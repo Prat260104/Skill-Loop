@@ -1,3 +1,135 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Instant Theme Transition - Performance Optimized */
+@layer base {
+    :root {
+        /* Default Theme (Purple) */
+        --primary: #a855f7;
+        --primary-glow: rgba(168, 85, 247, 0.5);
+    }
+
+    body.theme-purple {
+        --primary: #a855f7;
+        --primary-glow: rgba(168, 85, 247, 0.5);
+    }
+
+    body.theme-pink {
+        --primary: #ec4899;
+        --primary-glow: rgba(236, 72, 153, 0.5);
+    }
+
+    body.theme-cyan {
+        --primary: #06b6d4;
+        --primary-glow: rgba(6, 182, 212, 0.5);
+    }
+
+    body.theme-gold {
+        --primary: #fbbf24;
+        --primary-glow: rgba(251, 191, 36, 0.5);
+    }
+
+    * {
+        transition-property: background-color, border-color, color, fill, stroke;
+        transition-duration: 300ms; /* Smoother transition */
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    html {
+        @apply scroll-smooth;
+    }
+
+    html.dark {
+        color-scheme: dark;
+    }
+}
+
+/* Custom Gradient Animation - Optimized */
+@keyframes gradient-xy {
+
+    0%,
+    100% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+.animate-gradient-xy {
+    background-size: 400% 400%;
+    animation: gradient-xy 15s ease infinite;
+    will-change: background-position;
+}
+
+/* Vibrant Multi-Color Glow */
+@keyframes vibrant-glow {
+
+    0%,
+    100% {
+        opacity: 0.6;
+        filter: blur(40px);
+    }
+
+    50% {
+        opacity: 0.9;
+        filter: blur(60px);
+    }
+}
+
+.vibrant-glow {
+    animation: vibrant-glow 4s ease-in-out infinite;
+}
+
+/* Shimmer Effect */
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+.shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    background-size: 1000px 100%;
+    animation: shimmer 3s infinite;
+}
+
+/* Float Animation */
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+/* Pulse Glow */
+@keyframes pulse-glow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 20px rgba(168, 85, 247, 0.4), 0 0 40px rgba(236, 72, 153, 0.2);
+    }
+
+    50% {
+        box-shadow: 0 0 30px rgba(168, 85, 247, 0.6), 0 0 60px rgba(236, 72, 153, 0.4);
+    }
+}
+
+.pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+}

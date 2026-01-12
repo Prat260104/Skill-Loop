@@ -176,7 +176,63 @@ useEffect(() => {
 
 ## ❓ My Questions & Answers
 
-*(This section will be updated as you ask questions)*
+### Q1: What does `{skills.map(skill => <span key={skill}>{skill}</span>)}` mean?
+
+**Answer:** This uses JavaScript's `.map()` function to render a list in React.
+
+**Breaking it down:**
+
+1. **`.map()` basics:**
+   ```javascript
+   const numbers = [1, 2, 3];
+   const doubled = numbers.map(num => num * 2);
+   // Result: [2, 4, 6]
+   ```
+   `.map()` transforms each item in an array.
+
+2. **In React - Rendering Lists:**
+   ```javascript
+   const skills = ['React', 'Java', 'DSA'];
+   
+   // Convert each skill into a <span> element
+   {skills.map(skill => <span key={skill}>{skill}</span>)}
+   ```
+   
+   **Result in HTML:**
+   ```html
+   <span>React</span>
+   <span>Java</span>
+   <span>DSA</span>
+   ```
+
+3. **Why `key={skill}`?**
+   - React needs a unique identifier for each item in a list
+   - Helps React know which items changed/added/removed
+   - **Without key:** React shows a warning ⚠️
+   - **With key:** React efficiently updates the list ✅
+
+**Complete Example:**
+```javascript
+function MySkills() {
+  const skills = ['React', 'Java', 'DSA'];
+  
+  return (
+    <div>
+      <h2>My Skills:</h2>
+      {skills.map(skill => (
+        <span 
+          key={skill} 
+          className="bg-blue-500 text-white px-3 py-1 rounded mx-1"
+        >
+          {skill}
+        </span>
+      ))}
+    </div>
+  );
+}
+```
+
+**What you see:** Beautiful skill tags → `[React] [Java] [DSA]`
 
 ---
 
