@@ -76,6 +76,8 @@ This section is designed to make you hireable as **both** a Full-Stack Dev and a
 #### A. Generative AI (LLMs)
 *   **"The AI Interviewer" (Skill Verification):** Instead of manually checking skills, users chat with an AI Agent (RAG-based) that asks technical questions. The AI generates a "Confidence Score" (e.g., "User knows 80% of React hooks").
     *   *Resume Keyword:* RAG, LangChain, Prompt Engineering, LLM Agents.
+*   **Smart Profile Builder (NLP):** Auto-scans user's pinned GitHub repositories and LinkedIn "About" section to construct a "Skill Graph" without manual entry.
+    *   *Resume Keyword:* Entity Extraction, GitHub API, Web Scraping.
 *   **Auto-Summarization:** Automatically transcribe video sessions (using Whisper API) and generate "Key Takeaways" notes for students.
     *   *Resume Keyword:* Speech-to-Text, NLP, Transformers.
 

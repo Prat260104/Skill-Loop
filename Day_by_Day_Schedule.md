@@ -23,8 +23,8 @@ Since you are learning *while* building, we will move at a comfortable pace. I w
     *   How animations work in web (Framer Motion basics).
     *   Responsive Design (Mobile vs Desktop).
 *   **Task:**
-    *   [ ] Build the "Hero Section" (The first thing users see).
-    *   [ ] Make it responsive.
+    *   [x] Build the "Hero Section" (The first thing users see).
+    *   [x] Make it responsive.
 
 ## Mod 2: Backend Foundations (Spring Boot)
 **Goal:** Understand APIs and Database connections.
@@ -34,8 +34,8 @@ Since you are learning *while* building, we will move at a comfortable pace. I w
     *   What is a REST API? (GET, POST, PUT, DELETE).
     *   Controller vs Service vs Repository layer.
 *   **Task:**
-    *   [ ] Create the Spring Boot project.
-    *   [ ] Write a simple "Hello World" API.
+    *   [/] Create the Spring Boot project.
+    *   [/] Write a simple "Hello World" API.
 
 ### 📅 Day 7-8: Database Design (PostgreSQL)
 *   **Study Goal:**

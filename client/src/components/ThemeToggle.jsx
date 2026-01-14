@@ -15,7 +15,7 @@ export default function ThemeToggle() {
     ];
 
     return (
-        <div className="fixed top-6 right-6 z-50 flex items-center gap-4">
+        <div className="flex items-center gap-4">
             {/* Color Theme Selector */}
             <div className="relative">
                 <motion.button
