@@ -34,8 +34,8 @@ Since you are learning *while* building, we will move at a comfortable pace. I w
     *   What is a REST API? (GET, POST, PUT, DELETE).
     *   Controller vs Service vs Repository layer.
 *   **Task:**
-    *   [/] Create the Spring Boot project.
-    *   [/] Write a simple "Hello World" API.
+    *   [x] Create the Spring Boot project.
+    *   [x] Write a simple "Hello World" API.
 
 ### 📅 Day 7-8: Database Design (PostgreSQL)
 *   **Study Goal:**
