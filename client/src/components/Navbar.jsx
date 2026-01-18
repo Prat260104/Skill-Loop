@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-scroll'; // For smooth scrolling
+import { Link as RouterLink } from 'react-router-dom'; // For page navigation
 import { HiMenu, HiX } from 'react-icons/hi';
 import ThemeToggle from './ThemeToggle';
 
@@ -51,13 +52,15 @@ export default function Navbar() {
                     {/* Right Side: Theme Toggle & Login Button */}
                     <div className="hidden md:flex items-center gap-4">
                         <ThemeToggle />
-                        <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-full font-medium shadow-lg shadow-primary/25 transition-all"
-                        >
-                            Sign In
-                        </motion.button>
+                        <RouterLink to="/signup">
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-full font-medium shadow-lg shadow-primary/25 transition-all"
+                            >
+                                Sign Up
+                            </motion.button>
+                        </RouterLink>
                     </div>
 
                     {/* Mobile Menu Button */}
@@ -95,9 +98,11 @@ export default function Navbar() {
                                     {link.name}
                                 </Link>
                             ))}
-                            <button className="w-full mt-4 bg-primary text-white py-2 rounded-lg font-bold">
-                                Sign In
-                            </button>
+                            <RouterLink to="/signup" onClick={() => setIsOpen(false)}>
+                                <button className="w-full mt-4 bg-primary text-white py-2 rounded-lg font-bold">
+                                    Sign Up
+                                </button>
+                            </RouterLink>
                         </div>
                     </motion.div>
                 )}
