@@ -73,5 +73,21 @@ We defined CSS Variables (`--primary: #a855f7`).
 
 ---
 
-## 3. Summary for Interview
-"I built a React application using **Functional Components** and **Hooks**. I used `useState` to manage local UI state (like opening menus) and custom **Context API** for global state (Theme/Dark Mode). I optimized animations using `useEffect` for event listeners and `Framer Motion` for hardware-accelerated transitions."
+## 3. Top Interview Questions (Frontend) 🎤
+
+### Q1: What is the Virtual DOM?
+"It's a lightweight copy of the real DOM. When data changes, React updates the Virtual DOM first, compares it with the previous version (Diffing), and then only updates the specific parts of the Real DOM that changed. This is faster than repainting the whole page."
+
+### Q2: Why can't I update state directly (`count = count + 1`)?
+"Because React state is **Immutable**. If you change the variable directly, React doesn't know it changed and won't re-render. You MUST use the setter function (`setCount`) to trigger the re-render cycle."
+
+### Q3: What is "Prop Drilling" and how do you fix it?
+"Prop Drilling is passing data through many layers of components just to get it to a child (Grandparent -> Parent -> Child). I fixed this in my project using **Context API** (`ThemeContext`), which allows any component to access global data without passing props manually."
+
+### Q4: Explain the `useEffect` Dependency Array `[]`.
+*   `useEffect(fn)`: Runs after **every** render.
+*   `useEffect(fn, [])`: Runs **only once** (on mount).
+*   `useEffect(fn, [id])`: Runs whenever `id` changes.
+
+### Q5: Why Tailwind CSS instead of Bootstrap?
+"Tailwind provides **utility classes** for granular control without fighting default styles. It also scans my code and only ships the CSS I used (via PurgeCSS), making the bundle size smaller than loading all of Bootstrap."
