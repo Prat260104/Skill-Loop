@@ -43,7 +43,7 @@ Since you are learning *while* building, we will move at a comfortable pace. I w
     *   JPA/Hibernate (How Java talks to SQL).
 *   **Task:**
     *   [ ] Design the `User` table (Name, Email, Password).
-    *   [ ] Connect Spring Boot to PostgreSQL.
+    *   [x] Connect Spring Boot to PostgreSQL.
 
 ## Mod 3: Security & Auth (The Hard Part)
 **Goal:** Mastering Login/Signup.
