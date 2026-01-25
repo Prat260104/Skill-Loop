@@ -52,13 +52,13 @@ export default function Navbar() {
                     {/* Right Side: Theme Toggle & Login Button */}
                     <div className="hidden md:flex items-center gap-4">
                         <ThemeToggle />
-                        <RouterLink to="/signup">
+                        <RouterLink to="/login">
                             <motion.button
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 className="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-full font-medium shadow-lg shadow-primary/25 transition-all"
                             >
-                                Sign Up
+                                Sign In
                             </motion.button>
                         </RouterLink>
                     </div>
@@ -98,9 +98,9 @@ export default function Navbar() {
                                     {link.name}
                                 </Link>
                             ))}
-                            <RouterLink to="/signup" onClick={() => setIsOpen(false)}>
+                            <RouterLink to="/login" onClick={() => setIsOpen(false)}>
                                 <button className="w-full mt-4 bg-primary text-white py-2 rounded-lg font-bold">
-                                    Sign Up
+                                    Sign In
                                 </button>
                             </RouterLink>
                         </div>

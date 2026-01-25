@@ -1,5 +1,6 @@
 package com.skillloop.server.controller;
 
+import com.skillloop.server.dto.LoginRequest;
 import com.skillloop.server.dto.SignupRequest;
 import com.skillloop.server.model.User;
 import com.skillloop.server.service.AuthService;
@@ -21,6 +22,16 @@ public class AuthController {
         try {
             User registeredUser = authService.registerUser(signupRequest);
             return ResponseEntity.ok("User registered successfully! ID: " + registeredUser.getId());
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
+        try {
+            User loggedInUser = authService.loginUser(loginRequest);
+            return ResponseEntity.ok("Login successful! Welcome " + loggedInUser.getName());
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

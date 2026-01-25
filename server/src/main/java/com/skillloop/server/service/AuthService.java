@@ -1,5 +1,6 @@
 package com.skillloop.server.service;
 
+import com.skillloop.server.dto.LoginRequest;
 import com.skillloop.server.dto.SignupRequest;
 import com.skillloop.server.model.User;
 import com.skillloop.server.repository.UserRepository;
@@ -31,5 +32,18 @@ public class AuthService {
 
         // 3. Save to DB
         return userRepository.save(user);
+    }
+
+    public User loginUser(LoginRequest request) {
+        // 1. Find user by email
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("Error: User not found!"));
+
+        // 2. Check password (plain text for now)
+        if (!user.getPassword().equals(request.getPassword())) {
+            throw new RuntimeException("Error: Invalid password!");
+        }
+
+        return user;
     }
 }

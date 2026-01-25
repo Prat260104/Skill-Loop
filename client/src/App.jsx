@@ -9,6 +9,7 @@ import HowItWorks from './components/HowItWorks'
 import IntroAnimation from './components/IntroAnimation'
 import MouseSpotlight from './components/MouseSpotlight'
 import Signup from './components/Signup'
+import Login from './components/Login'
 
 function App() {
   const [showIntro, setShowIntro] = useState(true);
@@ -32,6 +33,7 @@ function App() {
                   </>
                 } />
                 <Route path="/signup" element={<Signup />} />
+                <Route path="/login" element={<Login />} />
               </Routes>
             </main>
             <Footer />
