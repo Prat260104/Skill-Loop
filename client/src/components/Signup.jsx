@@ -22,8 +22,16 @@ export default function Signup() {
             });
 
             if (response.ok) {
+                const data = await response.json();
                 setStatus('success');
-                setMessage('Account Created Successfully! Redirecting...');
+                setMessage('Account Created! Redirecting to setup...');
+
+                // Save and Redirect
+                localStorage.setItem('user', JSON.stringify(data));
+                setTimeout(() => {
+                    window.location.href = '/profile-setup';
+                }, 1000);
+
             } else {
                 const errorText = await response.text();
                 setStatus('error');

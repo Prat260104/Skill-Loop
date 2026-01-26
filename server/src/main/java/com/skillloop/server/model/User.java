@@ -32,10 +32,10 @@ public class User {
 
     private String role; // "STUDENT" or "MENTOR"
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> skillsOffered;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> skillsWanted;
 
     private int skillPoints = 0;

@@ -24,10 +24,22 @@ export default function Login() {
             });
 
             if (response.ok) {
-                const text = await response.text();
+                const data = await response.json(); // It's JSON now!
                 setStatus('success');
-                setMessage(text);
-                // Optionally redirect here later
+                setMessage(`Welcome back, ${data.name}!`);
+
+                // Save user to local storage
+                localStorage.setItem('user', JSON.stringify(data));
+
+                // Smart Redirect
+                setTimeout(() => {
+                    if (data.profileComplete) {
+                        window.location.href = '/';
+                    } else {
+                        window.location.href = '/profile-setup';
+                    }
+                }, 1000);
+
             } else {
                 const errorText = await response.text();
                 setStatus('error');

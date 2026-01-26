@@ -10,6 +10,7 @@ import IntroAnimation from './components/IntroAnimation'
 import MouseSpotlight from './components/MouseSpotlight'
 import Signup from './components/Signup'
 import Login from './components/Login'
+import ProfileSetup from './components/ProfileSetup'
 
 function App() {
   const [showIntro, setShowIntro] = useState(true);
@@ -34,6 +35,7 @@ function App() {
                 } />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/profile-setup" element={<ProfileSetup />} />
               </Routes>
             </main>
             <Footer />
