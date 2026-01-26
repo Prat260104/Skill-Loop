@@ -1,5 +1,6 @@
 package com.skillloop.server.controller;
 
+import com.skillloop.server.dto.AuthResponse;
 import com.skillloop.server.dto.LoginRequest;
 import com.skillloop.server.dto.SignupRequest;
 import com.skillloop.server.model.User;
@@ -21,7 +22,16 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest) {
         try {
             User registeredUser = authService.registerUser(signupRequest);
-            return ResponseEntity.ok("User registered successfully! ID: " + registeredUser.getId());
+
+            // New users definitely have empty profiles
+            AuthResponse response = new AuthResponse(
+                    registeredUser.getId(),
+                    registeredUser.getName(),
+                    registeredUser.getEmail(),
+                    registeredUser.getRole(),
+                    false);
+
+            return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -31,7 +41,19 @@ public class AuthController {
     public ResponseEntity<?> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
         try {
             User loggedInUser = authService.loginUser(loginRequest);
-            return ResponseEntity.ok("Login successful! Welcome " + loggedInUser.getName());
+
+            // Check if profile is complete (Has at least one skill offered)
+            boolean isProfileComplete = loggedInUser.getSkillsOffered() != null
+                    && !loggedInUser.getSkillsOffered().isEmpty();
+
+            AuthResponse response = new AuthResponse(
+                    loggedInUser.getId(),
+                    loggedInUser.getName(),
+                    loggedInUser.getEmail(),
+                    loggedInUser.getRole(),
+                    isProfileComplete);
+
+            return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

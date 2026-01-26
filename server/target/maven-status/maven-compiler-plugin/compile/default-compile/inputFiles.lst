@@ -1,7 +1,10 @@
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/ServerApplication.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/TestController.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/controller/AuthController.java
+/Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/controller/ProfileController.java
+/Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/dto/AuthResponse.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/dto/LoginRequest.java
+/Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/dto/ProfileRequest.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/dto/SignupRequest.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/model/User.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/repository/UserRepository.java

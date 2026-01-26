@@ -1,4 +1,4 @@
-package com.skillloop.server.dto;
+ package com.skillloop.server.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
