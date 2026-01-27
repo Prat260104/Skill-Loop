@@ -89,15 +89,38 @@ export default function Navbar() {
                     {/* Right Side: Theme Toggle & Login Button */}
                     <div className="hidden md:flex items-center gap-4">
                         <ThemeToggle />
-                        <RouterLink to="/login">
-                            <motion.button
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                className="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-full font-medium shadow-lg shadow-primary/25 transition-all"
-                            >
-                                Sign In
-                            </motion.button>
-                        </RouterLink>
+                        {localStorage.getItem('user') ? (
+                            <div className="flex items-center gap-4">
+                                <RouterLink to="/dashboard">
+                                    <motion.button
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        className="px-5 py-2 rounded-full font-bold text-white bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all border border-transparent"
+                                    >
+                                        Dashboard 🚀
+                                    </motion.button>
+                                </RouterLink>
+                                <button
+                                    onClick={() => {
+                                        localStorage.removeItem('user');
+                                        window.location.href = '/';
+                                    }}
+                                    className="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-full font-medium shadow-lg transition-all"
+                                >
+                                    Logout
+                                </button>
+                            </div>
+                        ) : (
+                            <RouterLink to="/login">
+                                <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    className="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-full font-medium shadow-lg shadow-primary/25 transition-all"
+                                >
+                                    Sign In
+                                </motion.button>
+                            </RouterLink>
+                        )}
                     </div>
 
                     {/* Mobile Menu Button */}
@@ -133,11 +156,30 @@ export default function Navbar() {
                                 </button>
                             ))}
                             <div className="w-full px-3">
-                                <RouterLink to="/login" onClick={() => setIsOpen(false)}>
-                                    <button className="w-full mt-4 bg-primary text-white py-2 rounded-lg font-bold">
-                                        Sign In
-                                    </button>
-                                </RouterLink>
+                                {localStorage.getItem('user') ? (
+                                    <div className="flex flex-col gap-3 mt-4">
+                                        <RouterLink to="/dashboard" onClick={() => setIsOpen(false)}>
+                                            <button className="w-full bg-primary/10 text-primary py-2 rounded-lg font-bold">
+                                                Dashboard
+                                            </button>
+                                        </RouterLink>
+                                        <button
+                                            onClick={() => {
+                                                localStorage.removeItem('user');
+                                                window.location.href = '/';
+                                            }}
+                                            className="w-full bg-red-500 text-white py-2 rounded-lg font-bold"
+                                        >
+                                            Logout
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <RouterLink to="/login" onClick={() => setIsOpen(false)}>
+                                        <button className="w-full mt-4 bg-primary text-white py-2 rounded-lg font-bold">
+                                            Sign In
+                                        </button>
+                                    </RouterLink>
+                                )}
                             </div>
                         </div>
                     </motion.div>

@@ -34,7 +34,7 @@ export default function Login() {
                 // Smart Redirect
                 setTimeout(() => {
                     if (data.profileComplete) {
-                        window.location.href = '/';
+                        window.location.href = '/dashboard';
                     } else {
                         window.location.href = '/profile-setup';
                     }

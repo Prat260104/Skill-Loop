@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,6 +14,13 @@ export default function ProfileSetup() {
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user) {
+            navigate('/login');
+        }
+    }, [navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -49,7 +56,7 @@ export default function ProfileSetup() {
                 localStorage.setItem('user', JSON.stringify(user));
 
                 setStatus('success');
-                setTimeout(() => navigate('/'), 1500); // Go to Home
+                setTimeout(() => navigate('/dashboard'), 1500); // Go to Dashboard
             } else {
                 setStatus('error');
             }

@@ -11,6 +11,7 @@ import MouseSpotlight from './components/MouseSpotlight'
 import Signup from './components/Signup'
 import Login from './components/Login'
 import ProfileSetup from './components/ProfileSetup'
+import Dashboard from './components/Dashboard'
 
 function App() {
   const [showIntro, setShowIntro] = useState(true);
@@ -36,6 +37,7 @@ function App() {
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/profile-setup" element={<ProfileSetup />} />
+                <Route path="/dashboard" element={<Dashboard />} />
               </Routes>
             </main>
             <Footer />
