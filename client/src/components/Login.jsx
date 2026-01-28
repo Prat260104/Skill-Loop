@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { authApi } from '../api/authApi';
 
 export default function Login() {
     const [formData, setFormData] = useState({ email: '', password: '' });
@@ -17,37 +18,27 @@ export default function Login() {
         setMessage('');
 
         try {
-            const response = await fetch('http://localhost:9090/api/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            });
+            const data = await authApi.login(formData);
 
-            if (response.ok) {
-                const data = await response.json(); // It's JSON now!
-                setStatus('success');
-                setMessage(`Welcome back, ${data.name}!`);
+            setStatus('success');
+            setMessage(`Welcome back, ${data.name}!`);
 
-                // Save user to local storage
-                localStorage.setItem('user', JSON.stringify(data));
+            // Save user to local storage
+            localStorage.setItem('user', JSON.stringify(data));
 
-                // Smart Redirect
-                setTimeout(() => {
-                    if (data.profileComplete) {
-                        window.location.href = '/dashboard';
-                    } else {
-                        window.location.href = '/profile-setup';
-                    }
-                }, 1000);
+            // Smart Redirect
+            setTimeout(() => {
+                if (data.profileComplete) {
+                    window.location.href = '/dashboard';
+                } else {
+                    window.location.href = '/profile-setup';
+                }
+            }, 1000);
 
-            } else {
-                const errorText = await response.text();
-                setStatus('error');
-                setMessage('Error: ' + errorText);
-            }
         } catch (error) {
             setStatus('error');
-            setMessage('Network Error: Is Backend running?');
+            // Check if it's an Error object (from our API helper) or a network error string
+            setMessage('Error: ' + (error.message || 'Login Failed'));
         }
     };
 

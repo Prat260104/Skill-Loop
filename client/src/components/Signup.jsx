@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { authApi } from '../api/authApi';
 
 export default function Signup() {
     const [formData, setFormData] = useState({ name: '', email: '', password: '' });
@@ -15,31 +16,20 @@ export default function Signup() {
         setStatus('loading');
 
         try {
-            const response = await fetch('http://localhost:9090/api/auth/signup', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            });
+            const data = await authApi.signup(formData);
 
-            if (response.ok) {
-                const data = await response.json();
-                setStatus('success');
-                setMessage('Account Created! Redirecting to setup...');
+            setStatus('success');
+            setMessage('Account Created! Redirecting to setup...');
 
-                // Save and Redirect
-                localStorage.setItem('user', JSON.stringify(data));
-                setTimeout(() => {
-                    window.location.href = '/profile-setup';
-                }, 1000);
+            // Save and Redirect
+            localStorage.setItem('user', JSON.stringify(data));
+            setTimeout(() => {
+                window.location.href = '/profile-setup';
+            }, 1000);
 
-            } else {
-                const errorText = await response.text();
-                setStatus('error');
-                setMessage('Error: ' + errorText);
-            }
         } catch (error) {
             setStatus('error');
-            setMessage('Network Error: Is Backend running?');
+            setMessage('Error: ' + (error.message || 'Signup Failed'));
         }
     };
 

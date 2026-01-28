@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import UserCard from './UserCard';
 import SessionCard from './SessionCard';
 import { sessionApi } from '../api/sessionApi';
+import { userApi } from '../api/userApi';
 
 export default function Dashboard() {
     const [users, setUsers] = useState([]);
@@ -21,12 +22,9 @@ export default function Dashboard() {
         setLoading(true);
         try {
             if (activeTab === 'explore') {
-                const response = await fetch('http://localhost:9090/api/user');
-                if (response.ok) {
-                    const data = await response.json();
-                    // Filter out myself from explore
-                    setUsers(data.filter(u => u.id !== CURRENT_USER_ID));
-                }
+                const data = await userApi.getAllUsers();
+                // Filter out myself from explore
+                setUsers(data.filter(u => u.id !== CURRENT_USER_ID));
             } else {
                 const data = await sessionApi.getMySessions(CURRENT_USER_ID);
                 setSessions(data);
@@ -87,8 +85,8 @@ export default function Dashboard() {
                             <button
                                 onClick={() => setActiveTab('explore')}
                                 className={`px-6 py-2 rounded-lg text-sm font-semibold transition-all ${activeTab === 'explore'
-                                        ? 'bg-primary text-white shadow-md'
-                                        : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white'
+                                    ? 'bg-primary text-white shadow-md'
+                                    : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white'
                                     }`}
                             >
                                 Explore
@@ -96,8 +94,8 @@ export default function Dashboard() {
                             <button
                                 onClick={() => setActiveTab('sessions')}
                                 className={`px-6 py-2 rounded-lg text-sm font-semibold transition-all ${activeTab === 'sessions'
-                                        ? 'bg-primary text-white shadow-md'
-                                        : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white'
+                                    ? 'bg-primary text-white shadow-md'
+                                    : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white'
                                     }`}
                             >
                                 My Sessions
