@@ -1,7 +1,0 @@
-com/skillloop/server/ServerApplication.class
-com/skillloop/server/controller/AuthController.class
-com/skillloop/server/dto/SignupRequest.class
-com/skillloop/server/repository/UserRepository.class
-com/skillloop/server/service/AuthService.class
-com/skillloop/server/model/User.class
-com/skillloop/server/TestController.class
