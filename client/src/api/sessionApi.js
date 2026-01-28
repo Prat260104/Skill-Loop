@@ -66,5 +66,19 @@ export const sessionApi = {
             console.error("Error rejecting session:", error);
             throw error;
         }
+    },
+
+    // 5. Mark Session Complete (Award Points)
+    // PUT /api/sessions/{sessionId}/complete/{studentId}
+    completeSession: async (sessionId, studentId) => {
+        try {
+            const response = await fetch(`${API_URL}/${sessionId}/complete/${studentId}`, {
+                method: 'PUT'
+            });
+            return handleResponse(response);
+        } catch (error) {
+            console.error("Error completing session:", error);
+            throw error;
+        }
     }
 };

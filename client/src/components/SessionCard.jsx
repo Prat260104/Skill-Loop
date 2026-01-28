@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 
-export default function SessionCard({ session, currentUserId, onAccept, onReject }) {
+export default function SessionCard({ session, currentUserId, onAccept, onReject, onComplete }) {
     const isMentor = session.mentor.id === parseInt(currentUserId);
     const isPending = session.status === 'PENDING';
 
@@ -10,6 +10,16 @@ export default function SessionCard({ session, currentUserId, onAccept, onReject
         ACCEPTED: 'bg-green-100 text-green-800 border-green-200',
         REJECTED: 'bg-red-100 text-red-800 border-red-200',
         COMPLETED: 'bg-blue-100 text-blue-800 border-blue-200'
+    };
+
+    // Helper to format date safely
+    const formatDate = (dateString) => {
+        if (!dateString) return "No Date";
+        try {
+            return new Date(dateString).toLocaleDateString();
+        } catch (e) {
+            return "Invalid Date";
+        }
     };
 
     return (
@@ -24,7 +34,7 @@ export default function SessionCard({ session, currentUserId, onAccept, onReject
                     {session.status}
                 </span>
                 <span className="text-sm text-gray-400">
-                    {new Date(session.meetingTime).toLocaleDateString()}
+                    {formatDate(session.scheduledTime || session.createdAt)}
                 </span>
             </div>
 
@@ -60,6 +70,21 @@ export default function SessionCard({ session, currentUserId, onAccept, onReject
                     >
                         Decline
                     </button>
+                </div>
+            )}
+
+            {/* Actions (Only for Student looking at Accepted Session) */}
+            {!isMentor && session.status === 'ACCEPTED' && (
+                <div className="mt-2">
+                    <button
+                        onClick={() => onComplete(session.id)}
+                        className="w-full py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-semibold transition-colors shadow-md shadow-blue-500/20"
+                    >
+                        ✅ Mark as Completed
+                    </button>
+                    <p className="text-xs text-center text-gray-400 mt-2">
+                        Clicking this will award +50 points to your mentor.
+                    </p>
                 </div>
             )}
 

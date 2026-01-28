@@ -12,7 +12,9 @@ export default function Dashboard() {
     const [searchTerm, setSearchTerm] = useState('');
     const [activeTab, setActiveTab] = useState('explore'); // 'explore' | 'sessions'
 
-    const CURRENT_USER_ID = 1; // Hardcoded for MVP
+    // Fix: Get actual User ID from Local Storage
+    const user = JSON.parse(localStorage.getItem('user'));
+    const CURRENT_USER_ID = user ? user.id : null;
 
     useEffect(() => {
         fetchData();
@@ -55,6 +57,17 @@ export default function Dashboard() {
             alert("Session Rejected!");
         } catch (error) {
             alert("Error rejecting session");
+        }
+    };
+
+    const handleCompleteSession = async (sessionId) => {
+        if (!confirm("Did this session actually happen? (This will award points to the Mentor)")) return;
+        try {
+            await sessionApi.completeSession(sessionId, CURRENT_USER_ID);
+            fetchData();
+            alert("Session Completed! Points Awarded! 🏆");
+        } catch (error) {
+            alert("Error completing session: " + error.message);
         }
     };
 
@@ -147,6 +160,7 @@ export default function Dashboard() {
                                         currentUserId={CURRENT_USER_ID}
                                         onAccept={handleAcceptSession}
                                         onReject={handleRejectSession}
+                                        onComplete={handleCompleteSession}
                                     />
                                 ))
                             ) : (

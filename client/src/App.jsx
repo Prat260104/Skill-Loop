@@ -12,6 +12,7 @@ import Signup from './components/Signup'
 import Login from './components/Login'
 import ProfileSetup from './components/ProfileSetup'
 import Dashboard from './components/Dashboard'
+import Leaderboard from './components/Leaderboard'
 
 function App() {
   const [showIntro, setShowIntro] = useState(true);
@@ -38,6 +39,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/profile-setup" element={<ProfileSetup />} />
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/leaderboard" element={<Leaderboard />} />
               </Routes>
             </main>
             <Footer />

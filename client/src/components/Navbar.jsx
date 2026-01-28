@@ -133,6 +133,13 @@ export default function Navbar() {
                                                 </div>
                                             </RouterLink>
 
+                                            <RouterLink to="/leaderboard" onClick={() => setIsProfileOpen(false)}>
+                                                <div className="px-4 py-3 flex items-center gap-3 hover:bg-yellow-50 dark:hover:bg-yellow-900/10 cursor-pointer transition-colors text-yellow-600">
+                                                    <span>🏆</span>
+                                                    <span className="text-sm font-medium">Hall of Fame</span>
+                                                </div>
+                                            </RouterLink>
+
                                             <div onClick={handleLogout} className="px-4 py-3 flex items-center gap-3 hover:bg-red-50 dark:hover:bg-red-500/10 cursor-pointer transition-colors text-red-600">
                                                 <HiLogout className="w-5 h-5" />
                                                 <span className="text-sm font-medium">Log Out</span>
@@ -189,43 +196,47 @@ export default function Navbar() {
                             ))}
 
                             <div className="pt-4 border-t border-gray-100 dark:border-white/5 mt-4">
-                                {user ? (
-                                    <>
-                                        <div className="flex items-center gap-3 px-4 mb-4">
-                                            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">
-                                                {user.name.charAt(0).toUpperCase()}
-                                            </div>
-                                            <div>
-                                                <p className="font-bold text-gray-900 dark:text-white">{user.name}</p>
-                                                <p className="text-xs text-gray-500">{user.email}</p>
-                                            </div>
+                                <>
+                                    <div className="flex items-center gap-3 px-4 mb-4">
+                                        <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">
+                                            {user.name.charAt(0).toUpperCase()}
                                         </div>
-                                        <RouterLink to="/dashboard" onClick={() => setIsOpen(false)}>
-                                            <button className="w-full flex items-center justify-center gap-2 bg-primary/10 text-primary py-3 rounded-xl font-bold mb-3">
-                                                <HiViewGrid className="w-5 h-5" />
-                                                Dashboard
-                                            </button>
-                                        </RouterLink>
-                                        <button
-                                            onClick={handleLogout}
-                                            className="w-full flex items-center justify-center gap-2 bg-red-50 dark:bg-red-500/10 text-red-600 py-3 rounded-xl font-bold"
-                                        >
-                                            <HiLogout className="w-5 h-5" />
-                                            Log Out
-                                        </button>
-                                    </>
-                                ) : (
-                                    <RouterLink to="/login" onClick={() => setIsOpen(false)}>
-                                        <button className="w-full bg-primary text-white py-3 rounded-xl font-bold shadow-lg shadow-primary/30">
-                                            Sign In
+                                        <div>
+                                            <p className="font-bold text-gray-900 dark:text-white">{user.name}</p>
+                                            <p className="text-xs text-gray-500">{user.email}</p>
+                                        </div>
+                                    </div>
+                                    <RouterLink to="/dashboard" onClick={() => setIsOpen(false)}>
+                                        <button className="w-full flex items-center justify-center gap-2 bg-primary/10 text-primary py-3 rounded-xl font-bold mb-2">
+                                            <HiViewGrid className="w-5 h-5" />
+                                            Dashboard
                                         </button>
                                     </RouterLink>
+                                    <RouterLink to="/leaderboard" onClick={() => setIsOpen(false)}>
+                                        <button className="w-full flex items-center justify-center gap-2 bg-yellow-400/10 text-yellow-600 py-3 rounded-xl font-bold mb-3">
+                                            🏆 Leaderboard
+                                        </button>
+                                    </RouterLink>
+                                    <button
+                                        onClick={handleLogout}
+                                        className="w-full flex items-center justify-center gap-2 bg-red-50 dark:bg-red-500/10 text-red-600 py-3 rounded-xl font-bold"
+                                    >
+                                        <HiLogout className="w-5 h-5" />
+                                        Log Out
+                                    </button>
+                                </>
+                                ) : (
+                                <RouterLink to="/login" onClick={() => setIsOpen(false)}>
+                                    <button className="w-full bg-primary text-white py-3 rounded-xl font-bold shadow-lg shadow-primary/30">
+                                        Sign In
+                                    </button>
+                                </RouterLink>
                                 )}
                             </div>
                         </div>
                     </motion.div>
                 )}
             </AnimatePresence>
-        </motion.nav>
+        </motion.nav >
     );
 }

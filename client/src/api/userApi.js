@@ -20,5 +20,17 @@ export const userApi = {
             console.error("Error fetching users:", error);
             throw error;
         }
+    },
+
+    // 2. Get Leaderboard
+    // GET /api/user/leaderboard
+    getLeaderboard: async () => {
+        try {
+            const response = await fetch(`${API_URL}/leaderboard`);
+            return handleResponse(response);
+        } catch (error) {
+            console.error("Error fetching leaderboard:", error);
+            throw error;
+        }
     }
 };
