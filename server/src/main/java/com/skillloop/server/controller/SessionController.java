@@ -55,4 +55,15 @@ public class SessionController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    // 5. Mark Session Complete (Award Points)
+    @PutMapping("/{sessionId}/complete/{studentId}")
+    public ResponseEntity<?> completeSession(@PathVariable Long sessionId, @PathVariable Long studentId) {
+        try {
+            Session session = sessionService.completeSession(studentId, sessionId);
+            return ResponseEntity.ok(session);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

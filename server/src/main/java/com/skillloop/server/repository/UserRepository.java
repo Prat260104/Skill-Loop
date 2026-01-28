@@ -14,4 +14,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // Check if email exists
     Boolean existsByEmail(String email);
+
+    // Leaderboard Magic Query: "Get Top 10 users sorted by Skill Points"
+    java.util.List<User> findTop10ByOrderBySkillPointsDesc();
 }

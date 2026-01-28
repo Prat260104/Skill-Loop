@@ -74,4 +74,28 @@ public class SessionService {
         session.setStatus(SessionStatus.REJECTED);
         return sessionRepository.save(session);
     }
+
+    public Session completeSession(Long studentId, Long sessionId) {
+        Session session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new RuntimeException("Session not found"));
+
+        // Only the Student can mark it as complete (to prevent cheating)
+        if (!session.getStudent().getId().equals(studentId)) {
+            throw new RuntimeException("Only the student can mark a session as complete!");
+        }
+
+        if (session.getStatus() != SessionStatus.ACCEPTED) {
+            throw new RuntimeException("Only accepted sessions can be completed.");
+        }
+
+        // 1. Mark as Completed
+        session.setStatus(SessionStatus.COMPLETED);
+
+        // 2. Award Points to Mentor
+        User mentor = session.getMentor();
+        mentor.setSkillPoints(mentor.getSkillPoints() + 50); // The Reward
+        userRepository.save(mentor);
+
+        return sessionRepository.save(session);
+    }
 }

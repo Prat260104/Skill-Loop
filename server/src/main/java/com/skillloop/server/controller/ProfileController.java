@@ -49,4 +49,21 @@ public class ProfileController {
                 .collect(java.util.stream.Collectors.toList());
         return ResponseEntity.ok(users);
     }
+
+    @GetMapping("/leaderboard")
+    public ResponseEntity<java.util.List<com.skillloop.server.dto.UserSummaryDTO>> getLeaderboard() {
+        java.util.List<com.skillloop.server.dto.UserSummaryDTO> users = userRepository
+                .findTop10ByOrderBySkillPointsDesc().stream()
+                .map(user -> new com.skillloop.server.dto.UserSummaryDTO(
+                        user.getId(),
+                        user.getName(),
+                        user.getEmail(),
+                        user.getBio(),
+                        user.getSkillsOffered(),
+                        user.getSkillsWanted(),
+                        user.getSkillPoints(),
+                        user.getRole()))
+                .collect(java.util.stream.Collectors.toList());
+        return ResponseEntity.ok(users);
+    }
 }
