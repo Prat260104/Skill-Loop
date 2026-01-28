@@ -29,7 +29,8 @@ public class ProfileController {
                     }
 
                     userRepository.save(user);
-                    return ResponseEntity.ok("Profile updated successfully!");
+                    return ResponseEntity
+                            .ok(java.util.Collections.singletonMap("message", "Profile updated successfully!"));
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -48,6 +49,22 @@ public class ProfileController {
                         user.getRole()))
                 .collect(java.util.stream.Collectors.toList());
         return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<com.skillloop.server.dto.UserSummaryDTO> getUserById(@PathVariable Long id) {
+        return userRepository.findById(id)
+                .map(user -> new com.skillloop.server.dto.UserSummaryDTO(
+                        user.getId(),
+                        user.getName(),
+                        user.getEmail(),
+                        user.getBio(),
+                        user.getSkillsOffered(),
+                        user.getSkillsWanted(),
+                        user.getSkillPoints(),
+                        user.getRole()))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/leaderboard")

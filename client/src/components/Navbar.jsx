@@ -126,6 +126,18 @@ export default function Navbar() {
                                                 <p className="text-xs text-gray-500">{user.email}</p>
                                             </div>
 
+                                            <RouterLink to={`/profile/${user.id}`} onClick={() => setIsProfileOpen(false)}>
+                                                <div className="px-4 py-3 flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer transition-colors text-gray-700 dark:text-gray-200 border-b border-gray-100 dark:border-white/5">
+                                                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">
+                                                        {user.name.charAt(0).toUpperCase()}
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-sm font-bold">My Profile</p>
+                                                        <p className="text-xs text-gray-400">View & Edit</p>
+                                                    </div>
+                                                </div>
+                                            </RouterLink>
+
                                             <RouterLink to="/dashboard" onClick={() => setIsProfileOpen(false)}>
                                                 <div className="px-4 py-3 flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer transition-colors text-gray-700 dark:text-gray-200">
                                                     <HiViewGrid className="w-5 h-5 text-primary" />
@@ -196,41 +208,42 @@ export default function Navbar() {
                             ))}
 
                             <div className="pt-4 border-t border-gray-100 dark:border-white/5 mt-4">
-                                <>
-                                    <div className="flex items-center gap-3 px-4 mb-4">
-                                        <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">
-                                            {user.name.charAt(0).toUpperCase()}
+                                {user ? (
+                                    <>
+                                        <div className="flex items-center gap-3 px-4 mb-4">
+                                            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">
+                                                {user.name.charAt(0).toUpperCase()}
+                                            </div>
+                                            <div>
+                                                <p className="font-bold text-gray-900 dark:text-white">{user.name}</p>
+                                                <p className="text-xs text-gray-500">{user.email}</p>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <p className="font-bold text-gray-900 dark:text-white">{user.name}</p>
-                                            <p className="text-xs text-gray-500">{user.email}</p>
-                                        </div>
-                                    </div>
-                                    <RouterLink to="/dashboard" onClick={() => setIsOpen(false)}>
-                                        <button className="w-full flex items-center justify-center gap-2 bg-primary/10 text-primary py-3 rounded-xl font-bold mb-2">
-                                            <HiViewGrid className="w-5 h-5" />
-                                            Dashboard
+                                        <RouterLink to="/dashboard" onClick={() => setIsOpen(false)}>
+                                            <button className="w-full flex items-center justify-center gap-2 bg-primary/10 text-primary py-3 rounded-xl font-bold mb-2">
+                                                <HiViewGrid className="w-5 h-5" />
+                                                Dashboard
+                                            </button>
+                                        </RouterLink>
+                                        <RouterLink to="/leaderboard" onClick={() => setIsOpen(false)}>
+                                            <button className="w-full flex items-center justify-center gap-2 bg-yellow-400/10 text-yellow-600 py-3 rounded-xl font-bold mb-3">
+                                                🏆 Leaderboard
+                                            </button>
+                                        </RouterLink>
+                                        <button
+                                            onClick={handleLogout}
+                                            className="w-full flex items-center justify-center gap-2 bg-red-50 dark:bg-red-500/10 text-red-600 py-3 rounded-xl font-bold"
+                                        >
+                                            <HiLogout className="w-5 h-5" />
+                                            Log Out
                                         </button>
-                                    </RouterLink>
-                                    <RouterLink to="/leaderboard" onClick={() => setIsOpen(false)}>
-                                        <button className="w-full flex items-center justify-center gap-2 bg-yellow-400/10 text-yellow-600 py-3 rounded-xl font-bold mb-3">
-                                            🏆 Leaderboard
-                                        </button>
-                                    </RouterLink>
-                                    <button
-                                        onClick={handleLogout}
-                                        className="w-full flex items-center justify-center gap-2 bg-red-50 dark:bg-red-500/10 text-red-600 py-3 rounded-xl font-bold"
-                                    >
-                                        <HiLogout className="w-5 h-5" />
-                                        Log Out
-                                    </button>
-                                </>
+                                    </>
                                 ) : (
-                                <RouterLink to="/login" onClick={() => setIsOpen(false)}>
-                                    <button className="w-full bg-primary text-white py-3 rounded-xl font-bold shadow-lg shadow-primary/30">
-                                        Sign In
-                                    </button>
-                                </RouterLink>
+                                    <RouterLink to="/login" onClick={() => setIsOpen(false)}>
+                                        <button className="w-full bg-primary text-white py-3 rounded-xl font-bold shadow-lg shadow-primary/30">
+                                            Sign In
+                                        </button>
+                                    </RouterLink>
                                 )}
                             </div>
                         </div>
