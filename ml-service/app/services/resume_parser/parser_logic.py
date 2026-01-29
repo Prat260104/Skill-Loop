@@ -3,6 +3,7 @@ import pdfplumber
 import io
 import json
 import os
+import re
 from fastapi import UploadFile, HTTPException
 
 # Load the AI Brain (spaCy Model)
@@ -60,15 +61,39 @@ def analyze_resume_text(text: str) -> dict:
     # NER for Org, Person
     for ent in doc.ents:
         if ent.label_ == "ORG" and ent.text not in [e['org'] for e in extracted_data['experience']]:
-            extracted_data["experience"].append({"org": ent.text, "type": "Organization"})
+            extracted_data["experience"].append({"org": ent.text, "type": "Organization (AI)"})
         elif ent.label_ == "PERSON" and extracted_data["name"] is None:
             extracted_data["name"] = ent.text
+
+    # 🕵️‍♂️ Regex Backup for Experience (When AI fails)
+    # Pattern: "Worked at [Company]" or "Experience at [Company]"
+    exp_patterns = [
+        r"Worked at\s+([A-Z][\w\s]+?)(?=\s+from|\s+in|\s+as|\.|$)",  # Stop at prepositions
+        r"Experience at\s+([A-Z][\w\s]+?)(?=\s+from|\s+in|\s+as|\.|$)",
+        r"Intern at\s+([A-Z][\w\s]+?)(?=\s+from|\s+in|\s+as|\.|$)"
+    ]
+
+    for pattern in exp_patterns:
+        matches = re.findall(pattern, text, re.IGNORECASE)
+        for match in matches:
+            company = match.strip()
+            # Avoid adding if already found or if it's too short/long
+            if company and len(company) > 2 and company not in [e['org'] for e in extracted_data['experience']]:
+                extracted_data["experience"].append({"org": company, "type": "Organization (Regex)"})
 
     # Skill Matching
     doc_text_lower = text.lower()
     found_skills = set()
+    
+    # We use regex with word boundaries (\b) to ensure we match "Java" but not "Javascript" (if looking for "Script") 
+    # or "C" in "Cloud".
+    
     for skill in SKILLS_DB:
-        if skill in doc_text_lower:
+        # Create a regex pattern for the skill, ensuring it matches whole words only
+        # re.escape is used to handle special characters like C++ or C#
+        pattern = r"(?<!\w)" + re.escape(skill) + r"(?!\w)"
+        
+        if re.search(pattern, doc_text_lower):
             found_skills.add(skill.title())
             
     extracted_data["skills"] = list(found_skills)
