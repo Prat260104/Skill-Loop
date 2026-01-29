@@ -4,24 +4,31 @@ import pdfplumber
 import io
 from typing import List, Dict
 
+import json
+import os
+
 # Initialize FastAPI
 app = FastAPI()
 
 # Load the AI Brain (spaCy Model)
-# Note: Ensure you run `python -m spacy download en_core_web_sm`
 try:
     nlp = spacy.load("en_core_web_sm")
 except OSError:
     print("⚠️ Model not found. Please run: python -m spacy download en_core_web_sm")
     nlp = None
 
-# 🧠 Our Knowledge Base (Simple Skill List for matching)
-# In production, this would come from a database or a larger file.
-SKILLS_DB = [
-    "java", "python", "react", "node.js", "javascript", "typescript",
-    "spring boot", "django", "fastapi", "html", "css", "sql", "postgresql",
-    "mongodb", "docker", "kubernetes", "aws", "git", "machine learning", "nlp"
-]
+# 🧠 Load Skills Database from JSON
+SKILLS_DB = []
+try:
+    with open("skills.json", "r") as f:
+        data = json.load(f)
+        # Flatten the dictionary into a single list of skills
+        for category in data:
+            SKILLS_DB.extend(data[category])
+    print(f"✅ Loaded {len(SKILLS_DB)} skills from skills.json")
+except FileNotFoundError:
+    print("⚠️ skills.json not found! Using empty DB.")
+    SKILLS_DB = []
 
 @app.get("/")
 def home():
