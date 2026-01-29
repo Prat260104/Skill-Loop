@@ -60,5 +60,27 @@ export const userApi = {
             console.error("Error updating profile:", error);
             throw error;
         }
+    },
+
+    // 5. Upload Resume
+    // POST /api/user/{id}/resume
+    uploadResume: async (id, file) => {
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const response = await fetch(`${API_URL}/${id}/resume`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Accept': 'application/json'
+                },
+                body: formData
+            });
+            return handleResponse(response);
+        } catch (error) {
+            console.error("Error uploading resume:", error);
+            throw error;
+        }
     }
 };

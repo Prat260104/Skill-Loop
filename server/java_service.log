@@ -76,3 +76,19 @@ WARNING: Restricted methods will be blocked in a future release unless native ac
 2026-01-29T18:23:08.221+05:30  INFO 26690 --- [server] [nio-9090-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
 2026-01-29T18:23:08.224+05:30  INFO 26690 --- [server] [nio-9090-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
 2026-01-29T19:19:10.545+05:30  WARN 26690 --- [server] [l-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=43m377ms).
+2026-01-29T19:45:36.880+05:30  WARN 26690 --- [server] [l-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=10m26s232ms).
+2026-01-29T21:17:32.339+05:30  WARN 26690 --- [server] [l-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h31m55s459ms).
+2026-01-29T23:35:20.299+05:30  WARN 26690 --- [server] [l-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2h17m47s959ms).
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  05:22 h
+[INFO] Finished at: 2026-01-29T23:44:44+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:3.4.1:run (default-cli) on project server: Process terminated with exit code: 137 -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException

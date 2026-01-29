@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { userApi } from '../api/userApi';
 
 export default function ProfilePage() {
@@ -15,6 +15,10 @@ export default function ProfilePage() {
     const [bio, setBio] = useState('');
     const [skillsOffered, setSkillsOffered] = useState('');
     const [skillsWanted, setSkillsWanted] = useState('');
+
+    // UI States
+    const [uploading, setUploading] = useState(false);
+    const [notification, setNotification] = useState(null); // { type, message }
 
     const currentUser = JSON.parse(localStorage.getItem('user'));
 
@@ -46,6 +50,40 @@ export default function ProfilePage() {
         }
     };
 
+
+    const handleResumeUpload = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        setUploading(true);
+        setNotification({ type: 'info', message: 'Parsing your resume... Please wait.' });
+
+        try {
+            const parsedData = await userApi.uploadResume(targetId, file);
+
+            // Auto-fill skills
+            let newSkills = parsedData.skills || [];
+            const currentSkillsStr = skillsOffered || "";
+            const newSkillsStr = newSkills.join(', ');
+
+            const updatedSkillsStr = currentSkillsStr
+                ? `${currentSkillsStr}, ${newSkillsStr}`
+                : newSkillsStr;
+
+            setSkillsOffered(updatedSkillsStr);
+            setNotification({ type: 'success', message: 'Success! Skills extracted from resume.' });
+
+            // Clear success message after 3 seconds
+            setTimeout(() => setNotification(null), 3000);
+
+        } catch (error) {
+            console.error("Resume upload failed", error);
+            setNotification({ type: 'error', message: 'Failed to parse resume. Please try again.' });
+        } finally {
+            setUploading(false);
+        }
+    };
+
     const handleSave = async () => {
         try {
             const updatedData = {
@@ -57,10 +95,11 @@ export default function ProfilePage() {
             await userApi.updateProfile(targetId, updatedData);
             setIsEditing(false);
             fetchProfile(); // Refresh
-            alert("Profile Updated Successfully!");
+            setNotification({ type: 'success', message: 'Profile Updated Successfully!' });
+            setTimeout(() => setNotification(null), 3000);
         } catch (error) {
             console.error("Update failed:", error);
-            alert(`Failed to update profile: ${error.message}`);
+            setNotification({ type: 'error', message: `Failed to update profile: ${error.message}` });
         }
     };
 
@@ -78,7 +117,26 @@ export default function ProfilePage() {
     const rank = getRank(profileUser.skillPoints);
 
     return (
-        <div className="min-h-screen pt-24 pb-12 px-4 bg-gray-50 dark:bg-slate-900">
+        <div className="min-h-screen pt-24 pb-12 px-4 bg-gray-50 dark:bg-slate-900 relative">
+            {/* Notification Toast */}
+            <AnimatePresence>
+                {notification && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -50, x: '-50%' }}
+                        animate={{ opacity: 1, y: 0, x: '-50%' }}
+                        exit={{ opacity: 0, y: -20, x: '-50%' }}
+                        className={`fixed top-24 left-1/2 z-50 px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3 border ${notification.type === 'success' ? 'bg-green-50 border-green-200 text-green-700' :
+                            notification.type === 'error' ? 'bg-red-50 border-red-200 text-red-700' :
+                                'bg-blue-50 border-blue-200 text-blue-700'
+                            }`}
+                    >
+                        <span className="text-xl">
+                            {notification.type === 'success' ? '✨' : notification.type === 'error' ? '❌' : '⏳'}
+                        </span>
+                        <span className="font-semibold">{notification.message}</span>
+                    </motion.div>
+                )}
+            </AnimatePresence>
             <div className="max-w-4xl mx-auto">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -194,7 +252,44 @@ export default function ProfilePage() {
                         {isOwnProfile && (
                             <div className="mt-8 flex justify-end">
                                 {isEditing ? (
-                                    <div className="flex gap-3">
+                                    <div className="flex gap-3 items-center">
+                                        <div className="relative overflow-hidden inline-block group">
+                                            <button
+                                                disabled={uploading}
+                                                className={`
+                                                    px-5 py-2.5 rounded-xl font-bold text-white shadow-lg 
+                                                    flex items-center gap-2 transition-all transform 
+                                                    ${uploading
+                                                        ? 'bg-gray-400 cursor-not-allowed'
+                                                        : 'bg-gradient-to-r from-violet-600 to-indigo-600 hover:shadow-indigo-500/30 hover:shadow-xl hover:-translate-y-0.5 active:scale-95'
+                                                    }
+                                                `}
+                                            >
+                                                {uploading ? (
+                                                    <>
+                                                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                        </svg>
+                                                        <span>Processing...</span>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <span className="text-lg">📄</span>
+                                                        <span>Auto-Fill from Resume</span>
+                                                    </>
+                                                )}
+                                            </button>
+                                            {!uploading && (
+                                                <input
+                                                    type="file"
+                                                    accept=".pdf"
+                                                    onChange={handleResumeUpload}
+                                                    className="absolute left-0 top-0 opacity-0 w-full h-full cursor-pointer"
+                                                    title="Upload PDF Resume to auto-fill skills"
+                                                />
+                                            )}
+                                        </div>
                                         <button
                                             onClick={() => setIsEditing(false)}
                                             className="px-6 py-2 rounded-xl font-bold text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5 transition-colors"
