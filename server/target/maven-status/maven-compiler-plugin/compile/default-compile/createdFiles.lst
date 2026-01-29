@@ -1,9 +1,13 @@
+com/skillloop/server/service/ResumeService$1.class
 com/skillloop/server/ServerApplication.class
 com/skillloop/server/controller/AuthController.class
 com/skillloop/server/dto/SignupRequest.class
 com/skillloop/server/controller/SessionController.class
+com/skillloop/server/service/ResumeService.class
 com/skillloop/server/repository/SessionRepository.class
+com/skillloop/server/config/AppConfig.class
 com/skillloop/server/dto/ProfileRequest.class
+com/skillloop/server/dto/ResumeResponseDTO.class
 com/skillloop/server/repository/UserRepository.class
 com/skillloop/server/service/AuthService.class
 com/skillloop/server/dto/LoginRequest.class

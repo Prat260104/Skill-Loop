@@ -59,40 +59,124 @@ def analyze_resume_text(text: str) -> dict:
         "raw_text_length": len(text)
     }
 
-    # 📝 Extract Summary (Simple Heuristic: First 3-4 lines that are not Name/Contact)
-    lines = [line.strip() for line in text.split('\n') if line.strip()]
-    if lines:
-        # Skip lines that look like name/email/phone (basic check)
-        summary_lines = []
-        for line in lines[:6]: # Check first 6 lines
-            if len(line.split()) > 3 and "@" not in line and "phone" not in line.lower():
-                summary_lines.append(line)
-                if len(summary_lines) >= 3: break
+    # 📝 Extract Summary (Smart Section-Aware)
+    # Strategy:
+    # 1. Look for headers like "Summary", "Professional Summary", "Objective".
+    # 2. If found, grab text until next header.
+    # 3. If NOT found, fallback to top-of-file heuristic (but deeper search).
+    
+    summary_header = r"(?:^|\n)\s*(?:Professional\s+|Career\s+|Executive\s+)?(Summary|Objective|Profile|About Me)\s*(?:[:\-]|$)"
+    match = re.search(summary_header, text, re.IGNORECASE)
+    
+    if match:
+        # Found a specific summary section!
+        start_idx = match.end()
+        remaining = text[start_idx:]
         
-        extracted_data["summary"] = " ".join(summary_lines)
+        # Stop at next common header (Experience, Education, Skills, etc.)
+        next_header = r"(?:^|\n)\s*(?:Experience|Work|Employment|Education|Skills|Projects|Certifications|Languages)\s*(?:[:\-]|$)"
+        end_match = re.search(next_header, remaining, re.IGNORECASE)
+        
+        if end_match:
+            extracted_data["summary"] = remaining[:end_match.start()].strip()
+        else:
+            # Take a reasonable chunk if no next header found (e.g. first 500 chars)
+            extracted_data["summary"] = remaining[:500].strip()
+    else:
+        # Fallback: Check first 15 lines (increased from 6)
+        lines = [line.strip() for line in text.split('\n') if line.strip()]
+        if lines:
+            summary_lines = []
+            # Skip lines that usually appear at top (Name, Contact info)
+            for line in lines[:15]: 
+                # Heuristic: Line > 3 words, no '@' (email), no 'phone'
+                if len(line.split()) > 3 and "@" not in line and "phone" not in line.lower():
+                    summary_lines.append(line)
+                    # Limit to ~5 lines for bio
+                    if len(summary_lines) >= 5: break
+            
+            extracted_data["summary"] = " ".join(summary_lines)
+        
+    # 🕵️‍♂️ Improved Experience Extraction (Section-Aware)
+    # 1. Identify "Experience" or "Work History" Section
+    # 2. Extract only from that section until the next header
+    
+    experience_entries = []
+    
+    # Robust Regex for Section Headers
+    # Matches lines like: "Professional Experience", "WORK HISTORY", "Employment", "Internships"
+    # (?i) = case insensitive, (?:^|\n) = start of line, \s* = optional whitespace
+    headers_pattern = r"(?:^|\n)\s*(?:Professional\s+|Work\s+|Relevant\s+|Additional\s+)?(Experience|History|Employment|Internships|Work)\s*(?:[:\-]|$)"
+    
+    # We use re.split with capturing group to keep the delimiter to know which section we found
+    sections = re.split(f"({headers_pattern})", text, flags=re.IGNORECASE)
+    
+    experience_text_block = ""
+    
+    # Find the block after our Experience header
+    # re.split return [text_before, match_group1, text_after...]
+    # Since our pattern has groups, the output structure is tricky. 
+    # Let's simplify: find the index of the best match.
+    
+    search_match = re.search(headers_pattern, text, re.IGNORECASE)
+    if search_match:
+        start_index = search_match.end()
+        # Look for the NEXT header after this one to determine the end
+        remaining_text = text[start_index:]
+        
+        next_header_pattern = r"(?:^|\n)\s*(?:Education|Skills|Projects|Certifications|Achievements|Languages|References|Declaration|Technical Skills)\s*(?:[:\-]|$)"
+        end_match = re.search(next_header_pattern, remaining_text, re.IGNORECASE)
+        
+        if end_match:
+            experience_text_block = remaining_text[:end_match.start()]
+        else:
+            experience_text_block = remaining_text # Go to end of file if no other headers
+            
+        print(f"✅ FOUND Section: '{search_match.group().strip()}'")
+    else:
+        print("⚠️ NO Experience Header Found. Fallback to full text (Risk of false positives).")
+        # To avoid extracting random things from other sections, we might want to return empty 
+        # OR be very strict. For now, let's keep full text but warn.
+        experience_text_block = text
 
-    # NER for Org, Person
+    target_text = experience_text_block
+    
+    # Common Job Roles to look for (Added more)
+    job_roles = r"(Intern|Engineer|Developer|Lead|Manager|Head|Coordinator|Volunteer|Member|Fellow|Specialist|Analyst|Consultant|Director|Founder|Co-Founder|Architect|Administrator|Associate|Researcher)"
+    
+    # Pattern: "Role at Company" (e.g., "Software Engineer at Google", "Technical Lead at GDSC")
+    role_at_company_pattern = fr"(?i)\b({job_roles}[\w\s]*?)\s+(?:at|@|for|with)\s+([A-Z][\w\s&]+?)(?=\s+from|\s+in|\s*[\(\|]|\s*[\d]|$)"
+    
+    matches = re.findall(role_at_company_pattern, target_text)
+    for role, company in matches:
+        # Clean up
+        role = role.strip()
+        company = company.strip()
+        
+        # Filter out common false positives
+        if len(company) < 2 or company.lower() in ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december", "present", "various", "university", "college", "school", "institute"]:
+            continue
+            
+        full_entry = f"{role} at {company}"
+        if full_entry not in [e['org'] for e in extracted_data['experience']]:
+            extracted_data["experience"].append({"org": full_entry, "type": "Experience (Regex)"})
+
+    # Fallback: If we found nothing, try the old generic "Worked at X" pattern
+    if not extracted_data["experience"]:
+        backup_patterns = [
+            r"Worked at\s+([A-Z][\w\s]+?)(?=\s+from|\s+in|\s+as|\.|$)",
+            r"Experience at\s+([A-Z][\w\s]+?)(?=\s+from|\s+in|\s+as|\.|$)"
+        ]
+        for pattern in backup_patterns:
+            matches = re.findall(pattern, text, re.IGNORECASE)
+            for company in matches:
+                 if len(company) > 2:
+                    extracted_data["experience"].append({"org": f"Worked at {company.strip()}", "type": "Experience (Fallback)"})
+
+    # NER Name Extraction (Keep this)
     for ent in doc.ents:
-        if ent.label_ == "ORG" and ent.text not in [e['org'] for e in extracted_data['experience']]:
-            extracted_data["experience"].append({"org": ent.text, "type": "Organization (AI)"})
-        elif ent.label_ == "PERSON" and extracted_data["name"] is None:
+        if ent.label_ == "PERSON" and extracted_data["name"] is None:
             extracted_data["name"] = ent.text
-
-    # 🕵️‍♂️ Regex Backup for Experience (When AI fails)
-    # Pattern: "Worked at [Company]" or "Experience at [Company]"
-    exp_patterns = [
-        r"Worked at\s+([A-Z][\w\s]+?)(?=\s+from|\s+in|\s+as|\.|$)",  # Stop at prepositions
-        r"Experience at\s+([A-Z][\w\s]+?)(?=\s+from|\s+in|\s+as|\.|$)",
-        r"Intern at\s+([A-Z][\w\s]+?)(?=\s+from|\s+in|\s+as|\.|$)"
-    ]
-
-    for pattern in exp_patterns:
-        matches = re.findall(pattern, text, re.IGNORECASE)
-        for match in matches:
-            company = match.strip()
-            # Avoid adding if already found or if it's too short/long
-            if company and len(company) > 2 and company not in [e['org'] for e in extracted_data['experience']]:
-                extracted_data["experience"].append({"org": company, "type": "Organization (Regex)"})
 
     # Skill Matching
     doc_text_lower = text.lower()
