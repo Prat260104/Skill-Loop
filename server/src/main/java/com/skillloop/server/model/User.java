@@ -28,6 +28,7 @@ public class User {
     @NotBlank(message = "Password is required")
     private String password;
 
+    @Column(columnDefinition = "TEXT")
     private String bio;
 
     private String role; // "STUDENT" or "MENTOR"

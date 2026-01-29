@@ -35,24 +35,29 @@ public class ProfileController {
 
         @PutMapping("/{id}/profile")
         public ResponseEntity<?> updateProfile(@PathVariable Long id, @RequestBody ProfileRequest profileRequest) {
-                return userRepository.findById(id)
-                                .map(user -> {
-                                        user.setBio(profileRequest.getBio());
-                                        user.setSkillsOffered(profileRequest.getSkillsOffered());
-                                        user.setSkillsWanted(profileRequest.getSkillsWanted());
-                                        user.setExperience(profileRequest.getExperience());
+                try {
+                        return userRepository.findById(id)
+                                        .map(user -> {
+                                                user.setBio(profileRequest.getBio());
+                                                user.setSkillsOffered(profileRequest.getSkillsOffered());
+                                                user.setSkillsWanted(profileRequest.getSkillsWanted());
+                                                user.setExperience(profileRequest.getExperience());
 
-                                        // Award some basic skill points for completing profile
-                                        if (user.getSkillPoints() == 0) {
-                                                user.setSkillPoints(10);
-                                        }
+                                                // Award some basic skill points for completing profile
+                                                if (user.getSkillPoints() == 0) {
+                                                        user.setSkillPoints(10);
+                                                }
 
-                                        userRepository.save(user);
-                                        return ResponseEntity
-                                                        .ok(java.util.Collections.singletonMap("message",
-                                                                        "Profile updated successfully!"));
-                                })
-                                .orElse(ResponseEntity.notFound().build());
+                                                userRepository.save(user);
+                                                return ResponseEntity
+                                                                .ok(java.util.Collections.singletonMap("message",
+                                                                                "Profile updated successfully!"));
+                                        })
+                                        .orElse(ResponseEntity.notFound().build());
+                } catch (Exception e) {
+                        e.printStackTrace();
+                        return ResponseEntity.internalServerError().body("Update failed: " + e.getMessage());
+                }
         }
 
         @GetMapping
