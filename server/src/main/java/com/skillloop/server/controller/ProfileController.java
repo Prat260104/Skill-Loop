@@ -40,6 +40,7 @@ public class ProfileController {
                                         user.setBio(profileRequest.getBio());
                                         user.setSkillsOffered(profileRequest.getSkillsOffered());
                                         user.setSkillsWanted(profileRequest.getSkillsWanted());
+                                        user.setExperience(profileRequest.getExperience());
 
                                         // Award some basic skill points for completing profile
                                         if (user.getSkillPoints() == 0) {
@@ -64,6 +65,7 @@ public class ProfileController {
                                                 user.getBio(),
                                                 user.getSkillsOffered(),
                                                 user.getSkillsWanted(),
+                                                user.getExperience(),
                                                 user.getSkillPoints(),
                                                 user.getRole()))
                                 .collect(java.util.stream.Collectors.toList());
@@ -80,6 +82,7 @@ public class ProfileController {
                                                 user.getBio(),
                                                 user.getSkillsOffered(),
                                                 user.getSkillsWanted(),
+                                                user.getExperience(),
                                                 user.getSkillPoints(),
                                                 user.getRole()))
                                 .map(ResponseEntity::ok)
@@ -97,6 +100,7 @@ public class ProfileController {
                                                 user.getBio(),
                                                 user.getSkillsOffered(),
                                                 user.getSkillsWanted(),
+                                                user.getExperience(),
                                                 user.getSkillPoints(),
                                                 user.getRole()))
                                 .collect(java.util.stream.Collectors.toList());

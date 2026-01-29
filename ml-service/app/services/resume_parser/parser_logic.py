@@ -52,11 +52,24 @@ def analyze_resume_text(text: str) -> dict:
     
     extracted_data = {
         "name": None,
-        "email": None, 
+        "email": None,
         "skills": [],
         "experience": [],
+        "summary": None,
         "raw_text_length": len(text)
     }
+
+    # 📝 Extract Summary (Simple Heuristic: First 3-4 lines that are not Name/Contact)
+    lines = [line.strip() for line in text.split('\n') if line.strip()]
+    if lines:
+        # Skip lines that look like name/email/phone (basic check)
+        summary_lines = []
+        for line in lines[:6]: # Check first 6 lines
+            if len(line.split()) > 3 and "@" not in line and "phone" not in line.lower():
+                summary_lines.append(line)
+                if len(summary_lines) >= 3: break
+        
+        extracted_data["summary"] = " ".join(summary_lines)
 
     # NER for Org, Person
     for ent in doc.ents:

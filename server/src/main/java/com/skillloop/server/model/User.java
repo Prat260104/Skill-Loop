@@ -38,6 +38,11 @@ public class User {
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> skillsWanted;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_experiences", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "experience", columnDefinition = "TEXT")
+    private List<String> experience; // Stores work history strings
+
     private int skillPoints = 0;
 
     @CreationTimestamp
@@ -119,6 +124,14 @@ public class User {
 
     public void setSkillsWanted(List<String> skillsWanted) {
         this.skillsWanted = skillsWanted;
+    }
+
+    public List<String> getExperience() {
+        return experience;
+    }
+
+    public void setExperience(List<String> experience) {
+        this.experience = experience;
     }
 
     public int getSkillPoints() {

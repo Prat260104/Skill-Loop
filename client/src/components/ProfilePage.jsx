@@ -15,6 +15,7 @@ export default function ProfilePage() {
     const [bio, setBio] = useState('');
     const [skillsOffered, setSkillsOffered] = useState('');
     const [skillsWanted, setSkillsWanted] = useState('');
+    const [experience, setExperience] = useState(''); // New State for Experience
 
     // UI States
     const [uploading, setUploading] = useState(false);
@@ -43,6 +44,7 @@ export default function ProfilePage() {
             setBio(data.bio || '');
             setSkillsOffered(data.skillsOffered ? data.skillsOffered.join(', ') : '');
             setSkillsWanted(data.skillsWanted ? data.skillsWanted.join(', ') : '');
+            setExperience(data.experience ? data.experience.join('\n') : ''); // Join with newlines for text area
         } catch (error) {
             console.error("Error fetching profile:", error);
         } finally {
@@ -56,29 +58,37 @@ export default function ProfilePage() {
         if (!file) return;
 
         setUploading(true);
-        setNotification({ type: 'info', message: 'Parsing your resume... Please wait.' });
+        setNotification({ type: 'info', message: 'Parsing your resume...' });
 
         try {
             const parsedData = await userApi.uploadResume(targetId, file);
 
-            // Auto-fill skills
+            // 1. Auto-fill Skills
             let newSkills = parsedData.skills || [];
             const currentSkillsStr = skillsOffered || "";
             const newSkillsStr = newSkills.join(', ');
-
-            const updatedSkillsStr = currentSkillsStr
-                ? `${currentSkillsStr}, ${newSkillsStr}`
-                : newSkillsStr;
-
+            const updatedSkillsStr = currentSkillsStr ? `${currentSkillsStr}, ${newSkillsStr}` : newSkillsStr;
             setSkillsOffered(updatedSkillsStr);
-            setNotification({ type: 'success', message: 'Success! Skills extracted from resume.' });
 
-            // Clear success message after 3 seconds
+            // 2. Auto-fill Bio (from Summary if available)
+            if (parsedData.summary) {
+                setBio(parsedData.summary);
+            }
+
+            // 3. Auto-fill Experience
+            if (parsedData.experience && parsedData.experience.length > 0) {
+                // parsedData.experience is likely List<Map> from API: [{org: "Google", type: "AI"}, ...]
+                // We want to format it nicely for the text area
+                const newExpLines = parsedData.experience.map(exp => `Worked at ${exp.org}`);
+                setExperience(newExpLines.join('\n'));
+            }
+
+            setNotification({ type: 'success', message: 'Success! Profile auto-filled.' });
             setTimeout(() => setNotification(null), 3000);
 
         } catch (error) {
             console.error("Resume upload failed", error);
-            setNotification({ type: 'error', message: 'Failed to parse resume. Please try again.' });
+            setNotification({ type: 'error', message: 'Failed to parse resume.' });
         } finally {
             setUploading(false);
         }
@@ -90,6 +100,7 @@ export default function ProfilePage() {
                 bio,
                 skillsOffered: skillsOffered.split(',').map(s => s.trim()).filter(s => s),
                 skillsWanted: skillsWanted.split(',').map(s => s.trim()).filter(s => s),
+                experience: experience.split('\n').map(s => s.trim()).filter(s => s) // Split by newline to send as List
             };
 
             await userApi.updateProfile(targetId, updatedData);
@@ -197,6 +208,31 @@ export default function ProfilePage() {
                                     </p>
                                 )}
                             </div>
+
+                            {/* Middle: Experience Section (New) */}
+                            <div className="space-y-4 md:col-span-2">
+                                <h3 className="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                                    <span>💼</span> Experience
+                                </h3>
+                                {isEditing ? (
+                                    <textarea
+                                        value={experience}
+                                        onChange={(e) => setExperience(e.target.value)}
+                                        className="w-full p-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary outline-none"
+                                        rows="4"
+                                        placeholder="Worked at Google&#10;Intern at Amazon"
+                                    />
+                                ) : (
+                                    <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-1">
+                                        {profileUser.experience && profileUser.experience.length > 0 ? (
+                                            profileUser.experience.map((exp, i) => (
+                                                <li key={i}>{exp}</li>
+                                            ))
+                                        ) : <li className="text-gray-400 italic list-none">No experience listed.</li>}
+                                    </ul>
+                                )}
+                            </div>
+
 
                             {/* Right: Skills */}
                             <div className="space-y-6">

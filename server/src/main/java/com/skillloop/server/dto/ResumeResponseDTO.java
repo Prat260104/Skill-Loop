@@ -9,6 +9,7 @@ public class ResumeResponseDTO {
     private String email;
     private List<String> skills;
     private List<Map<String, String>> experience;
+    private String summary;
     private Integer raw_text_length;
 
     public String getName() {
@@ -49,5 +50,13 @@ public class ResumeResponseDTO {
 
     public void setRaw_text_length(Integer raw_text_length) {
         this.raw_text_length = raw_text_length;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 }
