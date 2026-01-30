@@ -9,8 +9,8 @@ API_KEY = os.getenv("GEMINI_API_KEY")
 
 if API_KEY:
     genai.configure(api_key=API_KEY)
-    # Use the 'gemini-pro' model (free tier compatible)
-    model = genai.GenerativeModel('gemini-pro')
+    # Use the 'gemini-2.0-flash' model (supported in this environment)
+    model = genai.GenerativeModel('gemini-2.0-flash')
 else:
     model = None
     print("⚠️ WARNING: GEMINI_API_KEY not found in .env")

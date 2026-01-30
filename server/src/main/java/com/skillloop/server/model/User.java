@@ -44,6 +44,9 @@ public class User {
     @Column(name = "experience", columnDefinition = "TEXT")
     private List<String> experience; // Stores work history strings
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> verifiedSkills;
+
     private int skillPoints = 0;
 
     @CreationTimestamp
@@ -133,6 +136,14 @@ public class User {
 
     public void setExperience(List<String> experience) {
         this.experience = experience;
+    }
+
+    public List<String> getVerifiedSkills() {
+        return verifiedSkills;
+    }
+
+    public void setVerifiedSkills(List<String> verifiedSkills) {
+        this.verifiedSkills = verifiedSkills;
     }
 
     public int getSkillPoints() {

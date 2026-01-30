@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { userApi } from '../api/userApi';
+import InterviewModal from './InterviewModal';
 
 export default function ProfilePage() {
     const { id } = useParams();
@@ -20,6 +21,10 @@ export default function ProfilePage() {
     // UI States
     const [uploading, setUploading] = useState(false);
     const [notification, setNotification] = useState(null); // { type, message }
+
+    // Interview Modal State
+    const [isInterviewOpen, setIsInterviewOpen] = useState(false);
+    const [interviewSkill, setInterviewSkill] = useState(null);
 
     const currentUser = JSON.parse(localStorage.getItem('user'));
 
@@ -250,108 +255,140 @@ export default function ProfilePage() {
                                         <div className="flex flex-wrap gap-2">
                                             {profileUser.skillsOffered && profileUser.skillsOffered.length > 0 ? (
                                                 profileUser.skillsOffered.map((skill, i) => (
-                                                    <span key={i} className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
-                                                        {skill}
-                                                    </span>
+                                                    <div key={i} className="group relative inline-block">
+                                                        <span className={`px-3 py-1 rounded-full text-sm font-medium border flex items-center gap-2
+                                                            ${profileUser.verifiedSkills && profileUser.verifiedSkills.includes(skill)
+                                                                ? 'bg-gradient-to-r from-emerald-50 to-green-50 text-emerald-700 border-emerald-200'
+                                                                : 'bg-gray-50 text-gray-700 border-gray-200'}
+                                                        `}>
+                                                            {skill}
+                                                            {profileUser.verifiedSkills && profileUser.verifiedSkills.includes(skill) ? (
+                                                                <span className="text-emerald-500" title="Verified Skill">✓</span>
+                                                            ) : isOwnProfile && (
+                                                                <button
+                                                                    onClick={() => {
+                                                                        setInterviewSkill(skill);
+                                                                        setIsInterviewOpen(true);
+                                                                    }}
+                                                                    className="ml-1 text-xs text-indigo-500 hover:text-indigo-700 font-bold opacity-0 group-hover:opacity-100 transition-opacity"
+                                                                >
+                                                                    Verify?
+                                                                </button>
+                                                            )}
+                                                        </span>
+                                                    </div>
                                                 ))
                                             ) : <span className="text-gray-400 italic">None listed</span>}
                                         </div>
                                     )}
                                 </div>
 
-                                <div>
-                                    <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">🎯 Skills Wanted</h3>
-                                    {isEditing ? (
-                                        <input
-                                            type="text"
-                                            value={skillsWanted}
-                                            onChange={(e) => setSkillsWanted(e.target.value)}
-                                            className="w-full p-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary outline-none"
-                                            placeholder="Machine Learning, Design (comma separated)"
-                                        />
-                                    ) : (
-                                        <div className="flex flex-wrap gap-2">
-                                            {profileUser.skillsWanted && profileUser.skillsWanted.length > 0 ? (
-                                                profileUser.skillsWanted.map((skill, i) => (
-                                                    <span key={i} className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
-                                                        {skill}
-                                                    </span>
-                                                ))
-                                            ) : <span className="text-gray-400 italic">None listed</span>}
-                                        </div>
-                                    )}
-                                </div>
+                                {/* Interview Modal */}
+                                <InterviewModal
+                                    isOpen={isInterviewOpen}
+                                    onClose={() => setIsInterviewOpen(false)}
+                                    skill={interviewSkill}
+                                    userId={profileUser.id}
+                                    onVerified={(skill) => {
+                                        setIsInterviewOpen(false);
+                                        setNotification({ type: 'success', message: `${skill} Verified! Points Awarded! 🏆` });
+                                        fetchProfile(); // Refresh to show badge
+                                    }}
+                                />
+                            </div>
+
+                            <div>
+                                <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">🎯 Skills Wanted</h3>
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        value={skillsWanted}
+                                        onChange={(e) => setSkillsWanted(e.target.value)}
+                                        className="w-full p-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary outline-none"
+                                        placeholder="Machine Learning, Design (comma separated)"
+                                    />
+                                ) : (
+                                    <div className="flex flex-wrap gap-2">
+                                        {profileUser.skillsWanted && profileUser.skillsWanted.length > 0 ? (
+                                            profileUser.skillsWanted.map((skill, i) => (
+                                                <span key={i} className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                                                    {skill}
+                                                </span>
+                                            ))
+                                        ) : <span className="text-gray-400 italic">None listed</span>}
+                                    </div>
+                                )}
                             </div>
                         </div>
+                    </div>
 
-                        {/* Actions */}
-                        {isOwnProfile && (
-                            <div className="mt-8 flex justify-end">
-                                {isEditing ? (
-                                    <div className="flex gap-3 items-center">
-                                        <div className="relative overflow-hidden inline-block group">
-                                            <button
-                                                disabled={uploading}
-                                                className={`
+                    {/* Actions */}
+                    {isOwnProfile && (
+                        <div className="mt-8 flex justify-end">
+                            {isEditing ? (
+                                <div className="flex gap-3 items-center">
+                                    <div className="relative overflow-hidden inline-block group">
+                                        <button
+                                            disabled={uploading}
+                                            className={`
                                                     px-5 py-2.5 rounded-xl font-bold text-white shadow-lg 
                                                     flex items-center gap-2 transition-all transform 
                                                     ${uploading
-                                                        ? 'bg-gray-400 cursor-not-allowed'
-                                                        : 'bg-gradient-to-r from-violet-600 to-indigo-600 hover:shadow-indigo-500/30 hover:shadow-xl hover:-translate-y-0.5 active:scale-95'
-                                                    }
+                                                    ? 'bg-gray-400 cursor-not-allowed'
+                                                    : 'bg-gradient-to-r from-violet-600 to-indigo-600 hover:shadow-indigo-500/30 hover:shadow-xl hover:-translate-y-0.5 active:scale-95'
+                                                }
                                                 `}
-                                            >
-                                                {uploading ? (
-                                                    <>
-                                                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                                        </svg>
-                                                        <span>Processing...</span>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <span className="text-lg">📄</span>
-                                                        <span>Auto-Fill from Resume</span>
-                                                    </>
-                                                )}
-                                            </button>
-                                            {!uploading && (
-                                                <input
-                                                    type="file"
-                                                    accept=".pdf"
-                                                    onChange={handleResumeUpload}
-                                                    className="absolute left-0 top-0 opacity-0 w-full h-full cursor-pointer"
-                                                    title="Upload PDF Resume to auto-fill skills"
-                                                />
+                                        >
+                                            {uploading ? (
+                                                <>
+                                                    <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                    </svg>
+                                                    <span>Processing...</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <span className="text-lg">📄</span>
+                                                    <span>Auto-Fill from Resume</span>
+                                                </>
                                             )}
-                                        </div>
-                                        <button
-                                            onClick={() => setIsEditing(false)}
-                                            className="px-6 py-2 rounded-xl font-bold text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5 transition-colors"
-                                        >
-                                            Cancel
                                         </button>
-                                        <button
-                                            onClick={handleSave}
-                                            className="px-6 py-2 rounded-xl font-bold text-white bg-primary shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all"
-                                        >
-                                            Save Changes
-                                        </button>
+                                        {!uploading && (
+                                            <input
+                                                type="file"
+                                                accept=".pdf"
+                                                onChange={handleResumeUpload}
+                                                className="absolute left-0 top-0 opacity-0 w-full h-full cursor-pointer"
+                                                title="Upload PDF Resume to auto-fill skills"
+                                            />
+                                        )}
                                     </div>
-                                ) : (
                                     <button
-                                        onClick={() => setIsEditing(true)}
-                                        className="px-6 py-2 rounded-xl font-bold text-primary bg-primary/10 hover:bg-primary/20 transition-colors"
+                                        onClick={() => setIsEditing(false)}
+                                        className="px-6 py-2 rounded-xl font-bold text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5 transition-colors"
                                     >
-                                        Edit Profile
+                                        Cancel
                                     </button>
-                                )}
-                            </div>
-                        )}
-                    </div>
-                </motion.div>
-            </div>
-        </div>
+                                    <button
+                                        onClick={handleSave}
+                                        className="px-6 py-2 rounded-xl font-bold text-white bg-primary shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all"
+                                    >
+                                        Save Changes
+                                    </button>
+                                </div>
+                            ) : (
+                                <button
+                                    onClick={() => setIsEditing(true)}
+                                    className="px-6 py-2 rounded-xl font-bold text-primary bg-primary/10 hover:bg-primary/20 transition-colors"
+                                >
+                                    Edit Profile
+                                </button>
+                            )}
+                        </div>
+                    )}
+                </motion.div >
+            </div >
+        </div >
     );
 }
