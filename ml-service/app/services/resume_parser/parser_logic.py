@@ -74,14 +74,21 @@ def analyze_resume_text(text: str) -> dict:
         remaining = text[start_idx:]
         
         # Stop at next common header (Experience, Education, Skills, etc.)
-        next_header = r"(?:^|\n)\s*(?:Experience|Work|Employment|Education|Skills|Projects|Certifications|Languages)\s*(?:[:\-]|$)"
+        next_header = r"(?:^|\n)\s*(?:Experience|Work|Employment|Education|Skills|Technical\s+Skills|Professional\s+Skills|Core\s+Competencies|Soft\s+Skills|Tools|Technologies|Projects|Certifications|Languages|Achievements|Awards|Honors|Publications|Volunteer|Hobbies|Interests|Freelance)\s*(?:[:\-]|\r?\n|$)"
         end_match = re.search(next_header, remaining, re.IGNORECASE)
         
+        raw_summary = ""
         if end_match:
-            extracted_data["summary"] = remaining[:end_match.start()].strip()
+            raw_summary = remaining[:end_match.start()].strip()
         else:
             # Take a reasonable chunk if no next header found (e.g. first 500 chars)
-            extracted_data["summary"] = remaining[:500].strip()
+            raw_summary = remaining[:500].strip()
+            
+        # Truncate at first full stop
+        if "." in raw_summary:
+            extracted_data["summary"] = raw_summary.split(".")[0] + "."
+        else:
+            extracted_data["summary"] = raw_summary
     else:
         # Fallback: Check first 15 lines (increased from 6)
         lines = [line.strip() for line in text.split('\n') if line.strip()]
@@ -95,7 +102,11 @@ def analyze_resume_text(text: str) -> dict:
                     # Limit to ~5 lines for bio
                     if len(summary_lines) >= 5: break
             
-            extracted_data["summary"] = " ".join(summary_lines)
+            raw_summary = " ".join(summary_lines)
+            if "." in raw_summary:
+                extracted_data["summary"] = raw_summary.split(".")[0] + "."
+            else:
+                extracted_data["summary"] = raw_summary
         
     # 🕵️‍♂️ Improved Experience Extraction (Section-Aware)
     # 1. Identify "Experience" or "Work History" Section
@@ -124,7 +135,7 @@ def analyze_resume_text(text: str) -> dict:
         # Look for the NEXT header after this one to determine the end
         remaining_text = text[start_index:]
         
-        next_header_pattern = r"(?:^|\n)\s*(?:Education|Skills|Projects|Certifications|Achievements|Languages|References|Declaration|Technical Skills)\s*(?:[:\-]|$)"
+        next_header_pattern = r"(?:^|\n)\s*(?:Education|Skills|Technical\s+Skills|Professional\s+Skills|Core\s+Competencies|Soft\s+Skills|Tools|Technologies|Projects|Certifications|Achievements|Languages|References|Declaration|Awards|Honors|Publications|Volunteer|Hobbies|Interests|Freelance)\s*(?:[:\-]|\r?\n|$)"
         end_match = re.search(next_header_pattern, remaining_text, re.IGNORECASE)
         
         if end_match:
