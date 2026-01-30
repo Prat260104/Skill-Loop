@@ -102,6 +102,7 @@ Since you are learning *while* building, we will move at a comfortable pace. I w
     *   Basic NLP (Sentiment Analysis).
 *   **Task:**
     *   [ ] Connect a simple Python script to check Feedback sentiment.
+    *   [ ] Fix bugs in Experience Section extraction (Resume Parser).
 
 ### 📅 Day 29-30: Deployment & Review
 *   **Study Goal:**

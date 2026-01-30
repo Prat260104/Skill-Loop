@@ -74,7 +74,7 @@ def analyze_resume_text(text: str) -> dict:
         remaining = text[start_idx:]
         
         # Stop at next common header (Experience, Education, Skills, etc.)
-        next_header = r"(?:^|\n)\s*(?:Experience|Work|Employment|Education|Skills|Technical\s+Skills|Professional\s+Skills|Core\s+Competencies|Soft\s+Skills|Tools|Technologies|Projects|Certifications|Languages|Achievements|Awards|Honors|Publications|Volunteer|Hobbies|Interests|Freelance)\s*(?:[:\-]|\r?\n|$)"
+        next_header = r"(?:^|\n)\s*(?:Experience|Work|Employment|Education|Skills|Technical\s+Skills|Professional\s+Skills|Core\s+Competencies|Soft\s+Skills|Tools|Technologies|(?:[\w\s]+)?Projects|Certifications|Languages|Achievements|Awards|Honors|Publications|Volunteer|Hobbies|Interests|Freelance)\s*(?:[:\-]|\r?\n|$)"
         end_match = re.search(next_header, remaining, re.IGNORECASE)
         
         raw_summary = ""
@@ -117,7 +117,9 @@ def analyze_resume_text(text: str) -> dict:
     # Robust Regex for Section Headers
     # Matches lines like: "Professional Experience", "WORK HISTORY", "Employment", "Internships"
     # (?i) = case insensitive, (?:^|\n) = start of line, \s* = optional whitespace
-    headers_pattern = r"(?:^|\n)\s*(?:Professional\s+|Work\s+|Relevant\s+|Additional\s+)?(Experience|History|Employment|Internships|Work)\s*(?:[:\-]|$)"
+    # STRICT: Removed isolated 'Work' and 'History' to avoid matching sentences like "Work on java".
+    # STRICT: Removed isolated 'Work' and 'History'. Added negative lookahead (?!\s*\d) to avoid "Experience: 5 years".
+    headers_pattern = r"(?:^|\n)\s*(?:Professional\s+|Work\s+|Relevant\s+|Additional\s+)?(Experience|Employment|Internships|Work\s+History)\s*(?:[:\-]|\r?\n|$)(?!\s*\d)"
     
     # We use re.split with capturing group to keep the delimiter to know which section we found
     sections = re.split(f"({headers_pattern})", text, flags=re.IGNORECASE)
@@ -135,7 +137,7 @@ def analyze_resume_text(text: str) -> dict:
         # Look for the NEXT header after this one to determine the end
         remaining_text = text[start_index:]
         
-        next_header_pattern = r"(?:^|\n)\s*(?:Education|Skills|Technical\s+Skills|Professional\s+Skills|Core\s+Competencies|Soft\s+Skills|Tools|Technologies|Projects|Certifications|Achievements|Languages|References|Declaration|Awards|Honors|Publications|Volunteer|Hobbies|Interests|Freelance)\s*(?:[:\-]|\r?\n|$)"
+        next_header_pattern = r"(?:^|\n)\s*(?:Education|Skills|Technical\s+Skills|Professional\s+Skills|Core\s+Competencies|Soft\s+Skills|Tools|Technologies|(?:[\w\s]+)?Projects|Certifications|Achievements|Languages|References|Declaration|Awards|Honors|Publications|Volunteer|Hobbies|Interests|Freelance)\s*(?:[:\-]|\r?\n|$)"
         end_match = re.search(next_header_pattern, remaining_text, re.IGNORECASE)
         
         if end_match:
@@ -145,10 +147,9 @@ def analyze_resume_text(text: str) -> dict:
             
         print(f"✅ FOUND Section: '{search_match.group().strip()}'")
     else:
-        print("⚠️ NO Experience Header Found. Fallback to full text (Risk of false positives).")
-        # To avoid extracting random things from other sections, we might want to return empty 
-        # OR be very strict. For now, let's keep full text but warn.
-        experience_text_block = text
+        print("⚠️ NO Experience Header Found. Skipping regex extraction to avoid false positives.")
+        experience_text_block = "" # Do NOT use full text to avoid bleeding
+
 
     target_text = experience_text_block
     
@@ -156,7 +157,8 @@ def analyze_resume_text(text: str) -> dict:
     job_roles = r"(Intern|Engineer|Developer|Lead|Manager|Head|Coordinator|Volunteer|Member|Fellow|Specialist|Analyst|Consultant|Director|Founder|Co-Founder|Architect|Administrator|Associate|Researcher)"
     
     # Pattern: "Role at Company" (e.g., "Software Engineer at Google", "Technical Lead at GDSC")
-    role_at_company_pattern = fr"(?i)\b({job_roles}[\w\s]*?)\s+(?:at|@|for|with)\s+([A-Z][\w\s&]+?)(?=\s+from|\s+in|\s*[\(\|]|\s*[\d]|$)"
+    # STRICT: Removed 'for' and 'with' to prevent "Responsible for Project" matches.
+    role_at_company_pattern = fr"(?i)\b({job_roles}[\w\s]*?)\s+(?:at|@)\s+([A-Z][\w\s&]+?)(?=\s+from|\s+in|\s*[\(\|]|\s*[\d]|$)"
     
     matches = re.findall(role_at_company_pattern, target_text)
     for role, company in matches:
@@ -165,24 +167,15 @@ def analyze_resume_text(text: str) -> dict:
         company = company.strip()
         
         # Filter out common false positives
-        if len(company) < 2 or company.lower() in ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december", "present", "various", "university", "college", "school", "institute"]:
+        if len(company) < 2 or company.lower() in ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december", "present", "various", "university", "college", "school", "institute", "linkedin", "github", "gitlab", "twitter", "medium", "facebook", "instagram", "youtube"]:
             continue
             
         full_entry = f"{role} at {company}"
         if full_entry not in [e['org'] for e in extracted_data['experience']]:
             extracted_data["experience"].append({"org": full_entry, "type": "Experience (Regex)"})
 
-    # Fallback: If we found nothing, try the old generic "Worked at X" pattern
-    if not extracted_data["experience"]:
-        backup_patterns = [
-            r"Worked at\s+([A-Z][\w\s]+?)(?=\s+from|\s+in|\s+as|\.|$)",
-            r"Experience at\s+([A-Z][\w\s]+?)(?=\s+from|\s+in|\s+as|\.|$)"
-        ]
-        for pattern in backup_patterns:
-            matches = re.findall(pattern, text, re.IGNORECASE)
-            for company in matches:
-                 if len(company) > 2:
-                    extracted_data["experience"].append({"org": f"Worked at {company.strip()}", "type": "Experience (Fallback)"})
+    # Fallback removed to enforce strict section-based extraction.
+    # If no Experience section is found, we return no experience rather than guessing from full text.
 
     # NER Name Extraction (Keep this)
     for ent in doc.ents:
