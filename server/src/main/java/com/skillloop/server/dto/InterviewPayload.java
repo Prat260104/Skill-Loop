@@ -32,6 +32,8 @@ public class InterviewPayload {
 
     public static class AnswerRequest {
         private String question;
+        @com.fasterxml.jackson.annotation.JsonProperty("user_answer")
+        @com.fasterxml.jackson.annotation.JsonAlias("userAnswer")
         private String userAnswer;
         private Long userId; // To save verification
         private String skill; // To save verification

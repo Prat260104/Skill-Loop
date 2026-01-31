@@ -69,6 +69,7 @@ public class VerificationController {
             return ResponseEntity.ok(body);
 
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.internalServerError().body("Evaluation Error: " + e.getMessage());
         }
     }
