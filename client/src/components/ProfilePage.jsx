@@ -374,7 +374,7 @@ export default function ProfilePage() {
                                     <div className="relative">
                                         <button
                                             onClick={() => setShowVerifyDropdown(!showVerifyDropdown)}
-                                            className="px-6 py-2 rounded-xl font-bold text-white bg-gradient-to-r from-pink-500 to-rose-500 shadow-lg shadow-rose-500/30 hover:shadow-rose-500/50 hover:-translate-y-0.5 transition-all"
+                                            className="px-6 py-2 rounded-xl font-bold text-white bg-primary shadow-lg shadow-primary/30 hover:shadow-primary/50 hover:-translate-y-0.5 transition-all"
                                         >
                                             Verify Skills 🤖
                                         </button>
@@ -407,9 +407,9 @@ export default function ProfilePage() {
 
                                     <button
                                         onClick={() => setIsEditing(true)}
-                                        className="px-6 py-2 rounded-xl font-bold text-primary bg-primary/10 hover:bg-primary/20 transition-colors"
+                                        className="px-6 py-2 rounded-xl font-bold text-primary border-2 border-primary hover:bg-primary hover:text-white transition-all shadow-lg shadow-primary/20"
                                     >
-                                        Edit Profile
+                                        Edit Profile ✏️
                                     </button>
                                 </div>
                             )}
