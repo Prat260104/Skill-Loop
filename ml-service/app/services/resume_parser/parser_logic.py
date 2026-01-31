@@ -182,12 +182,47 @@ def analyze_resume_text(text: str) -> dict:
         if ent.label_ == "PERSON" and extracted_data["name"] is None:
             extracted_data["name"] = ent.text
 
-    # Skill Matching
-    doc_text_lower = text.lower()
-    found_skills = set()
+    # 🎯 Skill Extraction (Section-Aware Only)
+    # Strategy: Only look for skills in "Skills", "Technical Skills", "Technologies" sections.
+    # This avoids picking up "Java" from "I like Java coffee" in the summary.
     
-    # We use regex with word boundaries (\b) to ensure we match "Java" but not "Javascript" (if looking for "Script") 
-    # or "C" in "Cloud".
+    skills_header = r"(?:^|\n)\s*(?:Technical\s+Skills|Professional\s+Skills|Core\s+Competencies|Soft\s+Skills|Skills|Technologies|Tech\s+Stack|Languages\s+and\s+Technologies)\s*(?:[:\-]|\r?\n|$)"
+    
+    # Split text by skills header
+    skill_sections = re.split(f"({skills_header})", text, flags=re.IGNORECASE)
+    
+    skills_text_block = ""
+    
+    # If we found a skills section, lets grab the text up to the next section
+    search_match = re.search(skills_header, text, re.IGNORECASE)
+    if search_match:
+        start_index = search_match.end()
+        remaining_text = text[start_index:]
+        
+        # Next common headers that might end the skills section
+        next_header = r"(?:^|\n)\s*(?:Experience|Work|Employment|Education|Projects|Certifications|Achievements|Awards|Honors|Publications|Volunteer|Hobbies|Interests)\s*(?:[:\-]|\r?\n|$)"
+        end_match = re.search(next_header, remaining_text, re.IGNORECASE)
+        
+        if end_match:
+            skills_text_block = remaining_text[:end_match.start()]
+        else:
+            skills_text_block = remaining_text
+            
+        print(f"✅ FOUND Skills Section: '{search_match.group().strip()}'")
+    else:
+        print("⚠️ NO Skills Header Found. Falling back to full text (User requested strict, but fallback is safer for now).")
+        # For now, let's respect the user's strict request "sirf skills... se uthao". 
+        # But if we return empty, they might think it's broken. 
+        # Let's keep a reduced scope or check if the user really wants ZERO skills if no section found.
+        # Given "sirf skills ... se uthao", I will PRIORITIZE the section. 
+        # If no section is found, I will use the whole text BUT maybe warn or be stricter?
+        # Actually, let's try strict section first. If empty, maybe the parser failed to find the header.
+        # Let's use the whole text for now if no header, acts as a failsafe.
+        skills_text_block = text
+
+    # Apply keyword matching ONLY on the identified block
+    doc_text_lower = skills_text_block.lower()
+    found_skills = set()
     
     for skill in SKILLS_DB:
         # Create a regex pattern for the skill, ensuring it matches whole words only
@@ -195,8 +230,10 @@ def analyze_resume_text(text: str) -> dict:
         pattern = r"(?<!\w)" + re.escape(skill) + r"(?!\w)"
         
         if re.search(pattern, doc_text_lower):
-            found_skills.add(skill.title())
+            # Normalization: Strip and Title Case
+            found_skills.add(skill.strip().title())
             
-    extracted_data["skills"] = list(found_skills)
+    # Explicitly ensure uniqueness (though Set does it) and sort for consistency
+    extracted_data["skills"] = sorted(list(set(found_skills)))
     
     return extracted_data

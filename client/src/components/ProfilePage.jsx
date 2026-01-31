@@ -47,7 +47,7 @@ export default function ProfilePage() {
 
             // Initialize form
             setBio(data.bio || '');
-            setSkillsOffered(data.skillsOffered ? data.skillsOffered.join(', ') : '');
+            setSkillsOffered(data.skillsOffered ? [...new Set(data.skillsOffered)].join(', ') : '');
             setSkillsWanted(data.skillsWanted ? data.skillsWanted.join(', ') : '');
             setExperience(data.experience ? data.experience.join('\n') : ''); // Join with newlines for text area
         } catch (error) {
@@ -68,11 +68,11 @@ export default function ProfilePage() {
         try {
             const parsedData = await userApi.uploadResume(targetId, file);
 
-            // 1. Auto-fill Skills
+            // 1. Auto-fill Skills (Deduplicated)
             let newSkills = parsedData.skills || [];
-            const currentSkillsStr = skillsOffered || "";
-            const newSkillsStr = newSkills.join(', ');
-            const updatedSkillsStr = currentSkillsStr ? `${currentSkillsStr}, ${newSkillsStr}` : newSkillsStr;
+            const currentSkills = skillsOffered.split(',').map(s => s.trim()).filter(s => s);
+            const combinedSkills = [...new Set([...currentSkills, ...newSkills])]; // Deduplicate
+            const updatedSkillsStr = combinedSkills.join(', ');
             setSkillsOffered(updatedSkillsStr);
 
             // 2. Auto-fill Bio (from Summary if available)
