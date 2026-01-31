@@ -25,6 +25,7 @@ export default function ProfilePage() {
     // Interview Modal State
     const [isInterviewOpen, setIsInterviewOpen] = useState(false);
     const [interviewSkill, setInterviewSkill] = useState(null);
+    const [showVerifyDropdown, setShowVerifyDropdown] = useState(false);
 
     const currentUser = JSON.parse(localStorage.getItem('user'));
 
@@ -264,17 +265,7 @@ export default function ProfilePage() {
                                                             {skill}
                                                             {profileUser.verifiedSkills && profileUser.verifiedSkills.includes(skill) ? (
                                                                 <span className="text-emerald-500" title="Verified Skill">✓</span>
-                                                            ) : isOwnProfile && (
-                                                                <button
-                                                                    onClick={() => {
-                                                                        setInterviewSkill(skill);
-                                                                        setIsInterviewOpen(true);
-                                                                    }}
-                                                                    className="ml-1 text-xs text-indigo-500 hover:text-indigo-700 font-bold opacity-0 group-hover:opacity-100 transition-opacity"
-                                                                >
-                                                                    Verify?
-                                                                </button>
-                                                            )}
+                                                            ) : null}
                                                         </span>
                                                     </div>
                                                 ))
@@ -378,12 +369,49 @@ export default function ProfilePage() {
                                     </button>
                                 </div>
                             ) : (
-                                <button
-                                    onClick={() => setIsEditing(true)}
-                                    className="px-6 py-2 rounded-xl font-bold text-primary bg-primary/10 hover:bg-primary/20 transition-colors"
-                                >
-                                    Edit Profile
-                                </button>
+                                <div className="flex gap-3 relative">
+                                    {/* Verify Skills Dropdown */}
+                                    <div className="relative">
+                                        <button
+                                            onClick={() => setShowVerifyDropdown(!showVerifyDropdown)}
+                                            className="px-6 py-2 rounded-xl font-bold text-white bg-gradient-to-r from-pink-500 to-rose-500 shadow-lg shadow-rose-500/30 hover:shadow-rose-500/50 hover:-translate-y-0.5 transition-all"
+                                        >
+                                            Verify Skills 🤖
+                                        </button>
+
+                                        {showVerifyDropdown && (
+                                            <div className="absolute bottom-full mb-2 right-0 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-gray-100 dark:border-white/10 overflow-hidden z-20">
+                                                <div className="p-2">
+                                                    <p className="px-3 py-2 text-xs font-bold text-gray-400 uppercase">Select Skill to Verify</p>
+                                                    {profileUser.skillsOffered && profileUser.skillsOffered.length > 0 ? (
+                                                        profileUser.skillsOffered.map((skill, i) => (
+                                                            <button
+                                                                key={i}
+                                                                onClick={() => {
+                                                                    setInterviewSkill(skill);
+                                                                    setIsInterviewOpen(true);
+                                                                    setShowVerifyDropdown(false);
+                                                                }}
+                                                                className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+                                                            >
+                                                                {skill}
+                                                            </button>
+                                                        ))
+                                                    ) : (
+                                                        <p className="px-3 py-2 text-sm text-gray-500 italic">No skills to verify.</p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <button
+                                        onClick={() => setIsEditing(true)}
+                                        className="px-6 py-2 rounded-xl font-bold text-primary bg-primary/10 hover:bg-primary/20 transition-colors"
+                                    >
+                                        Edit Profile
+                                    </button>
+                                </div>
                             )}
                         </div>
                     )}
