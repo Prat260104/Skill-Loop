@@ -12,9 +12,11 @@ public class UserSummaryDTO {
     private List<String> experience;
     private int skillPoints;
     private String role;
+    private List<String> verifiedSkills;
 
     public UserSummaryDTO(Long id, String name, String email, String bio, List<String> skillsOffered,
-            List<String> skillsWanted, List<String> experience, int skillPoints, String role) {
+            List<String> skillsWanted, List<String> experience, int skillPoints, String role,
+            List<String> verifiedSkills) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -24,6 +26,7 @@ public class UserSummaryDTO {
         this.experience = experience;
         this.skillPoints = skillPoints;
         this.role = role;
+        this.verifiedSkills = verifiedSkills;
     }
 
     public Long getId() {
@@ -96,5 +99,13 @@ public class UserSummaryDTO {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public List<String> getVerifiedSkills() {
+        return verifiedSkills;
+    }
+
+    public void setVerifiedSkills(List<String> verifiedSkills) {
+        this.verifiedSkills = verifiedSkills;
     }
 }

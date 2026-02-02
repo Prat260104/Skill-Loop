@@ -72,7 +72,8 @@ public class ProfileController {
                                                 user.getSkillsWanted(),
                                                 user.getExperience(),
                                                 user.getSkillPoints(),
-                                                user.getRole()))
+                                                user.getRole(),
+                                                user.getVerifiedSkills()))
                                 .collect(java.util.stream.Collectors.toList());
                 return ResponseEntity.ok(users);
         }
@@ -89,7 +90,8 @@ public class ProfileController {
                                                 user.getSkillsWanted(),
                                                 user.getExperience(),
                                                 user.getSkillPoints(),
-                                                user.getRole()))
+                                                user.getRole(),
+                                                user.getVerifiedSkills()))
                                 .map(ResponseEntity::ok)
                                 .orElse(ResponseEntity.notFound().build());
         }
@@ -107,7 +109,8 @@ public class ProfileController {
                                                 user.getSkillsWanted(),
                                                 user.getExperience(),
                                                 user.getSkillPoints(),
-                                                user.getRole()))
+                                                user.getRole(),
+                                                user.getVerifiedSkills()))
                                 .collect(java.util.stream.Collectors.toList());
                 return ResponseEntity.ok(users);
         }
