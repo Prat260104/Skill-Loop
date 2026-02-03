@@ -1,6 +1,7 @@
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/ServerApplication.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/TestController.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/config/AppConfig.java
+/Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/config/DataSeeder.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/controller/AuthController.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/controller/ProfileController.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/controller/RecommendationController.java
