@@ -66,7 +66,7 @@ const RecommendedMentors = ({ userId }) => {
             <div className="flex gap-6 overflow-x-auto pb-8 scrollbar-hide snap-x">
                 {mentors.map((mentor) => (
                     <div key={mentor.id} className="snap-center">
-                        <MentorCard mentor={mentor} />
+                        <MentorCard mentor={mentor} currentUserId={userId} />
                     </div>
                 ))}
             </div>

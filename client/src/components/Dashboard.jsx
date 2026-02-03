@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import UserCard from './UserCard';
 import RecommendedMentors from './dashboard/RecommendedMentors';
+import IncomingRequests from './dashboard/IncomingRequests';
 import SessionCard from './SessionCard';
 import { sessionApi } from '../api/sessionApi';
 import { userApi } from '../api/userApi';
@@ -157,28 +158,34 @@ export default function Dashboard() {
                             )
                         ) : (
                             // SESSIONS TAB
-                            sessions.length > 0 ? (
-                                sessions.map(session => (
-                                    <SessionCard
-                                        key={session.id}
-                                        session={session}
-                                        currentUserId={CURRENT_USER_ID}
-                                        onAccept={handleAcceptSession}
-                                        onReject={handleRejectSession}
-                                        onComplete={handleCompleteSession}
-                                    />
-                                ))
-                            ) : (
-                                <div className="col-span-full text-center py-20">
-                                    <p className="text-gray-500 text-lg">You have no scheduled sessions yet.</p>
-                                    <button
-                                        onClick={() => setActiveTab('explore')}
-                                        className="mt-4 text-primary font-semibold hover:underline"
-                                    >
-                                        Browse Mentors
-                                    </button>
-                                </div>
-                            )
+                            <div className="col-span-full">
+                                <IncomingRequests userId={CURRENT_USER_ID} />
+
+                                {sessions.length > 0 ? (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-6">
+                                        {sessions.map(session => (
+                                            <SessionCard
+                                                key={session.id}
+                                                session={session}
+                                                currentUserId={CURRENT_USER_ID}
+                                                onAccept={handleAcceptSession}
+                                                onReject={handleRejectSession}
+                                                onComplete={handleCompleteSession}
+                                            />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-20">
+                                        <p className="text-gray-500 text-lg">You have no scheduled sessions yet.</p>
+                                        <button
+                                            onClick={() => setActiveTab('explore')}
+                                            className="mt-4 text-primary font-semibold hover:underline"
+                                        >
+                                            Browse Mentors
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
                         )}
                     </div>
                 )}

@@ -1,9 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { sendConnectionRequest, getConnectionStatus } from '../../api/connectionApi';
 
-const MentorCard = ({ mentor }) => {
-    const { name, role, skillsOffered, matchScore, bio } = mentor;
+const MentorCard = ({ mentor, currentUserId }) => {
+    const { id: mentorId, name, role, skillsOffered, matchScore, bio } = mentor;
+    const [status, setStatus] = useState('NONE'); // NONE, PENDING, ACCEPTED
 
+    useEffect(() => {
+        if (currentUserId && mentorId) {
+            checkStatus();
+        }
+    }, [currentUserId, mentorId]);
+
+    const checkStatus = async () => {
+        try {
+            const data = await getConnectionStatus(currentUserId, mentorId);
+            if (data && data.status) {
+                setStatus(data.status);
+            }
+        } catch (error) {
+            console.error("Failed to check status", error);
+        }
+    };
+
+    const handleConnect = async () => {
+        if (status !== 'NONE') return;
+        try {
+            await sendConnectionRequest(currentUserId, mentorId);
+            setStatus('PENDING');
+        } catch (error) {
+            alert("Failed to send request");
+        }
+    };
     // Calculate Color based on Match Score (Green > 80%, Orange > 50%, Red < 50%)
     const getScoreColor = (score) => {
         if (score >= 80) return "text-green-400 border-green-400";
@@ -56,8 +84,19 @@ const MentorCard = ({ mentor }) => {
             </div>
 
             {/* Action Button */}
-            <button className="w-full py-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 font-semibold text-sm transition-all shadow-lg shadow-purple-500/20">
-                Connect & Chat
+            {/* Action Button */}
+            <button
+                onClick={handleConnect}
+                disabled={status !== 'NONE'}
+                className={`w-full py-2 rounded-xl font-semibold text-sm transition-all shadow-lg 
+                ${status === 'ACCEPTED'
+                        ? 'bg-green-500 text-white cursor-default'
+                        : status === 'PENDING'
+                            ? 'bg-gray-500 text-gray-300 cursor-not-allowed'
+                            : 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 shadow-purple-500/20 text-white'
+                    }`}
+            >
+                {status === 'ACCEPTED' ? 'Message' : status === 'PENDING' ? 'Request Sent' : 'Connect & Chat'}
             </button>
         </motion.div>
     );
