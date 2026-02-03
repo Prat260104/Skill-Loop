@@ -93,21 +93,36 @@ public class RecommendationService {
     }
 
     private UserSummaryDTO convertMapToDTO(Map<String, Object> map) {
-        // Safe casting helper for data coming back from JSON
+        // Safe casting helper for data coming back from JSON (Python uses snake_case)
         Long id = ((Number) map.get("id")).longValue();
         String name = (String) map.get("name");
         String email = (String) map.get("email");
         String bio = (String) map.get("bio");
-        List<String> skillsOffered = (List<String>) map.get("skillsOffered");
-        List<String> skillsWanted = (List<String>) map.get("skillsWanted");
+        List<String> skillsOffered = (List<String>) map.get("skills_offered");
+        List<String> skillsWanted = (List<String>) map.get("skills_wanted");
         List<String> experience = (List<String>) map.get("experience");
-        int skillPoints = map.get("skillPoints") != null ? ((Number) map.get("skillPoints")).intValue() : 0;
+
+        // Handle skill_points which might be skillPoints or skill_points depending on
+        // serialization
+        // Since we used .dict() in python, it's likely skill_points
+        int skillPoints = 0;
+        if (map.containsKey("skill_points") && map.get("skill_points") != null) {
+            skillPoints = ((Number) map.get("skill_points")).intValue();
+        } else if (map.containsKey("skillPoints") && map.get("skillPoints") != null) {
+            skillPoints = ((Number) map.get("skillPoints")).intValue();
+        }
+
         String role = (String) map.get("role");
-        List<String> verifiedSkills = (List<String>) map.get("verifiedSkills");
+        List<String> verifiedSkills = (List<String>) map.get("verified_skills");
 
         // Convert Score (0.0 to 1.0) to Percentage (0 to 100)
-        Double rawScore = map.get("score") != null ? ((Number) map.get("score")).doubleValue() : 0.0;
-        Double matchScore = Math.round(rawScore * 100.0 * 10.0) / 10.0; // Round to 1 decimal
+        // Python sends 'match_score' (0-100 already? Let's check recommender.py)
+        // recommender.py: candidate['match_score'] = round(score * 100, 1)
+        // So it's already percentage!
+        Double matchScore = 0.0;
+        if (map.containsKey("match_score") && map.get("match_score") != null) {
+            matchScore = ((Number) map.get("match_score")).doubleValue();
+        }
 
         return new UserSummaryDTO(id, name, email, bio, skillsOffered, skillsWanted, experience, skillPoints, role,
                 verifiedSkills, matchScore);

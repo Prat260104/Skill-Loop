@@ -56,11 +56,13 @@ class RecommenderSystem:
         # For Target User: We mostly care about what they WANT (`skills_wanted`) and their `bio`.
         # (Assuming the target user is a student looking for a mentor)
         target_features = " ".join(target_user.get("skills_wanted", []) or []) + " " + (target_user.get("bio", "") or "")
+        print(f"DEBUG: Target Features: '{target_features}'") # DEBUG
         
         # For Candidates: We care about what they OFFER (`skills_offered`) and their `bio`.
         candidate_features = []
         for cand in candidates:
             feats = " ".join(cand.get("skills_offered", []) or []) + " " + (cand.get("bio", "") or "")
+            print(f"DEBUG: Candidate Features (ID: {cand.get('id')}): '{feats}'") # DEBUG
             candidate_features.append(feats)
 
         # 2. Vectorization (TF-IDF)

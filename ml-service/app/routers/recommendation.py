@@ -7,17 +7,23 @@ router = APIRouter()
 
 # --- Pydantic Models for Input Validation ---
 
+from pydantic import BaseModel, Field
+
 class UserProfileDTO(BaseModel):
     id: Optional[int] = None
     name: Optional[str] = None
+    email: Optional[str] = None
     role: Optional[str] = None
-    skills_offered: List[str] = []
-    skills_wanted: List[str] = []
     bio: Optional[str] = ""
-    verified_skills: List[str] = []
+    skills_offered: List[str] = Field(default=[], alias="skillsOffered")
+    skills_wanted: List[str] = Field(default=[], alias="skillsWanted")
+    verified_skills: List[str] = Field(default=[], alias="verifiedSkills")
+    experience: List[str] = Field(default=[], alias="experience")
+    skill_points: Optional[int] = Field(default=0, alias="skillPoints")
 
     class Config:
-        strict = False # Allow loose parsing if slightly different fields come in
+        populate_by_name = True
+        allow_population_by_field_name = True # Support for Pydantic v1 & v2
 
 class RecommendationRequest(BaseModel):
     target_user: UserProfileDTO
@@ -42,6 +48,8 @@ async def get_recommendations(request: RecommendationRequest):
             candidates=candidate_dicts,
             top_k=request.top_k
         )
+        print(f"DEBUG: Target User Dict keys: {target_user_dict.keys()}")
+        print(f"DEBUG: Target User Skills Wanted: {target_user_dict.get('skills_wanted')}")
         
         return {"matches": matches}
 
