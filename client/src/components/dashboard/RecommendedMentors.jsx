@@ -3,19 +3,20 @@ import axios from 'axios';
 import MentorCard from '../cards/MentorCard';
 import { motion } from 'framer-motion';
 
-const RecommendedMentors = () => {
+const RecommendedMentors = ({ userId }) => {
     const [mentors, setMentors] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // TODO: dynamic user ID from Auth Context
-    const currentUserId = 1;
-
     useEffect(() => {
+        if (!userId) return;
+        console.log("Fetching recommendations for User ID:", userId);
+
         const fetchRecommendations = async () => {
             try {
                 // API Call to our Spring Boot Backend
-                const response = await axios.get(`http://localhost:9090/api/recommendations/${currentUserId}`);
+                const response = await axios.get(`http://localhost:9090/api/recommendations/${userId}`);
+                console.log("Recommendations Received:", response.data);
                 setMentors(response.data);
                 setLoading(false);
             } catch (err) {
@@ -26,7 +27,7 @@ const RecommendedMentors = () => {
         };
 
         fetchRecommendations();
-    }, []);
+    }, [userId]);
 
     if (loading) {
         return (
