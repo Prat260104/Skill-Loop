@@ -12,11 +12,12 @@ public class UserSummaryDTO {
     private List<String> experience;
     private int skillPoints;
     private String role;
+    private Double matchScore;
     private List<String> verifiedSkills;
 
     public UserSummaryDTO(Long id, String name, String email, String bio, List<String> skillsOffered,
             List<String> skillsWanted, List<String> experience, int skillPoints, String role,
-            List<String> verifiedSkills) {
+            List<String> verifiedSkills, Double matchScore) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -27,6 +28,13 @@ public class UserSummaryDTO {
         this.skillPoints = skillPoints;
         this.role = role;
         this.verifiedSkills = verifiedSkills;
+        this.matchScore = matchScore;
+    }
+
+    public UserSummaryDTO(Long id, String name, String email, String bio, List<String> skillsOffered,
+            List<String> skillsWanted, List<String> experience, int skillPoints, String role,
+            List<String> verifiedSkills) {
+        this(id, name, email, bio, skillsOffered, skillsWanted, experience, skillPoints, role, verifiedSkills, 0.0);
     }
 
     public Long getId() {
@@ -107,5 +115,13 @@ public class UserSummaryDTO {
 
     public void setVerifiedSkills(List<String> verifiedSkills) {
         this.verifiedSkills = verifiedSkills;
+    }
+
+    public Double getMatchScore() {
+        return matchScore;
+    }
+
+    public void setMatchScore(Double matchScore) {
+        this.matchScore = matchScore;
     }
 }

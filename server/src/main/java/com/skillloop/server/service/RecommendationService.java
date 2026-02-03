@@ -105,7 +105,11 @@ public class RecommendationService {
         String role = (String) map.get("role");
         List<String> verifiedSkills = (List<String>) map.get("verifiedSkills");
 
+        // Convert Score (0.0 to 1.0) to Percentage (0 to 100)
+        Double rawScore = map.get("score") != null ? ((Number) map.get("score")).doubleValue() : 0.0;
+        Double matchScore = Math.round(rawScore * 100.0 * 10.0) / 10.0; // Round to 1 decimal
+
         return new UserSummaryDTO(id, name, email, bio, skillsOffered, skillsWanted, experience, skillPoints, role,
-                verifiedSkills);
+                verifiedSkills, matchScore);
     }
 }
