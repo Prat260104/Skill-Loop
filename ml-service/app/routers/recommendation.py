@@ -48,8 +48,6 @@ async def get_recommendations(request: RecommendationRequest):
             candidates=candidate_dicts,
             top_k=request.top_k
         )
-        print(f"DEBUG: Target User Dict keys: {target_user_dict.keys()}")
-        print(f"DEBUG: Target User Skills Wanted: {target_user_dict.get('skills_wanted')}")
         
         return {"matches": matches}
 
