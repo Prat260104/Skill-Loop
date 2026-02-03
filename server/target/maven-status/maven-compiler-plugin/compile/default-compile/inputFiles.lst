@@ -3,12 +3,14 @@
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/config/AppConfig.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/controller/AuthController.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/controller/ProfileController.java
+/Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/controller/RecommendationController.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/controller/SessionController.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/controller/VerificationController.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/dto/AuthResponse.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/dto/InterviewPayload.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/dto/LoginRequest.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/dto/ProfileRequest.java
+/Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/dto/RecommendationRequest.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/dto/ResumeResponseDTO.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/dto/SessionRequest.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/dto/SignupRequest.java
@@ -19,5 +21,6 @@
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/repository/SessionRepository.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/repository/UserRepository.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/service/AuthService.java
+/Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/service/RecommendationService.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/service/ResumeService.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/service/SessionService.java
