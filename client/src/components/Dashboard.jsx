@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import UserCard from './UserCard';
+import RecommendedMentors from './dashboard/RecommendedMentors';
 import SessionCard from './SessionCard';
 import { sessionApi } from '../api/sessionApi';
 import { userApi } from '../api/userApi';
@@ -131,6 +132,10 @@ export default function Dashboard() {
                         )}
                     </div>
                 </div>
+
+
+                {/* Recommendations Section */}
+                {activeTab === 'explore' && <RecommendedMentors />}
 
                 {loading ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
