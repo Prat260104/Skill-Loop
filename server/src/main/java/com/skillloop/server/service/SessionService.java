@@ -21,6 +21,9 @@ public class SessionService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private NotificationService notificationService;
+
     public Session createSessionRequest(Long studentId, SessionRequest request) {
         User student = userRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
@@ -33,7 +36,15 @@ public class SessionService {
         }
 
         Session session = new Session(student, mentor, request.getSkill(), SessionStatus.PENDING);
-        return sessionRepository.save(session);
+        Session savedSession = sessionRepository.save(session);
+
+        // TRIGGER: Notify Mentor
+        notificationService.createNotification(
+                mentor,
+                "New Session Request: " + student.getName() + " wants to learn " + request.getSkill(),
+                "INFO");
+
+        return savedSession;
     }
 
     public List<Session> getSessionsForUser(Long userId) {
@@ -60,7 +71,15 @@ public class SessionService {
         }
 
         session.setStatus(SessionStatus.ACCEPTED);
-        return sessionRepository.save(session);
+        Session savedSession = sessionRepository.save(session);
+
+        // TRIGGER: Notify Student
+        notificationService.createNotification(
+                session.getStudent(),
+                "Good News! " + session.getMentor().getName() + " accepted your session request.",
+                "SUCCESS");
+
+        return savedSession;
     }
 
     public Session rejectSession(Long mentorId, Long sessionId) {
@@ -72,7 +91,15 @@ public class SessionService {
         }
 
         session.setStatus(SessionStatus.REJECTED);
-        return sessionRepository.save(session);
+        Session savedSession = sessionRepository.save(session);
+
+        // TRIGGER: Notify Student
+        notificationService.createNotification(
+                session.getStudent(),
+                "Update: " + session.getMentor().getName() + " declined your session request.",
+                "WARNING");
+
+        return savedSession;
     }
 
     public Session completeSession(Long studentId, Long sessionId) {
@@ -96,6 +123,14 @@ public class SessionService {
         mentor.setSkillPoints(mentor.getSkillPoints() + 50); // The Reward
         userRepository.save(mentor);
 
-        return sessionRepository.save(session);
+        Session savedSession = sessionRepository.save(session);
+
+        // TRIGGER: Notify Mentor
+        notificationService.createNotification(
+                mentor,
+                "Session Completed! You earned +50 Skill Points for teaching " + session.getStudent().getName(),
+                "SUCCESS");
+
+        return savedSession;
     }
 }
