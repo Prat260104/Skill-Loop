@@ -1,9 +1,11 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform, useMotionTemplate, useMotionValue } from 'framer-motion';
-import { Link } from 'react-scroll';
+import { Link as ScrollLink } from 'react-scroll';
+import { Link as RouterLink } from 'react-router-dom';
 import InteractiveBackground from './InteractiveBackground';
 
 export default function Hero() {
+    // ... existing hook logic ...
     const heroRef = useRef(null);
     const { scrollY } = useScroll();
     const y1 = useTransform(scrollY, [0, 500], [0, 200]);
@@ -86,44 +88,26 @@ export default function Hero() {
                         transition={{ duration: 0.8, delay: 0.6 }}
                         className="flex flex-col sm:flex-row items-center justify-center gap-4"
                     >
-                        <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="px-8 py-4 rounded-xl bg-gradient-to-r from-primary to-purple-600 text-white font-bold shadow-lg shadow-primary/25 hover:shadow-primary/50 transition-all border border-white/10"
-                        >
-                            Get Started
-                        </motion.button>
+                        <RouterLink to="/signup">
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="px-8 py-4 rounded-xl bg-gradient-to-r from-primary to-purple-600 text-white font-bold shadow-lg shadow-primary/25 hover:shadow-primary/50 transition-all border border-white/10"
+                            >
+                                Get Started
+                            </motion.button>
+                        </RouterLink>
 
-                        <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="px-8 py-4 rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm text-white font-semibold hover:bg-white/10 transition-all"
-                        >
-                            Watch Demo
-                        </motion.button>
+                        <ScrollLink to="features" smooth={true} duration={500} offset={-64}>
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="px-8 py-4 rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm text-white font-semibold hover:bg-white/10 transition-all"
+                            >
+                                Watch Demo
+                            </motion.button>
+                        </ScrollLink>
                     </motion.div>
-
-                    {/* Stats */}
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.8, delay: 1 }}
-                        className="mt-20 pt-10 border-t border-white/10 flex flex-wrap justify-center gap-12 text-center"
-                    >
-                        {[
-                            { value: '10K+', label: 'Active Learners' },
-                            { value: '500+', label: 'Premium Courses' },
-                            { value: '98%', label: 'Satisfaction' },
-                        ].map((stat, index) => (
-                            <div key={index} className="space-y-1">
-                                <div className="text-3xl font-bold text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">
-                                    {stat.value}
-                                </div>
-                                <div className="text-sm font-medium text-gray-400 uppercase tracking-wider">{stat.label}</div>
-                            </div>
-                        ))}
-                    </motion.div>
-
                 </div>
             </div>
 

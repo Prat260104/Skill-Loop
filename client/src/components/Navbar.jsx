@@ -56,6 +56,8 @@ export default function Navbar() {
         window.location.href = '/';
     };
 
+    const [hoveredLink, setHoveredLink] = useState(null);
+
     return (
         <div className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 px-4 pointer-events-none">
             <motion.nav
@@ -81,20 +83,23 @@ export default function Navbar() {
                             </span>
                         </div>
 
-                        {/* Desktop Menu */}
-                        <div className="hidden md:flex items-center space-x-1">
+                        {/* Desktop Menu - Sliding Spotlight Effect */}
+                        <div className="hidden md:flex items-center space-x-1" onMouseLeave={() => setHoveredLink(null)}>
                             {navLinks.map((link) => (
                                 <button
                                     key={link.name}
                                     onClick={() => handleNavClick(link.to)}
-                                    className="relative px-4 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-white transition-colors group overflow-hidden"
+                                    onMouseEnter={() => setHoveredLink(link.name)}
+                                    className="relative px-4 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-primary dark:hover:text-white transition-colors group"
                                 >
                                     <span className="relative z-10">{link.name}</span>
-                                    {/* Hover Pill Effect */}
-                                    <motion.div
-                                        className="absolute inset-0 bg-primary/10 dark:bg-white/10 opacity-0 group-hover:opacity-100 rounded-lg transition-opacity"
-                                        layoutId="navbar-hover"
-                                    />
+                                    {hoveredLink === link.name && (
+                                        <motion.div
+                                            layoutId="navbar-hover-pill"
+                                            className="absolute inset-0 bg-gray-100 dark:bg-white/10 rounded-lg -z-0"
+                                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                        />
+                                    )}
                                 </button>
                             ))}
                         </div>
