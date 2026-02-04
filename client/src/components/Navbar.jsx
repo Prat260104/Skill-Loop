@@ -4,6 +4,7 @@ import { Link as ScrollLink, scroller } from 'react-scroll';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { HiMenu, HiX, HiChevronDown, HiLogout, HiViewGrid } from 'react-icons/hi';
 import ThemeToggle from './ThemeToggle';
+import NotificationBell from './NotificationBell';
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false); // Mobile Menu
@@ -91,6 +92,7 @@ export default function Navbar() {
 
                     {/* Right Side Actions */}
                     <div className="hidden md:flex items-center gap-6">
+                        {user && <NotificationBell />}
                         <ThemeToggle />
 
                         {user ? (
@@ -176,6 +178,7 @@ export default function Navbar() {
 
                     {/* Mobile Menu Button */}
                     <div className="-mr-2 flex md:hidden gap-4">
+                        {user && <NotificationBell />}
                         <ThemeToggle />
                         <button
                             onClick={() => setIsOpen(!isOpen)}
