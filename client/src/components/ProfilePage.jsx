@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { userApi } from '../api/userApi';
 import InterviewModal from './InterviewModal';
+import SessionRequestModal from './SessionRequestModal';
 
 export default function ProfilePage() {
     const { id } = useParams();
@@ -26,6 +27,9 @@ export default function ProfilePage() {
     const [isInterviewOpen, setIsInterviewOpen] = useState(false);
     const [interviewSkill, setInterviewSkill] = useState(null);
     const [showVerifyDropdown, setShowVerifyDropdown] = useState(false);
+
+    // Session Modal State
+    const [isSessionRequestOpen, setIsSessionRequestOpen] = useState(false);
 
     const currentUser = JSON.parse(localStorage.getItem('user'));
 
@@ -286,6 +290,14 @@ export default function ProfilePage() {
                                         fetchProfile(); // Refresh to show badge
                                     }}
                                 />
+
+                                {/* Session Request Modal */}
+                                <SessionRequestModal
+                                    isOpen={isSessionRequestOpen}
+                                    onClose={() => setIsSessionRequestOpen(false)}
+                                    mentor={profileUser}
+                                    currentUser={currentUser}
+                                />
                             </div>
 
                             <div>
@@ -314,10 +326,10 @@ export default function ProfilePage() {
                     </div>
 
                     {/* Actions */}
-                    {isOwnProfile && (
-                        <div className="mt-8 flex justify-end">
-                            {isEditing ? (
-                                <div className="flex gap-3 items-center">
+                    <div className="mt-8 flex justify-end px-8 pb-8">
+                        {isOwnProfile ? (
+                            isEditing ? (
+                                <div className="flex gap-3 items-center" >
                                     <div className="relative overflow-hidden inline-block group">
                                         <button
                                             disabled={uploading}
@@ -412,9 +424,18 @@ export default function ProfilePage() {
                                         Edit Profile ✏️
                                     </button>
                                 </div>
-                            )}
-                        </div>
-                    )}
+                            )
+                        ) : (
+                            // Use Case: Other User viewing this profile
+                            <button
+                                onClick={() => setIsSessionRequestOpen(true)}
+                                className="px-8 py-3 rounded-xl font-bold text-white bg-gradient-to-r from-primary to-purple-600 shadow-lg shadow-primary/30 hover:shadow-primary/50 transform hover:-translate-y-0.5 transition-all text-lg flex items-center gap-2"
+                            >
+                                <span>📅</span>
+                                <span>Request Session</span>
+                            </button>
+                        )}
+                    </div>
                 </motion.div >
             </div >
         </div >
