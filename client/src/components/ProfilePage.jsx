@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { userApi } from '../api/userApi';
 import InterviewModal from './InterviewModal';
 import SessionRequestModal from './SessionRequestModal';
+import InteractiveBackground from './InteractiveBackground';
 
 export default function ProfilePage() {
     const { id } = useParams();
@@ -138,7 +139,9 @@ export default function ProfilePage() {
     const rank = getRank(profileUser.skillPoints);
 
     return (
-        <div className="min-h-screen pt-24 pb-12 px-4 bg-gray-50 dark:bg-slate-900 relative">
+        <div className="min-h-screen pt-20 pb-12 px-4 relative bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
+            <InteractiveBackground />
+
             {/* Notification Toast */}
             <AnimatePresence>
                 {notification && (
@@ -146,9 +149,9 @@ export default function ProfilePage() {
                         initial={{ opacity: 0, y: -50, x: '-50%' }}
                         animate={{ opacity: 1, y: 0, x: '-50%' }}
                         exit={{ opacity: 0, y: -20, x: '-50%' }}
-                        className={`fixed top-24 left-1/2 z-50 px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3 border ${notification.type === 'success' ? 'bg-green-50 border-green-200 text-green-700' :
-                            notification.type === 'error' ? 'bg-red-50 border-red-200 text-red-700' :
-                                'bg-blue-50 border-blue-200 text-blue-700'
+                        className={`fixed top-24 left-1/2 z-50 px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3 border backdrop-blur-md ${notification.type === 'success' ? 'bg-green-500/10 border-green-500/20 text-green-600 dark:text-green-400' :
+                            notification.type === 'error' ? 'bg-red-500/10 border-red-500/20 text-red-600 dark:text-red-400' :
+                                'bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-400'
                             }`}
                     >
                         <span className="text-xl">
@@ -158,286 +161,355 @@ export default function ProfilePage() {
                     </motion.div>
                 )}
             </AnimatePresence>
-            <div className="max-w-4xl mx-auto">
+
+            <div className="relative z-10 max-w-6xl mx-auto">
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden"
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    className="bg-white/80 dark:bg-slate-900/60 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/20 dark:border-white/5 overflow-hidden"
                 >
-                    {/* Header Banner */}
-                    <div className="h-32 bg-gradient-to-r from-primary to-purple-600"></div>
+                    {/* Premium Header Banner */}
+                    <div className="h-64 bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 relative overflow-hidden">
+                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
+                        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+                        <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4"></div>
+                    </div>
 
-                    <div className="px-8 pb-8">
-                        {/* Avatar & Info */}
-                        <div className="relative flex flex-col md:flex-row items-center md:items-end -mt-12 mb-6 gap-6">
-                            <div className="w-24 h-24 rounded-full bg-white dark:bg-slate-800 p-1 shadow-lg">
-                                <div className="w-full h-full rounded-full bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center text-3xl font-bold text-white">
-                                    {profileUser.name.charAt(0).toUpperCase()}
+                    <div className="px-8 pb-12">
+                        {/* Profile Header Section */}
+                        <div className="relative flex flex-col md:flex-row items-end gap-6 -mt-16 mb-8">
+                            {/* Avatar */}
+                            <motion.div
+                                initial={{ scale: 0.8, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                transition={{ delay: 0.2 }}
+                                className="relative group"
+                            >
+                                <div className="w-32 h-32 rounded-3xl bg-white dark:bg-slate-800 p-1.5 shadow-2xl rotate-3 hover:rotate-0 transition-all duration-300">
+                                    <div className="w-full h-full rounded-2xl bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center text-5xl font-bold text-white shadow-inner">
+                                        {profileUser.name.charAt(0).toUpperCase()}
+                                    </div>
                                 </div>
+                                {/* Status Dot */}
+                                <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-lg">
+                                    <div className="w-5 h-5 bg-green-500 rounded-full border-2 border-white dark:border-slate-800 animate-pulse"></div>
+                                </div>
+                            </motion.div>
+
+                            {/* Name & Role */}
+                            <div className="flex-1 text-center md:text-left mb-4 md:mb-0">
+                                <motion.h1
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.3 }}
+                                    className="text-4xl font-black text-gray-900 dark:text-white mb-2 tracking-tight"
+                                >
+                                    {profileUser.name}
+                                </motion.h1>
+                                <motion.div
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.4 }}
+                                    className="flex flex-wrap gap-3 justify-center md:justify-start items-center text-gray-600 dark:text-gray-300 font-medium"
+                                >
+                                    <span className="px-3 py-1 bg-gray-100 dark:bg-white/5 rounded-lg border border-gray-200 dark:border-white/10 flex items-center gap-2">
+                                        💼 {profileUser.role || 'Member'}
+                                    </span>
+                                    <span className="px-3 py-1 bg-gray-100 dark:bg-white/5 rounded-lg border border-gray-200 dark:border-white/10 flex items-center gap-2">
+                                        📧 {profileUser.email}
+                                    </span>
+                                    <span className={`px-3 py-1 rounded-lg border font-bold flex items-center gap-2 ${rank.color} bg-white/5`}>
+                                        {rank.title}
+                                    </span>
+                                </motion.div>
                             </div>
 
-                            <div className="flex-1 text-center md:text-left">
-                                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{profileUser.name}</h1>
-                                <p className="text-gray-500 dark:text-gray-400">{profileUser.role} • {profileUser.email}</p>
-                            </div>
-
-                            {/* Gamification Stats */}
-                            <div className="flex items-center gap-4 bg-gray-50 dark:bg-slate-900 p-3 rounded-xl border border-gray-100 dark:border-white/10">
-                                <div className="text-center px-4 border-r border-gray-200 dark:border-gray-700">
-                                    <p className="text-xs text-gray-500 uppercase font-bold">Points</p>
-                                    <p className="text-xl font-bold text-primary">{profileUser.skillPoints}</p>
-                                </div>
-                                <div className="text-center px-2">
-                                    <p className="text-xs text-gray-500 uppercase font-bold">Rank</p>
-                                    <p className={`text-lg font-bold ${rank.color}`}>{rank.title}</p>
-                                </div>
-                            </div>
+                            {/* Actions Button Group */}
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: 0.5 }}
+                                className="flex gap-4"
+                            >
+                                {isOwnProfile ? (
+                                    isEditing ? (
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() => setIsEditing(false)}
+                                                className="px-6 py-2.5 rounded-xl font-bold text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5 transition-colors"
+                                            >
+                                                Cancel
+                                            </button>
+                                            <button
+                                                onClick={handleSave}
+                                                className="px-6 py-2.5 rounded-xl font-bold text-white bg-gradient-to-r from-emerald-500 to-green-500 shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:-translate-y-0.5 transition-all"
+                                            >
+                                                Save Changes
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className="flex gap-3">
+                                            <button
+                                                onClick={() => setShowVerifyDropdown(!showVerifyDropdown)}
+                                                className="relative px-6 py-3 rounded-xl font-bold text-white bg-gradient-to-r from-indigo-500 to-purple-500 shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:-translate-y-0.5 transition-all flex items-center gap-2"
+                                            >
+                                                <span>Verify Skills 🤖</span>
+                                                {showVerifyDropdown && (
+                                                    <div className="absolute top-full right-0 mt-3 w-56 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-gray-100 dark:border-white/10 overflow-hidden z-50 text-left">
+                                                        <div className="p-2">
+                                                            <p className="px-3 py-2 text-xs font-bold text-gray-400 uppercase">Select Skill to Verify</p>
+                                                            {profileUser.skillsOffered && profileUser.skillsOffered.length > 0 ? (
+                                                                profileUser.skillsOffered.map((skill, i) => (
+                                                                    <button
+                                                                        key={i}
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            setInterviewSkill(skill);
+                                                                            setIsInterviewOpen(true);
+                                                                            setShowVerifyDropdown(false);
+                                                                        }}
+                                                                        className="w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors flex items-center justify-between group"
+                                                                    >
+                                                                        {skill}
+                                                                        <span className="opacity-0 group-hover:opacity-100 text-primary">→</span>
+                                                                    </button>
+                                                                ))
+                                                            ) : (
+                                                                <p className="px-3 py-2 text-sm text-gray-500 italic">No skills added yet.</p>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </button>
+                                            <button
+                                                onClick={() => setIsEditing(true)}
+                                                className="px-6 py-3 rounded-xl font-bold text-gray-700 dark:text-white border-2 border-gray-200 dark:border-white/10 hover:border-primary hover:text-primary dark:hover:border-primary transition-all flex items-center gap-2"
+                                            >
+                                                <span>Edit Profile ✏️</span>
+                                            </button>
+                                        </div>
+                                    )
+                                ) : (
+                                    <button
+                                        onClick={() => setIsSessionRequestOpen(true)}
+                                        className="px-8 py-3 rounded-xl font-bold text-white bg-gradient-to-r from-pink-500 to-rose-500 shadow-lg shadow-pink-500/30 hover:shadow-pink-500/50 transform hover:-translate-y-0.5 transition-all text-lg flex items-center gap-2 animate-pulse-soft"
+                                    >
+                                        <span>📅 Request Session</span>
+                                    </button>
+                                )}
+                            </motion.div>
                         </div>
 
-                        <hr className="border-gray-100 dark:border-white/5 my-6" />
-
-                        {/* Main Content */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-                            {/* Left: Bio */}
-                            <div className="space-y-4">
-                                <h3 className="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2">
-                                    <span>📝</span> About Me
-                                </h3>
-                                {isEditing ? (
-                                    <textarea
-                                        value={bio}
-                                        onChange={(e) => setBio(e.target.value)}
-                                        className="w-full p-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary outline-none"
-                                        rows="4"
-                                        placeholder="Tell us about yourself..."
-                                    />
-                                ) : (
-                                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                                        {profileUser.bio || "No bio yet."}
-                                    </p>
-                                )}
-                            </div>
-
-                            {/* Middle: Experience Section (New) */}
-                            <div className="space-y-4 md:col-span-2">
-                                <h3 className="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2">
-                                    <span>💼</span> Experience
-                                </h3>
-                                {isEditing ? (
-                                    <textarea
-                                        value={experience}
-                                        onChange={(e) => setExperience(e.target.value)}
-                                        className="w-full p-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary outline-none"
-                                        rows="4"
-                                        placeholder="Worked at Google&#10;Intern at Amazon"
-                                    />
-                                ) : (
-                                    <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-1">
-                                        {profileUser.experience && profileUser.experience.length > 0 ? (
-                                            profileUser.experience.map((exp, i) => (
-                                                <li key={i}>{exp}</li>
-                                            ))
-                                        ) : <li className="text-gray-400 italic list-none">No experience listed.</li>}
-                                    </ul>
-                                )}
-                            </div>
-
-
-                            {/* Right: Skills */}
-                            <div className="space-y-6">
+                        {/* Resume Auto-Fill Section (Only for Owner) */}
+                        {isOwnProfile && isEditing && (
+                            <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                className="mb-8 p-6 rounded-2xl bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-500/20 flex flex-col md:flex-row items-center justify-between gap-4"
+                            >
                                 <div>
-                                    <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">🚀 Skills Offered</h3>
-                                    {isEditing ? (
+                                    <h3 className="text-lg font-bold text-blue-800 dark:text-blue-300 flex items-center gap-2">
+                                        ✨ AI Auto-Fill
+                                    </h3>
+                                    <p className="text-sm text-blue-600 dark:text-blue-400">Upload your resume to automatically populate Bio, Experience, and Skills.</p>
+                                </div>
+                                <div className="relative overflow-hidden group">
+                                    <button
+                                        disabled={uploading}
+                                        className={`px-6 py-3 rounded-xl font-bold text-white shadow-lg flex items-center gap-2 transition-all ${uploading ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'}`}
+                                    >
+                                        {uploading ? (
+                                            <>
+                                                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                                <span>Parsing Resume...</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <span>📄 Upload PDF</span>
+                                            </>
+                                        )}
+                                    </button>
+                                    {!uploading && (
                                         <input
-                                            type="text"
-                                            value={skillsOffered}
-                                            onChange={(e) => setSkillsOffered(e.target.value)}
-                                            className="w-full p-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary outline-none"
-                                            placeholder="Java, React, Python (comma separated)"
+                                            type="file"
+                                            accept=".pdf"
+                                            onChange={handleResumeUpload}
+                                            className="absolute inset-0 opacity-0 cursor-pointer"
                                         />
-                                    ) : (
-                                        <div className="flex flex-wrap gap-2">
-                                            {profileUser.skillsOffered && profileUser.skillsOffered.length > 0 ? (
-                                                profileUser.skillsOffered.map((skill, i) => (
-                                                    <div key={i} className="group relative inline-block">
-                                                        <span className={`px-3 py-1 rounded-full text-sm font-medium border flex items-center gap-2
-                                                            ${profileUser.verifiedSkills && profileUser.verifiedSkills.includes(skill)
-                                                                ? 'bg-gradient-to-r from-emerald-50 to-green-50 text-emerald-700 border-emerald-200'
-                                                                : 'bg-gray-50 text-gray-700 border-gray-200'}
-                                                        `}>
-                                                            {skill}
-                                                            {profileUser.verifiedSkills && profileUser.verifiedSkills.includes(skill) ? (
-                                                                <span className="text-emerald-500" title="Verified Skill">✓</span>
-                                                            ) : null}
-                                                        </span>
-                                                    </div>
-                                                ))
-                                            ) : <span className="text-gray-400 italic">None listed</span>}
-                                        </div>
                                     )}
                                 </div>
+                            </motion.div>
+                        )}
 
-                                {/* Interview Modal */}
-                                <InterviewModal
-                                    isOpen={isInterviewOpen}
-                                    onClose={() => setIsInterviewOpen(false)}
-                                    skill={interviewSkill}
-                                    userId={profileUser.id}
-                                    onVerified={(skill) => {
-                                        setIsInterviewOpen(false);
-                                        setNotification({ type: 'success', message: `${skill} Verified! Points Awarded! 🏆` });
-                                        fetchProfile(); // Refresh to show badge
-                                    }}
-                                />
+                        <hr className="border-gray-200 dark:border-white/5 mb-10" />
 
-                                {/* Session Request Modal */}
-                                <SessionRequestModal
-                                    isOpen={isSessionRequestOpen}
-                                    onClose={() => setIsSessionRequestOpen(false)}
-                                    mentor={profileUser}
-                                    currentUser={currentUser}
-                                />
+                        {/* Content Grid */}
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+
+                            {/* Left Column: About & Stats */}
+                            <div className="space-y-8">
+                                {/* About Card */}
+                                <section>
+                                    <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+                                        About Me
+                                    </h3>
+                                    {isEditing ? (
+                                        <textarea
+                                            value={bio}
+                                            onChange={(e) => setBio(e.target.value)}
+                                            className="w-full p-4 rounded-2xl bg-gray-50 dark:bg-slate-800/50 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary outline-none transition-all placeholder:text-gray-400"
+                                            rows="6"
+                                            placeholder="Tell not just what you do, but why you do it..."
+                                        />
+                                    ) : (
+                                        <div className="p-6 rounded-2xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5 text-gray-600 dark:text-gray-300 leading-relaxed font-light text-lg">
+                                            {profileUser.bio || "No bio yet."}
+                                        </div>
+                                    )}
+                                </section>
+
+                                {/* Points Card */}
+                                <div className="p-6 rounded-2xl bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/20 flex items-center justify-between">
+                                    <div>
+                                        <p className="text-sm font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider">Skill Points</p>
+                                        <p className="text-4xl font-black text-amber-500 mt-1">{profileUser.skillPoints}</p>
+                                    </div>
+                                    <div className="text-4xl">🏆</div>
+                                </div>
                             </div>
 
-                            <div>
-                                <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">🎯 Skills Wanted</h3>
-                                {isEditing ? (
-                                    <input
-                                        type="text"
-                                        value={skillsWanted}
-                                        onChange={(e) => setSkillsWanted(e.target.value)}
-                                        className="w-full p-3 rounded-xl bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary outline-none"
-                                        placeholder="Machine Learning, Design (comma separated)"
-                                    />
-                                ) : (
-                                    <div className="flex flex-wrap gap-2">
-                                        {profileUser.skillsWanted && profileUser.skillsWanted.length > 0 ? (
-                                            profileUser.skillsWanted.map((skill, i) => (
-                                                <span key={i} className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
-                                                    {skill}
-                                                </span>
-                                            ))
-                                        ) : <span className="text-gray-400 italic">None listed</span>}
-                                    </div>
-                                )}
+                            {/* Right Column: Experience, Skills */}
+                            <div className="lg:col-span-2 space-y-10">
+
+                                {/* Experience Section */}
+                                <section>
+                                    <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+                                        Professional Experience
+                                    </h3>
+                                    {isEditing ? (
+                                        <textarea
+                                            value={experience}
+                                            onChange={(e) => setExperience(e.target.value)}
+                                            className="w-full p-4 rounded-2xl bg-gray-50 dark:bg-slate-800/50 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary outline-none transition-all"
+                                            rows="5"
+                                            placeholder="Worked at Google (2020-2022)&#10;Senior Dev at Amazon"
+                                        />
+                                    ) : (
+                                        <div className="space-y-4">
+                                            {profileUser.experience && profileUser.experience.length > 0 ? (
+                                                profileUser.experience.map((exp, i) => (
+                                                    <motion.div
+                                                        key={i}
+                                                        initial={{ opacity: 0, x: 20 }}
+                                                        animate={{ opacity: 1, x: 0 }}
+                                                        transition={{ delay: i * 0.1 }}
+                                                        className="flex items-start gap-4 p-4 rounded-2xl hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group cursor-default"
+                                                    >
+                                                        <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
+                                                            💼
+                                                        </div>
+                                                        <div>
+                                                            <p className="font-semibold text-gray-800 dark:text-gray-200 text-lg group-hover:text-primary transition-colors">{exp}</p>
+                                                            {/* Placeholder for duration/role if we parse it later */}
+                                                            <p className="text-sm text-gray-500">Previous Role</p>
+                                                        </div>
+                                                    </motion.div>
+                                                ))
+                                            ) : (
+                                                <div className="p-8 text-center text-gray-400 bg-gray-50 dark:bg-white/5 rounded-2xl border-dashed border-2 border-gray-200 dark:border-white/10">
+                                                    No experience listed yet.
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </section>
+
+                                {/* Skills Grid */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    {/* Offered Skills */}
+                                    <section>
+                                        <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+                                            🚀 Can Teach
+                                        </h3>
+                                        {isEditing ? (
+                                            <textarea
+                                                value={skillsOffered}
+                                                onChange={(e) => setSkillsOffered(e.target.value)}
+                                                className="w-full p-4 rounded-2xl bg-gray-50 dark:bg-slate-800/50 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary outline-none"
+                                                rows="3"
+                                            />
+                                        ) : (
+                                            <div className="flex flex-wrap gap-2">
+                                                {profileUser.skillsOffered && profileUser.skillsOffered.length > 0 ? (
+                                                    profileUser.skillsOffered.map((skill, i) => (
+                                                        <span key={i} className={`px-4 py-2 rounded-xl text-sm font-bold border flex items-center gap-2 transition-transform hover:scale-105 cursor-default
+                                                            ${profileUser.verifiedSkills && profileUser.verifiedSkills.includes(skill)
+                                                                ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20'
+                                                                : 'bg-indigo-500/5 text-indigo-600 dark:text-indigo-400 border-indigo-500/10'}
+                                                        `}>
+                                                            {skill}
+                                                            {profileUser.verifiedSkills && profileUser.verifiedSkills.includes(skill) && (
+                                                                <span className="text-emerald-500 text-xs" title="Verified">✓</span>
+                                                            )}
+                                                        </span>
+                                                    ))
+                                                ) : <span className="text-gray-400 italic">None listed</span>}
+                                            </div>
+                                        )}
+                                    </section>
+
+                                    {/* Wanted Skills */}
+                                    <section>
+                                        <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+                                            🎯 Wants to Learn
+                                        </h3>
+                                        {isEditing ? (
+                                            <textarea
+                                                value={skillsWanted}
+                                                onChange={(e) => setSkillsWanted(e.target.value)}
+                                                className="w-full p-4 rounded-2xl bg-gray-50 dark:bg-slate-800/50 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary outline-none"
+                                                rows="3"
+                                            />
+                                        ) : (
+                                            <div className="flex flex-wrap gap-2">
+                                                {profileUser.skillsWanted && profileUser.skillsWanted.length > 0 ? (
+                                                    profileUser.skillsWanted.map((skill, i) => (
+                                                        <span key={i} className="px-4 py-2 rounded-xl text-sm font-bold bg-pink-500/5 text-pink-600 dark:text-pink-400 border border-pink-500/10 hover:bg-pink-500/10 transition-colors cursor-default">
+                                                            {skill}
+                                                        </span>
+                                                    ))
+                                                ) : <span className="text-gray-400 italic">None listed</span>}
+                                            </div>
+                                        )}
+                                    </section>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    {/* Actions */}
-                    <div className="mt-8 flex justify-end px-8 pb-8">
-                        {isOwnProfile ? (
-                            isEditing ? (
-                                <div className="flex gap-3 items-center" >
-                                    <div className="relative overflow-hidden inline-block group">
-                                        <button
-                                            disabled={uploading}
-                                            className={`
-                                                    px-5 py-2.5 rounded-xl font-bold text-white shadow-lg 
-                                                    flex items-center gap-2 transition-all transform 
-                                                    ${uploading
-                                                    ? 'bg-gray-400 cursor-not-allowed'
-                                                    : 'bg-gradient-to-r from-violet-600 to-indigo-600 hover:shadow-indigo-500/30 hover:shadow-xl hover:-translate-y-0.5 active:scale-95'
-                                                }
-                                                `}
-                                        >
-                                            {uploading ? (
-                                                <>
-                                                    <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                                    </svg>
-                                                    <span>Processing...</span>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <span className="text-lg">📄</span>
-                                                    <span>Auto-Fill from Resume</span>
-                                                </>
-                                            )}
-                                        </button>
-                                        {!uploading && (
-                                            <input
-                                                type="file"
-                                                accept=".pdf"
-                                                onChange={handleResumeUpload}
-                                                className="absolute left-0 top-0 opacity-0 w-full h-full cursor-pointer"
-                                                title="Upload PDF Resume to auto-fill skills"
-                                            />
-                                        )}
-                                    </div>
-                                    <button
-                                        onClick={() => setIsEditing(false)}
-                                        className="px-6 py-2 rounded-xl font-bold text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5 transition-colors"
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        onClick={handleSave}
-                                        className="px-6 py-2 rounded-xl font-bold text-white bg-primary shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all"
-                                    >
-                                        Save Changes
-                                    </button>
-                                </div>
-                            ) : (
-                                <div className="flex gap-3 relative">
-                                    {/* Verify Skills Dropdown */}
-                                    <div className="relative">
-                                        <button
-                                            onClick={() => setShowVerifyDropdown(!showVerifyDropdown)}
-                                            className="px-6 py-2 rounded-xl font-bold text-white bg-primary shadow-lg shadow-primary/30 hover:shadow-primary/50 hover:-translate-y-0.5 transition-all"
-                                        >
-                                            Verify Skills 🤖
-                                        </button>
-
-                                        {showVerifyDropdown && (
-                                            <div className="absolute bottom-full mb-2 right-0 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-gray-100 dark:border-white/10 overflow-hidden z-20">
-                                                <div className="p-2">
-                                                    <p className="px-3 py-2 text-xs font-bold text-gray-400 uppercase">Select Skill to Verify</p>
-                                                    {profileUser.skillsOffered && profileUser.skillsOffered.length > 0 ? (
-                                                        profileUser.skillsOffered.map((skill, i) => (
-                                                            <button
-                                                                key={i}
-                                                                onClick={() => {
-                                                                    setInterviewSkill(skill);
-                                                                    setIsInterviewOpen(true);
-                                                                    setShowVerifyDropdown(false);
-                                                                }}
-                                                                className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
-                                                            >
-                                                                {skill}
-                                                            </button>
-                                                        ))
-                                                    ) : (
-                                                        <p className="px-3 py-2 text-sm text-gray-500 italic">No skills to verify.</p>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    <button
-                                        onClick={() => setIsEditing(true)}
-                                        className="px-6 py-2 rounded-xl font-bold text-primary border-2 border-primary hover:bg-primary hover:text-white transition-all shadow-lg shadow-primary/20"
-                                    >
-                                        Edit Profile ✏️
-                                    </button>
-                                </div>
-                            )
-                        ) : (
-                            // Use Case: Other User viewing this profile
-                            <button
-                                onClick={() => setIsSessionRequestOpen(true)}
-                                className="px-8 py-3 rounded-xl font-bold text-white bg-gradient-to-r from-primary to-purple-600 shadow-lg shadow-primary/30 hover:shadow-primary/50 transform hover:-translate-y-0.5 transition-all text-lg flex items-center gap-2"
-                            >
-                                <span>📅</span>
-                                <span>Request Session</span>
-                            </button>
-                        )}
-                    </div>
                 </motion.div >
+
+                {/* Modals - Rendered at root level of container */}
+                <InterviewModal
+                    isOpen={isInterviewOpen}
+                    onClose={() => setIsInterviewOpen(false)}
+                    skill={interviewSkill}
+                    userId={profileUser.id}
+                    onVerified={(skill) => {
+                        setIsInterviewOpen(false);
+                        setNotification({ type: 'success', message: `${skill} Verified! Points Awarded! 🏆` });
+                        fetchProfile();
+                    }}
+                />
+
+                <SessionRequestModal
+                    isOpen={isSessionRequestOpen}
+                    onClose={() => setIsSessionRequestOpen(false)}
+                    mentor={profileUser}
+                    currentUser={currentUser}
+                />
             </div >
         </div >
     );
 }
+
