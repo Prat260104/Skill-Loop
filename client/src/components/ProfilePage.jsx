@@ -169,41 +169,57 @@ export default function ProfilePage() {
                     transition={{ duration: 0.6, ease: "easeOut" }}
                     className="bg-white/80 dark:bg-slate-900/60 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/20 dark:border-white/5 overflow-hidden"
                 >
-                    {/* Branded Skill Loop Banner */}
-                    <div className="h-48 relative overflow-hidden bg-slate-900 border-b border-white/10">
-                        {/* Base Gradient - Darker & Professional */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 opacity-95"></div>
+                    {/* Interactive Spotlight Banner */}
+                    <div
+                        className="h-48 relative overflow-hidden bg-slate-900 border-b border-white/10 group cursor-default"
+                        onMouseMove={(e) => {
+                            const rect = e.currentTarget.getBoundingClientRect();
+                            e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                            e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+                        }}
+                    >
+                        {/* 1. Base Deep Space Background */}
+                        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-[#0a0a0a] to-black"></div>
 
-                        {/* Skill Loop Network Pattern (SVG Overlay) */}
-                        <div className="absolute inset-0 opacity-20">
-                            <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                                <defs>
-                                    <pattern id="grid-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-                                        <circle cx="2" cy="2" r="1" fill="currentColor" className="text-white" />
-                                    </pattern>
-                                </defs>
-                                <rect width="100%" height="100%" fill="url(#grid-pattern)" />
-                                {/* Connecting Lines - Abstract Representation of Loop/Connection */}
-                                <path d="M0,48 Q100,20 200,48 T400,48" stroke="url(#line-gradient)" strokeWidth="2" fill="none" className="opacity-50" />
-                                <path d="M0,100 Q150,50 300,100 T600,100" stroke="url(#line-gradient)" strokeWidth="2" fill="none" className="opacity-30" />
-                                <defs>
-                                    <linearGradient id="line-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                        <stop offset="0%" stopColor="#818cf8" stopOpacity="0" />
-                                        <stop offset="50%" stopColor="#a855f7" stopOpacity="1" />
-                                        <stop offset="100%" stopColor="#ec4899" stopOpacity="0" />
-                                    </linearGradient>
-                                </defs>
-                            </svg>
+                        {/* 2. Grid & Noise (Subtle Texture) */}
+                        <div className="absolute inset-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay"></div>
+                        <div className="absolute inset-0 opacity-10"
+                            style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.2) 1px, transparent 1px)', backgroundSize: '30px 30px' }}>
                         </div>
 
-                        {/* Branding Watermark */}
-                        <div className="absolute top-8 right-10 text-right select-none pointer-events-none">
-                            <h2 className="text-5xl font-black text-white/5 tracking-tighter">SkillLoop</h2>
-                            <p className="text-sm font-bold text-white/10 tracking-[0.5em] uppercase mt-1">CONNECTED</p>
-                        </div>
+                        {/* 3. Floating Container for Text */}
+                        <div className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none">
+                            <motion.div
+                                animate={{ y: [0, -5, 0] }}
+                                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                                className="relative flex flex-col items-center justify-center"
+                            >
+                                {/* === LAYER 1: DIM BASE TEXT (Always Visible) === */}
+                                <h1 className="text-6xl md:text-8xl font-black text-white/5 tracking-tighter select-none transition-none">
+                                    SKILL LOOP
+                                </h1>
+                                <p className="text-lg md:text-xl font-bold tracking-[0.8em] text-white/10 mt-2 uppercase transition-none">
+                                    Connected
+                                </p>
 
-                        {/* Subtle Glow Effect */}
-                        <div className="absolute -bottom-24 left-1/2 w-96 h-96 bg-indigo-500/10 rounded-full blur-[80px] -translate-x-1/2"></div>
+                                {/* === LAYER 2: GLOWING REVEAL TEXT (Masked by Cursor) === */}
+                                <div
+                                    className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none transition-none"
+                                    style={{
+                                        maskImage: 'radial-gradient(circle 120px at var(--mouse-x) var(--mouse-y), black 0%, transparent 100%)',
+                                        WebkitMaskImage: 'radial-gradient(circle 120px at var(--mouse-x) var(--mouse-y), black 0%, transparent 100%)',
+                                    }}
+                                >
+                                    {/* The Text itself (Brighter with Cyan/Purple Gradient) */}
+                                    <h1 className="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-b from-cyan-300 to-purple-500 tracking-tighter select-none drop-shadow-[0_0_15px_rgba(168,85,247,0.5)] transition-none">
+                                        SKILL LOOP
+                                    </h1>
+                                    <p className="text-lg md:text-xl font-bold tracking-[0.8em] text-cyan-400 mt-2 uppercase drop-shadow-[0_0_10px_rgba(6,182,212,0.8)] transition-none">
+                                        Connected
+                                    </p>
+                                </div>
+                            </motion.div>
+                        </div>
                     </div>
 
                     <div className="px-8 pb-12">
@@ -228,7 +244,7 @@ export default function ProfilePage() {
                             </motion.div>
 
                             {/* Name & Role */}
-                            <div className="flex-1 text-center md:text-left mb-4 md:mb-0">
+                            <div className="flex-1 text-center md:text-left mb-4 md:mb-0 translate-y-4">
                                 <motion.h1
                                     initial={{ opacity: 0, x: -20 }}
                                     animate={{ opacity: 1, x: 0 }}
@@ -542,4 +558,3 @@ export default function ProfilePage() {
         </div >
     );
 }
-
