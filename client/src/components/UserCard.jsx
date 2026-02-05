@@ -13,7 +13,7 @@ export default function UserCard({ user }) {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             whileHover={{ y: -5 }}
-            className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-xl border border-gray-100 dark:border-white/5 relative overflow-hidden group cursor-pointer"
+            className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-xl border border-gray-100 dark:border-white/5 relative overflow-hidden group cursor-pointer h-[420px] flex flex-col"
             onClick={handleViewProfile}
         >
             {/* Gradient Border Effect */}
@@ -21,37 +21,44 @@ export default function UserCard({ user }) {
 
             <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold text-xl">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold text-xl shrink-0">
                         {user.name.charAt(0).toUpperCase()}
                     </div>
-                    <div>
-                        <h3 className="font-bold text-lg dark:text-white group-hover:text-primary transition-colors">{user.name}</h3>
+                    <div className="min-w-0">
+                        <h3 className="font-bold text-lg dark:text-white group-hover:text-primary transition-colors truncate">{user.name}</h3>
                         <p className="text-xs text-primary font-medium px-2 py-0.5 bg-primary/10 rounded-full inline-block">
                             {user.role || 'Member'}
                         </p>
                     </div>
                 </div>
-                <div className="text-right">
+                <div className="text-right shrink-0">
                     <span className="text-sm font-bold text-yellow-500 flex items-center gap-1">
                         🏆 {user.skillPoints}
                     </span>
                 </div>
             </div>
 
-            <p className="text-gray-600 dark:text-gray-300 text-sm mb-6 line-clamp-2 min-h-[40px]">
+            <p className="text-gray-600 dark:text-gray-300 text-sm mb-6 line-clamp-2 h-[40px]">
                 {user.bio || "No bio available."}
             </p>
 
-            <div className="space-y-3 mb-6">
+            <div className="space-y-3 mb-6 flex-1 overflow-hidden">
                 <div>
                     <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Can Teach</h4>
                     <div className="flex flex-wrap gap-2">
                         {user.skillsOffered && user.skillsOffered.length > 0 ? (
-                            user.skillsOffered.map((skill, idx) => (
-                                <span key={idx} className="text-xs px-2 py-1 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 rounded-md">
-                                    {skill}
-                                </span>
-                            ))
+                            <>
+                                {user.skillsOffered.slice(0, 3).map((skill, idx) => (
+                                    <span key={idx} className="text-xs px-2 py-1 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 rounded-md whitespace-nowrap">
+                                        {skill}
+                                    </span>
+                                ))}
+                                {user.skillsOffered.length > 3 && (
+                                    <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400 rounded-md">
+                                        +{user.skillsOffered.length - 3}
+                                    </span>
+                                )}
+                            </>
                         ) : (
                             <span className="text-xs text-gray-400 italic">None listed</span>
                         )}
@@ -62,11 +69,18 @@ export default function UserCard({ user }) {
                     <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Wants to Learn</h4>
                     <div className="flex flex-wrap gap-2">
                         {user.skillsWanted && user.skillsWanted.length > 0 ? (
-                            user.skillsWanted.map((skill, idx) => (
-                                <span key={idx} className="text-xs px-2 py-1 bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 rounded-md">
-                                    {skill}
-                                </span>
-                            ))
+                            <>
+                                {user.skillsWanted.slice(0, 3).map((skill, idx) => (
+                                    <span key={idx} className="text-xs px-2 py-1 bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 rounded-md whitespace-nowrap">
+                                        {skill}
+                                    </span>
+                                ))}
+                                {user.skillsWanted.length > 3 && (
+                                    <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400 rounded-md">
+                                        +{user.skillsWanted.length - 3}
+                                    </span>
+                                )}
+                            </>
                         ) : (
                             <span className="text-xs text-gray-400 italic">None listed</span>
                         )}
@@ -79,7 +93,7 @@ export default function UserCard({ user }) {
                     e.stopPropagation();
                     handleViewProfile();
                 }}
-                className="w-full py-2.5 rounded-xl border border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-all duration-300"
+                className="w-full py-2.5 rounded-xl border border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-all duration-300 mt-auto"
             >
                 View Profile & Connect
             </button>
