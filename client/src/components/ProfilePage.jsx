@@ -169,11 +169,21 @@ export default function ProfilePage() {
                     transition={{ duration: 0.6, ease: "easeOut" }}
                     className="bg-white/80 dark:bg-slate-900/60 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/20 dark:border-white/5 overflow-hidden"
                 >
-                    {/* Premium Header Banner */}
-                    <div className="h-64 bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 relative overflow-hidden">
-                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
-                        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-                        <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4"></div>
+                    {/* Premium Animated Mesh Gradient Banner */}
+                    <div className="h-64 relative overflow-hidden bg-slate-900">
+                        {/* Animated Mesh Gradients */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 animate-gradient-xy opacity-80"></div>
+                        <div className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.1)_0%,_transparent_50%)] animate-spin-slow"></div>
+
+                        {/* Floating Orbs for extra 'wow' */}
+                        <div className="absolute top-10 right-20 w-32 h-32 bg-cyan-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float"></div>
+                        <div className="absolute bottom-10 left-20 w-48 h-48 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-video delay-1000"></div>
+
+                        {/* Pattern Overlay */}
+                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
+
+                        {/* Glass Shine */}
+                        <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent"></div>
                     </div>
 
                     <div className="px-8 pb-12">
