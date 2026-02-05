@@ -1,37 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { sendConnectionRequest, getConnectionStatus } from '../../api/connectionApi';
 
-const MentorCard = ({ mentor, currentUserId }) => {
+const MentorCard = ({ mentor }) => {
     const { id: mentorId, name, role, skillsOffered, matchScore, bio } = mentor;
-    const [status, setStatus] = useState('NONE'); // NONE, PENDING, ACCEPTED
+    const navigate = useNavigate();
 
-    useEffect(() => {
-        if (currentUserId && mentorId) {
-            checkStatus();
-        }
-    }, [currentUserId, mentorId]);
-
-    const checkStatus = async () => {
-        try {
-            const data = await getConnectionStatus(currentUserId, mentorId);
-            if (data && data.status) {
-                setStatus(data.status);
-            }
-        } catch (error) {
-            console.error("Failed to check status", error);
-        }
+    const handleViewProfile = () => {
+        navigate(`/profile/${mentorId}`);
     };
 
-    const handleConnect = async () => {
-        if (status !== 'NONE') return;
-        try {
-            await sendConnectionRequest(currentUserId, mentorId);
-            setStatus('PENDING');
-        } catch (error) {
-            alert("Failed to send request");
-        }
-    };
     // Calculate Color based on Match Score (Green > 80%, Orange > 50%, Red < 50%)
     const getScoreColor = (score) => {
         if (score >= 80) return "text-green-400 border-green-400";
@@ -42,11 +19,12 @@ const MentorCard = ({ mentor, currentUserId }) => {
     return (
         <motion.div
             whileHover={{ y: -5, scale: 1.02 }}
-            className="relative w-80 p-5 rounded-2xl bg-white/10 backdrop-blur-lg border border-white/20 shadow-xl overflow-hidden text-white"
+            onClick={handleViewProfile}
+            className="relative w-80 p-5 rounded-2xl bg-white/10 backdrop-blur-lg border border-white/20 shadow-xl overflow-hidden text-white cursor-pointer group"
         >
             {/* Glow Effect behind the card */}
-            <div className="absolute top-0 -left-10 w-20 h-20 bg-purple-500 blur-[80px] opacity-30" />
-            <div className="absolute bottom-0 -right-10 w-20 h-20 bg-blue-500 blur-[80px] opacity-30" />
+            <div className="absolute top-0 -left-10 w-20 h-20 bg-purple-500 blur-[80px] opacity-30 group-hover:opacity-50 transition-opacity" />
+            <div className="absolute bottom-0 -right-10 w-20 h-20 bg-blue-500 blur-[80px] opacity-30 group-hover:opacity-50 transition-opacity" />
 
             {/* Header: Avatar + Match Ring */}
             <div className="flex justify-between items-start mb-4">
@@ -55,7 +33,7 @@ const MentorCard = ({ mentor, currentUserId }) => {
                         {name[0]}
                     </div>
                     <div>
-                        <h3 className="font-bold text-lg leading-tight">{name}</h3>
+                        <h3 className="font-bold text-lg leading-tight group-hover:text-purple-300 transition-colors">{name}</h3>
                         <p className="text-xs text-gray-300">{role}</p>
                     </div>
                 </div>
@@ -86,17 +64,13 @@ const MentorCard = ({ mentor, currentUserId }) => {
             {/* Action Button */}
             {/* Action Button */}
             <button
-                onClick={handleConnect}
-                disabled={status !== 'NONE'}
-                className={`w-full py-2 rounded-xl font-semibold text-sm transition-all shadow-lg 
-                ${status === 'ACCEPTED'
-                        ? 'bg-green-500 text-white cursor-default'
-                        : status === 'PENDING'
-                            ? 'bg-gray-500 text-gray-300 cursor-not-allowed'
-                            : 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 shadow-purple-500/20 text-white'
-                    }`}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    handleViewProfile();
+                }}
+                className="w-full py-2 rounded-xl font-semibold text-sm transition-all shadow-lg bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 shadow-purple-500/20 text-white"
             >
-                {status === 'ACCEPTED' ? 'Message' : status === 'PENDING' ? 'Request Sent' : 'Connect & Chat'}
+                View Profile & Connect
             </button>
         </motion.div>
     );
