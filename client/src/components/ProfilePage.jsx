@@ -169,21 +169,41 @@ export default function ProfilePage() {
                     transition={{ duration: 0.6, ease: "easeOut" }}
                     className="bg-white/80 dark:bg-slate-900/60 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/20 dark:border-white/5 overflow-hidden"
                 >
-                    {/* Premium Animated Mesh Gradient Banner */}
-                    <div className="h-64 relative overflow-hidden bg-slate-900">
-                        {/* Animated Mesh Gradients */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 animate-gradient-xy opacity-80"></div>
-                        <div className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.1)_0%,_transparent_50%)] animate-spin-slow"></div>
+                    {/* Branded Skill Loop Banner */}
+                    <div className="h-48 relative overflow-hidden bg-slate-900 border-b border-white/10">
+                        {/* Base Gradient - Darker & Professional */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 opacity-95"></div>
 
-                        {/* Floating Orbs for extra 'wow' */}
-                        <div className="absolute top-10 right-20 w-32 h-32 bg-cyan-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float"></div>
-                        <div className="absolute bottom-10 left-20 w-48 h-48 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-video delay-1000"></div>
+                        {/* Skill Loop Network Pattern (SVG Overlay) */}
+                        <div className="absolute inset-0 opacity-20">
+                            <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <pattern id="grid-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                                        <circle cx="2" cy="2" r="1" fill="currentColor" className="text-white" />
+                                    </pattern>
+                                </defs>
+                                <rect width="100%" height="100%" fill="url(#grid-pattern)" />
+                                {/* Connecting Lines - Abstract Representation of Loop/Connection */}
+                                <path d="M0,48 Q100,20 200,48 T400,48" stroke="url(#line-gradient)" strokeWidth="2" fill="none" className="opacity-50" />
+                                <path d="M0,100 Q150,50 300,100 T600,100" stroke="url(#line-gradient)" strokeWidth="2" fill="none" className="opacity-30" />
+                                <defs>
+                                    <linearGradient id="line-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" stopColor="#818cf8" stopOpacity="0" />
+                                        <stop offset="50%" stopColor="#a855f7" stopOpacity="1" />
+                                        <stop offset="100%" stopColor="#ec4899" stopOpacity="0" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
 
-                        {/* Pattern Overlay */}
-                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
+                        {/* Branding Watermark */}
+                        <div className="absolute top-8 right-10 text-right select-none pointer-events-none">
+                            <h2 className="text-5xl font-black text-white/5 tracking-tighter">SkillLoop</h2>
+                            <p className="text-sm font-bold text-white/10 tracking-[0.5em] uppercase mt-1">CONNECTED</p>
+                        </div>
 
-                        {/* Glass Shine */}
-                        <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent"></div>
+                        {/* Subtle Glow Effect */}
+                        <div className="absolute -bottom-24 left-1/2 w-96 h-96 bg-indigo-500/10 rounded-full blur-[80px] -translate-x-1/2"></div>
                     </div>
 
                     <div className="px-8 pb-12">
