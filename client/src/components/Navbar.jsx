@@ -162,6 +162,15 @@ export default function Navbar() {
                                                         </div>
                                                     </RouterLink>
 
+                                                    <RouterLink to="/github-scraper" onClick={() => setIsProfileOpen(false)}>
+                                                        <div className="px-3 py-2 rounded-xl flex items-center gap-3 hover:bg-purple-500/5 dark:hover:bg-purple-500/20 cursor-pointer transition-colors text-gray-700 dark:text-gray-200 group">
+                                                            <div className="w-8 h-8 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-600 group-hover:bg-purple-500 group-hover:text-white transition-colors">
+                                                                🐙
+                                                            </div>
+                                                            <span className="text-sm font-semibold">GitHub Scraper</span>
+                                                        </div>
+                                                    </RouterLink>
+
                                                     <RouterLink to="/leaderboard" onClick={() => setIsProfileOpen(false)}>
                                                         <div className="px-3 py-2 rounded-xl flex items-center gap-3 hover:bg-yellow-500/5 dark:hover:bg-yellow-500/20 cursor-pointer transition-colors text-gray-700 dark:text-gray-200 group">
                                                             <div className="w-8 h-8 rounded-full bg-yellow-500/10 flex items-center justify-center text-yellow-600 group-hover:bg-yellow-500 group-hover:text-white transition-colors">
@@ -234,6 +243,11 @@ export default function Navbar() {
                                         <RouterLink to="/dashboard" onClick={() => setIsOpen(false)}>
                                             <button className="block w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5">
                                                 Dashboard
+                                            </button>
+                                        </RouterLink>
+                                        <RouterLink to="/github-scraper" onClick={() => setIsOpen(false)}>
+                                            <button className="block w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 text-purple-500">
+                                                GitHub Scraper 🐙
                                             </button>
                                         </RouterLink>
                                         <button

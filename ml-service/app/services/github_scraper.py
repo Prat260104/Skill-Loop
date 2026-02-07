@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 #Load environment variables
 load_dotenv()
 # Configure Gemini
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 def analyze_github_profile(username: str):
     """
@@ -54,7 +54,8 @@ def analyze_github_profile(username: str):
 
         # 2. AI ANALYSIS (The Brain)
         # We feed the collected context to Gemini
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        # Switched to flash-latest for better quota stability
+        model = genai.GenerativeModel('gemini-flash-latest')
         
         prompt = f"""
         You are a Technical Recruiter and Senior Engineer. Analyze these {len(project_descriptions)} GitHub projects to build a candidate profile.
