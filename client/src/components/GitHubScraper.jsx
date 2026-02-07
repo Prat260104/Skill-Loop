@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import InteractiveBackground from './InteractiveBackground';
 
 const GitHubScraper = () => {
     const [username, setUsername] = useState('');
@@ -91,31 +92,55 @@ const GitHubScraper = () => {
     };
 
     return (
-        <div className="min-h-screen bg-black text-white p-8 flex flex-col items-center justify-center relative overflow-hidden">
-            {/* Background Gradients */}
-            <div className="absolute top-0 left-0 w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-            <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-            <div className="absolute -bottom-32 left-20 w-96 h-96 bg-pink-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+        <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-slate-900 text-white p-8">
+
+            {/* 0. Canvas Particle Network */}
+            <InteractiveBackground />
+
+            {/* 1. Ambient Glow Blobs (Parallax feel) */}
+            <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-primary/20 rounded-full blur-[120px] opacity-30 animate-pulse-glow pointer-events-none" />
+            <div className="absolute top-[20%] -right-[10%] w-[40%] h-[40%] bg-purple-500/20 rounded-full blur-[120px] opacity-30 animate-pulse-glow delay-1000 pointer-events-none" />
+
+            {/* 2. Grid Pattern Overlay */}
+            <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] pointer-events-none opacity-20"></div>
 
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="z-10 w-full max-w-4xl"
+                className="z-10 w-full max-w-4xl relative"
             >
-                <h1 className="text-5xl font-bold text-center mb-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500">
-                    GitHub Hybrid Intelligence
-                </h1>
-                <p className="text-gray-400 text-center mb-10 text-lg">
-                    Analyze any GitHub profile using <span className="text-yellow-400">Official API</span> + <span className="text-blue-400">Gemini AI</span>
-                </p>
+                {/* Header Section */}
+                <div className="text-center mb-12">
+                    <motion.div
+                        initial={{ y: -20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ duration: 0.6 }}
+                        className="inline-block mb-4 px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5 backdrop-blur-md"
+                    >
+                        <span className="text-sm font-medium text-primary shadow-[0_0_10px_rgba(99,102,241,0.5)]">
+                            🚀 Hybrid Intelligence Engine
+                        </span>
+                    </motion.div>
+
+                    <h1 className="text-5xl md:text-6xl font-bold mb-4 tracking-tight leading-tight">
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 animate-gradient-x">
+                            GitHub Hybrid Intelligence
+                        </span>
+                    </h1>
+                    <p className="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto">
+                        Analyze any GitHub profile using <span className="text-yellow-400 font-semibold">GIT BIT</span> + <span className="text-blue-400 font-semibold">SKILL LOOP</span>
+                    </p>
+                </div>
 
                 {/* Input Section */}
-                <div className="bg-gray-900/50 backdrop-blur-xl border border-gray-700/50 p-8 rounded-3xl shadow-2xl mb-8">
-                    <div className="flex flex-col md:flex-row gap-4">
+                <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-8 rounded-3xl shadow-2xl mb-8 relative overflow-hidden group">
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                    <div className="flex flex-col md:flex-row gap-4 relative z-10">
                         <input
                             type="text"
                             placeholder="Enter GitHub Username or URL (e.g., prateekrai)"
-                            className="flex-1 bg-gray-800/50 border border-gray-700 text-white px-6 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all text-lg"
+                            className="flex-1 bg-black/20 border border-white/10 text-white px-6 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all text-lg placeholder:text-gray-500"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             onKeyPress={(e) => e.key === 'Enter' && analyzeProfile()}
@@ -125,7 +150,7 @@ const GitHubScraper = () => {
                             disabled={loading}
                             className={`px-8 py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 ${loading
                                 ? 'bg-gray-700 cursor-not-allowed text-gray-400'
-                                : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:shadow-lg hover:shadow-purple-500/25'
+                                : 'bg-gradient-to-r from-primary to-purple-600 shadow-lg shadow-primary/25 hover:shadow-primary/50 text-white'
                                 }`}
                         >
                             {loading ? (
@@ -144,7 +169,7 @@ const GitHubScraper = () => {
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            className="mt-4 p-4 bg-red-500/10 border border-red-500/50 rounded-xl text-red-400 text-center"
+                            className="mt-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-center font-medium"
                         >
                             ⚠️ {error}
                         </motion.div>
@@ -161,22 +186,22 @@ const GitHubScraper = () => {
                             className="grid grid-cols-1 md:grid-cols-2 gap-6"
                         >
                             {/* Left Column: Hard Data */}
-                            <div className="bg-gray-900/60 backdrop-blur-xl border border-gray-700/50 p-6 rounded-3xl">
-                                <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-cyan-400">
-                                    <span className="bg-cyan-500/20 p-2 rounded-lg">📊</span> Verified Hard Data
+                            <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-6 rounded-3xl hover:bg-white/10 transition-colors">
+                                <h3 className="text-xl font-bold mb-6 flex items-center gap-3 text-cyan-400">
+                                    <span className="bg-cyan-500/20 p-2.5 rounded-xl">📊</span> Verified Hard Data
                                 </h3>
 
                                 <div className="space-y-4">
-                                    <div className="flex justify-between items-center p-3 bg-gray-800/50 rounded-xl">
+                                    <div className="flex justify-between items-center p-4 bg-black/20 rounded-xl border border-white/5">
                                         <span className="text-gray-400">Repositories Scanned</span>
-                                        <span className="text-2xl font-bold">{data.top_projects_count}</span>
+                                        <span className="text-3xl font-bold text-white">{data.top_projects_count}</span>
                                     </div>
 
-                                    <div>
-                                        <span className="text-gray-400 block mb-2">Verified Languages</span>
+                                    <div className="p-4 bg-black/20 rounded-xl border border-white/5">
+                                        <span className="text-gray-400 block mb-3 text-sm uppercase tracking-wider">Verified Languages</span>
                                         <div className="flex flex-wrap gap-2">
                                             {data.verified_languages.map((lang, index) => (
-                                                <span key={index} className="px-3 py-1 bg-gray-800 border border-gray-600 rounded-full text-sm font-medium">
+                                                <span key={index} className="px-3 py-1 bg-cyan-500/10 border border-cyan-500/30 rounded-lg text-sm font-medium text-cyan-200">
                                                     {lang}
                                                 </span>
                                             ))}
@@ -186,36 +211,36 @@ const GitHubScraper = () => {
                             </div>
 
                             {/* Right Column: AI Intelligence */}
-                            <div className="bg-gray-900/60 backdrop-blur-xl border border-gray-700/50 p-6 rounded-3xl relative overflow-hidden group">
-                                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-6 rounded-3xl relative overflow-hidden group hover:bg-white/10 transition-colors">
+                                <div className="absolute inset-0 bg-gradient-to-br from-pink-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
-                                <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-pink-400">
-                                    <span className="bg-pink-500/20 p-2 rounded-lg">🧠</span> Gemini AI Insight
+                                <h3 className="text-xl font-bold mb-6 flex items-center gap-3 text-pink-400 relative z-10">
+                                    <span className="bg-pink-500/20 p-2.5 rounded-xl">🧠</span> Gemini AI Insight
                                 </h3>
 
                                 <div className="space-y-4 relative z-10">
-                                    <div className="flex items-center justify-between">
+                                    <div className="flex items-center justify-between p-4 bg-black/20 rounded-xl border border-white/5">
                                         <span className="text-gray-400">Seniority Level</span>
-                                        <span className={`px-4 py-1 rounded-full text-sm font-bold ${data.ai_analysis.seniority === 'Advanced' ? 'bg-green-500/20 text-green-400' :
-                                            data.ai_analysis.seniority === 'Intermediate' ? 'bg-yellow-500/20 text-yellow-400' :
-                                                'bg-blue-500/20 text-blue-400'
+                                        <span className={`px-4 py-1.5 rounded-full text-sm font-bold shadow-lg ${data.ai_analysis.seniority === 'Advanced' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
+                                            data.ai_analysis.seniority === 'Intermediate' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' :
+                                                'bg-blue-500/20 text-blue-400 border border-blue-500/30'
                                             }`}>
                                             {data.ai_analysis.seniority}
                                         </span>
                                     </div>
 
-                                    <div>
-                                        <span className="text-gray-400 block mb-2">Implied Tech Stack</span>
+                                    <div className="p-4 bg-black/20 rounded-xl border border-white/5">
+                                        <span className="text-gray-400 block mb-3 text-sm uppercase tracking-wider">Implied Tech Stack</span>
                                         <div className="flex flex-wrap gap-2">
                                             {data.ai_analysis.frameworks?.map((tech, i) => (
-                                                <span key={i} className="px-3 py-1 bg-purple-500/20 border border-purple-500/40 text-purple-300 rounded-lg text-sm">
+                                                <span key={i} className="px-3 py-1 bg-purple-500/10 border border-purple-500/30 text-purple-200 rounded-lg text-sm">
                                                     {tech}
                                                 </span>
                                             )) || <span className="text-gray-500 italic">None detected</span>}
                                         </div>
                                     </div>
 
-                                    <div className="mt-4 p-4 bg-gray-800/50 rounded-xl border border-gray-700/50 italic text-gray-300 text-sm">
+                                    <div className="mt-4 p-4 bg-gradient-to-br from-white/5 to-transparent rounded-xl border border-white/10 italic text-gray-300 text-sm leading-relaxed">
                                         "{data.ai_analysis.summary}"
                                     </div>
                                 </div>
@@ -227,18 +252,18 @@ const GitHubScraper = () => {
 
             {/* Save Button */}
             {data && (
-                <div className="mt-8 z-10 text-center">
+                <div className="mt-12 z-10 text-center">
                     <button
                         onClick={saveProfile}
                         disabled={saving}
-                        className={`px-8 py-3 rounded-full font-bold text-white shadow-lg transition-all flex items-center gap-2 mx-auto ${saving
+                        className={`px-10 py-4 rounded-full font-bold text-white shadow-2xl transition-all flex items-center gap-3 mx-auto text-lg ${saving
                             ? 'bg-gray-600 cursor-not-allowed'
-                            : 'bg-green-600 hover:bg-green-500 shadow-green-500/20 hover:shadow-green-500/40 hover:scale-105'
+                            : 'bg-gradient-to-r from-emerald-500 to-green-600 hover:shadow-emerald-500/40 hover:-translate-y-1'
                             }`}
                     >
                         {saving ? (
                             <>
-                                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <svg className="animate-spin h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
@@ -251,13 +276,15 @@ const GitHubScraper = () => {
                         )}
                     </button>
                     {saveMessage && (
-                        <motion.p
+                        <motion.div
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className={`text-center text-sm mt-3 font-semibold ${saveMessage.includes('Success') ? 'text-green-400' : 'text-red-400'}`}
+                            className={`inline-block mt-6 px-6 py-3 rounded-xl backdrop-blur-md border ${saveMessage.includes('Success')
+                                ? 'bg-green-500/10 border-green-500/20 text-green-400'
+                                : 'bg-red-500/10 border-red-500/20 text-red-400'}`}
                         >
-                            {saveMessage}
-                        </motion.p>
+                            <span className="font-semibold">{saveMessage}</span>
+                        </motion.div>
                     )}
                 </div>
             )}
