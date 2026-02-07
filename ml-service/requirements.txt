@@ -5,3 +5,4 @@ pdfplumber              # Extracts text from PDF files (Resume Upload)
 python-multipart        # Required by FastAPI to accept File Uploads
 google-generativeai     # Google Gemini SDK for AI Interviewer & Smart Features
 python-dotenv           # Loads API Keys/Config from .env file
+requests                # Simple HTTP library for GitHub API calls
