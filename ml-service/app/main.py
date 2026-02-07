@@ -1,7 +1,17 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from app.routers import resume, interview, recommendation, github
 
 app = FastAPI(title="SkillLoop ML Service", version="1.0.0")
+
+# Enable CORS for Frontend Access
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins for dev; specify frontend URL in prod
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Include Routers (Modules)
 app.include_router(resume.router, prefix="/api/v1/resume", tags=["Resume Parser"])
