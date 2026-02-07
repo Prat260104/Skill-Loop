@@ -6,6 +6,46 @@ const GitHubScraper = () => {
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
+    const [saving, setSaving] = useState(false);
+    const [saveMessage, setSaveMessage] = useState(null);
+
+    const saveProfile = async () => {
+        setSaving(true);
+        setSaveMessage(null);
+        try {
+            // Get User ID from Local Storage
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user || !user.id) {
+                throw new Error("User not found. Please login.");
+            }
+
+            const payload = {
+                user_id: user.id,
+                username: data.username,
+                top_projects_count: data.top_projects_count,
+                verified_languages: data.verified_languages,
+                ai_analysis: data.ai_analysis
+            };
+
+            const response = await fetch('http://localhost:8080/api/github/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText || 'Failed to save profile');
+            }
+
+            setSaveMessage("✅ Success! Profile Saved & Skills Updated.");
+        } catch (err) {
+            console.error(err);
+            setSaveMessage("❌ Error: " + err.message);
+        } finally {
+            setSaving(false);
+        }
+    };
 
     const analyzeProfile = async () => {
         if (!username) return;
@@ -84,8 +124,8 @@ const GitHubScraper = () => {
                             onClick={analyzeProfile}
                             disabled={loading}
                             className={`px-8 py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 ${loading
-                                    ? 'bg-gray-700 cursor-not-allowed text-gray-400'
-                                    : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:shadow-lg hover:shadow-purple-500/25'
+                                ? 'bg-gray-700 cursor-not-allowed text-gray-400'
+                                : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:shadow-lg hover:shadow-purple-500/25'
                                 }`}
                         >
                             {loading ? (
@@ -157,8 +197,8 @@ const GitHubScraper = () => {
                                     <div className="flex items-center justify-between">
                                         <span className="text-gray-400">Seniority Level</span>
                                         <span className={`px-4 py-1 rounded-full text-sm font-bold ${data.ai_analysis.seniority === 'Advanced' ? 'bg-green-500/20 text-green-400' :
-                                                data.ai_analysis.seniority === 'Intermediate' ? 'bg-yellow-500/20 text-yellow-400' :
-                                                    'bg-blue-500/20 text-blue-400'
+                                            data.ai_analysis.seniority === 'Intermediate' ? 'bg-yellow-500/20 text-yellow-400' :
+                                                'bg-blue-500/20 text-blue-400'
                                             }`}>
                                             {data.ai_analysis.seniority}
                                         </span>
@@ -185,18 +225,41 @@ const GitHubScraper = () => {
                 </AnimatePresence>
             </motion.div>
 
-            {/* Save Button (For Future Integration) */}
+            {/* Save Button */}
             {data && (
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="mt-8 z-10"
-                >
-                    <button className="px-8 py-3 bg-green-600 hover:bg-green-500 rounded-full font-bold text-white shadow-lg shadow-green-500/20 transition-all flex items-center gap-2">
-                        <span>💾</span> Save to Skill Loop Profile
+                <div className="mt-8 z-10 text-center">
+                    <button
+                        onClick={saveProfile}
+                        disabled={saving}
+                        className={`px-8 py-3 rounded-full font-bold text-white shadow-lg transition-all flex items-center gap-2 mx-auto ${saving
+                            ? 'bg-gray-600 cursor-not-allowed'
+                            : 'bg-green-600 hover:bg-green-500 shadow-green-500/20 hover:shadow-green-500/40 hover:scale-105'
+                            }`}
+                    >
+                        {saving ? (
+                            <>
+                                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Saving...
+                            </>
+                        ) : (
+                            <>
+                                <span>💾</span> Save to Skill Loop Profile
+                            </>
+                        )}
                     </button>
-                    <p className="text-center text-gray-500 text-xs mt-2">Connecting to Spring Boot...</p>
-                </motion.div>
+                    {saveMessage && (
+                        <motion.p
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className={`text-center text-sm mt-3 font-semibold ${saveMessage.includes('Success') ? 'text-green-400' : 'text-red-400'}`}
+                        >
+                            {saveMessage}
+                        </motion.p>
+                    )}
+                </div>
             )}
         </div>
     );
