@@ -14,6 +14,7 @@ import ProfileSetup from './components/ProfileSetup'
 import Dashboard from './components/Dashboard'
 import Leaderboard from './components/Leaderboard'
 import ProfilePage from './components/ProfilePage'
+import GitHubScraper from './components/GitHubScraper'
 
 function App() {
   const [showIntro, setShowIntro] = useState(true);
@@ -42,6 +43,7 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/leaderboard" element={<Leaderboard />} />
                 <Route path="/profile/:id" element={<ProfilePage />} />
+                <Route path="/github-scraper" element={<GitHubScraper />} />
               </Routes>
             </main>
             <Footer />
