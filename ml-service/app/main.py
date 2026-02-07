@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routers import resume, interview, recommendation
+from app.routers import resume, interview, recommendation, github
 
 app = FastAPI(title="SkillLoop ML Service", version="1.0.0")
 
@@ -7,6 +7,7 @@ app = FastAPI(title="SkillLoop ML Service", version="1.0.0")
 app.include_router(resume.router, prefix="/api/v1/resume", tags=["Resume Parser"])
 app.include_router(interview.router, prefix="/api/v1/interview", tags=["AI Interviewer"])
 app.include_router(recommendation.router, prefix="/api/v1/recommend", tags=["Smart Matching"])
+app.include_router(github.router, prefix="/api/v1/github", tags=["GitHub Scraper"])
 
 @app.get("/")
 def home():
