@@ -7,7 +7,7 @@ import numpy as np
 import pickle
 from tensorflow.keras.datasets import imdb
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Embedding, LSTM, Dense, Dropout
+from tensorflow.keras.layers import Embedding, LSTM, Dense, Dropout, Bidirectional
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.callbacks import EarlyStopping
 import os
@@ -18,7 +18,7 @@ MAX_LENGTH = 200        # Max review length (truncate/pad)
 EMBEDDING_DIM = 128     # Word vector size
 LSTM_UNITS = 128        # LSTM memory cells
 BATCH_SIZE = 64         # Training batch size
-EPOCHS = 5              # Training iterations
+EPOCHS = 10             # Training iterations (increased for better accuracy)
 
 print("=" * 60)
 print("🧠 SENTIMENT ANALYSIS MODEL TRAINING")
@@ -51,12 +51,14 @@ model = Sequential([
         name='embedding_layer'
     ),
     
-    # Layer 2: LSTM (captures sequential patterns)
-    LSTM(
-        LSTM_UNITS,
-        dropout=0.2,           # Prevents overfitting
-        recurrent_dropout=0.2, # Dropout on recurrent connections
-        name='lstm_layer'
+    # Layer 2: Bidirectional LSTM (captures context from both directions)
+    Bidirectional(
+        LSTM(
+            LSTM_UNITS,
+            dropout=0.2,           # Prevents overfitting
+            recurrent_dropout=0.2, # Dropout on recurrent connections
+            name='lstm_layer'
+        )
     ),
     
     # Layer 3: Dense hidden layer
