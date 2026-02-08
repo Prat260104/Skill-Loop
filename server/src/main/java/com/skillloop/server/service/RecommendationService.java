@@ -5,6 +5,7 @@ import com.skillloop.server.dto.UserSummaryDTO;
 import com.skillloop.server.model.User;
 import com.skillloop.server.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -24,8 +25,9 @@ public class RecommendationService {
     @Autowired
     private UserRepository userRepository;
 
-    // Python Service URL
-    private static final String ML_SERVICE_URL = "http://localhost:8000/api/v1/recommend/match";
+    // ML Service URL - externalized to application.properties
+    @Value("${ml.service.url:http://localhost:8001}")
+    private String mlServiceUrl;
 
     public List<UserSummaryDTO> getRecommendationsForUser(Long userId) {
         // 1. Fetch Target User
@@ -55,9 +57,9 @@ public class RecommendationService {
         HttpEntity<RecommendationRequest> request = new HttpEntity<>(payload, headers);
 
         try {
-            // We get a weird response structure from Python: {"matches": [ ... ]}
-            // So we need to parse it carefully.
-            ResponseEntity<Map> response = restTemplate.postForEntity(ML_SERVICE_URL, request, Map.class);
+            // Call Python ML Service
+            String url = mlServiceUrl + "/api/v1/recommend/match";
+            ResponseEntity<Map> response = restTemplate.postForEntity(url, request, Map.class);
 
             if (response.getBody() != null && response.getBody().containsKey("matches")) {
                 List<Map<String, Object>> matches = (List<Map<String, Object>>) response.getBody().get("matches");

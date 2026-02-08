@@ -2,6 +2,7 @@ package com.skillloop.server.service;
 
 import com.skillloop.server.dto.ResumeResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -21,8 +22,9 @@ public class ResumeService {
     @Autowired
     private RestTemplate restTemplate;
 
-    // Python ML Service URL
-    private final String ML_SERVICE_URL = "http://127.0.0.1:8000/api/v1/resume/parse";
+    // ML Service URL - externalized to application.properties
+    @Value("${ml.service.url:http://localhost:8001}")
+    private String mlServiceUrl;
 
     public ResumeResponseDTO parseResume(MultipartFile file) throws IOException {
         // 1. Prepare Headers
@@ -48,8 +50,9 @@ public class ResumeService {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
         // 4. Send Request to Python Service
+        String url = mlServiceUrl + "/api/v1/resume/parse";
         ResponseEntity<ResumeResponseDTO> response = restTemplate.postForEntity(
-                ML_SERVICE_URL,
+                url,
                 requestEntity,
                 ResumeResponseDTO.class);
 
