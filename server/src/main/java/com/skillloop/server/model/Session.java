@@ -34,6 +34,14 @@ public class Session {
 
     private LocalDateTime scheduledTime;
 
+    // Session Review & Sentiment Analysis
+    @Column(columnDefinition = "TEXT")
+    private String review; // Student's review/feedback after session
+
+    private Double sentimentScore; // -1 to +1 (from ML service)
+
+    private Boolean needsReview = false; // Flag for toxic reviews
+
     @Column(updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -98,6 +106,32 @@ public class Session {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    // Sentiment Analysis Getters/Setters
+
+    public String getReview() {
+        return review;
+    }
+
+    public void setReview(String review) {
+        this.review = review;
+    }
+
+    public Double getSentimentScore() {
+        return sentimentScore;
+    }
+
+    public void setSentimentScore(Double sentimentScore) {
+        this.sentimentScore = sentimentScore;
+    }
+
+    public Boolean getNeedsReview() {
+        return needsReview;
+    }
+
+    public void setNeedsReview(Boolean needsReview) {
+        this.needsReview = needsReview;
     }
 
     @Override

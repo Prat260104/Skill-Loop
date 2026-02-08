@@ -1,5 +1,6 @@
 package com.skillloop.server.service;
 
+import com.skillloop.server.dto.SentimentResponse;
 import com.skillloop.server.dto.SessionRequest;
 import com.skillloop.server.model.Session;
 import com.skillloop.server.model.SessionStatus;
@@ -23,6 +24,9 @@ public class SessionService {
 
     @Autowired
     private NotificationService notificationService;
+
+    @Autowired
+    private SentimentService sentimentService;
 
     public Session createSessionRequest(Long studentId, SessionRequest request) {
         User student = userRepository.findById(studentId)
@@ -102,7 +106,7 @@ public class SessionService {
         return savedSession;
     }
 
-    public Session completeSession(Long studentId, Long sessionId) {
+    public Session completeSession(Long studentId, Long sessionId, String review) {
         Session session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new RuntimeException("Session not found"));
 
@@ -118,7 +122,27 @@ public class SessionService {
         // 1. Mark as Completed
         session.setStatus(SessionStatus.COMPLETED);
 
-        // 2. Award Points to Mentor
+        // 2. Analyze Review Sentiment (if provided)
+        if (review != null && !review.trim().isEmpty()) {
+            try {
+                SentimentResponse sentiment = sentimentService.analyzeSentiment(review);
+                session.setReview(review);
+                session.setSentimentScore(sentiment.getScore());
+
+                // Flag toxic reviews for admin review
+                if (sentiment.isToxic()) {
+                    session.setNeedsReview(true);
+                    System.out.println("⚠️  TOXIC REVIEW DETECTED! Session " + sessionId +
+                            " flagged for admin review. Score: " + sentiment.getScore());
+                }
+            } catch (Exception e) {
+                System.err.println("Sentiment analysis failed for session " + sessionId + ": " + e.getMessage());
+                // Continue even if sentiment fails - don't block session completion
+                session.setReview(review);
+            }
+        }
+
+        // 3. Award Points to Mentor
         User mentor = session.getMentor();
         mentor.setSkillPoints(mentor.getSkillPoints() + 50); // The Reward
         userRepository.save(mentor);

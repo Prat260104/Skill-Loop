@@ -56,11 +56,15 @@ public class SessionController {
         }
     }
 
-    // 5. Mark Session Complete (Award Points)
+    // 5. Mark Session Complete (Award Points + Analyze Review)
     @PutMapping("/{sessionId}/complete/{studentId}")
-    public ResponseEntity<?> completeSession(@PathVariable Long sessionId, @PathVariable Long studentId) {
+    public ResponseEntity<?> completeSession(
+            @PathVariable Long sessionId,
+            @PathVariable Long studentId,
+            @RequestBody(required = false) com.skillloop.server.dto.CompleteSessionRequest request) {
         try {
-            Session session = sessionService.completeSession(studentId, sessionId);
+            String review = (request != null) ? request.getReview() : null;
+            Session session = sessionService.completeSession(studentId, sessionId, review);
             return ResponseEntity.ok(session);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
