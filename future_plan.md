@@ -53,16 +53,24 @@ This document outlines the **missing features** from the original Startup Plan t
 1.  **Refine Logic:** Better regex/NLP to identify "Experience" section boundaries.
 2.  **Bio Extraction:** Smartly summarize "Summary" or "Objective" instead of taking random text.
 
-### **B. Sentiment Analysis for Feedback**
+### **B. Sentiment Analysis for Feedback ✅**
+**Status:** Backend Complete - Frontend Integration Pending
 **Goal:** Detect toxic behavior or high-quality teaching from written reviews.
 **Implementation Steps:**
-1.  **ML Service:**
-    *   Create `services/sentiment.py`.
-    *   **UPDATED PLAN:** Train custom Keras model on IMDB dataset.
-    *   **Input:** "He was rude and didn't explain well." -> **Output:** `Sentiment: NEGATIVE (-0.8)`.
-2.  **Backend:**
-    *   In `SessionService.completeSession`, when saving a review, call this ML endpoint.
-    *   If Sentiment is Very Negative (< -0.5), auto-flag for Admin Review.
+1.  **ML Service:** ✅ **COMPLETED**
+    *   ✅ Created `services/sentiment_analyzer.py`.
+    *   ✅ Trained custom LSTM model on IMDB dataset (84.15% accuracy).
+    *   ✅ API Endpoint: `POST /api/sentiment/analyze`.
+    *   ✅ **Output:** `{"score": -0.91, "label": "NEGATIVE", "confidence": 0.91}`.
+2.  **Backend:** ✅ **COMPLETED**
+    *   ✅ `SentimentService.java` - calls ML API.
+    *   ✅ `SessionService.completeSession()` - analyzes review on session completion.
+    *   ✅ If score < -0.7 (toxic) → No points awarded, flagged for admin review.
+    *   ✅ Database fields: `review`, `sentimentScore`, `needsReview`.
+3.  **Frontend:** ❌ **PENDING**
+    *   Add review textarea on session completion modal.
+    *   Display sentiment score/feedback to user.
+    *   Admin panel to view flagged reviews.
 
 ### **C. Auto-Summarization & Notes**
 **Goal:** Provide "Key Takeaways" after a session.
@@ -140,10 +148,11 @@ This document outlines the **missing features** from the original Startup Plan t
 ## ❌ Current Status Checklist
 
 - [x] GitHub Scraper (Completed)
-- [ ] Sentiment Analysis (Custom Model)
+- [x] Sentiment Analysis (Backend Complete - Frontend Pending)
 - [ ] Recommendation Engine (Custom Algo)
 - [ ] Churn Prediction Job
 - [ ] Video Calling (WebRTC)
 - [ ] Badges System
 - [ ] Department-wise Leaderboards
 - [ ] University Email Regex
+
