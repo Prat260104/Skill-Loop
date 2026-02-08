@@ -1,5 +1,6 @@
 """
 Sentiment Analysis Model Training Script
+Trains a custom LSTM neural network for sentiment classification.
 """
 
 import numpy as np
