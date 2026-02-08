@@ -123,6 +123,7 @@ public class SessionService {
         session.setStatus(SessionStatus.COMPLETED);
 
         // 2. Analyze Review Sentiment (if provided)
+        boolean isToxicReview = false;
         if (review != null && !review.trim().isEmpty()) {
             try {
                 SentimentResponse sentiment = sentimentService.analyzeSentiment(review);
@@ -131,9 +132,11 @@ public class SessionService {
 
                 // Flag toxic reviews for admin review
                 if (sentiment.isToxic()) {
+                    isToxicReview = true;
                     session.setNeedsReview(true);
                     System.out.println("⚠️  TOXIC REVIEW DETECTED! Session " + sessionId +
                             " flagged for admin review. Score: " + sentiment.getScore());
+                    System.out.println("❌ No points awarded due to toxic review");
                 }
             } catch (Exception e) {
                 System.err.println("Sentiment analysis failed for session " + sessionId + ": " + e.getMessage());
@@ -142,18 +145,30 @@ public class SessionService {
             }
         }
 
-        // 3. Award Points to Mentor
+        // 3. Award Points to Mentor (ONLY if review is NOT toxic)
         User mentor = session.getMentor();
-        mentor.setSkillPoints(mentor.getSkillPoints() + 50); // The Reward
-        userRepository.save(mentor);
+        if (!isToxicReview) {
+            mentor.setSkillPoints(mentor.getSkillPoints() + 50); // The Reward
+            userRepository.save(mentor);
+            System.out.println("✅ Awarded +50 points to " + mentor.getName());
+        } else {
+            System.out.println("⚠️  Points withheld for " + mentor.getName() + " due to toxic review");
+        }
 
         Session savedSession = sessionRepository.save(session);
 
         // TRIGGER: Notify Mentor
-        notificationService.createNotification(
-                mentor,
-                "Session Completed! You earned +50 Skill Points for teaching " + session.getStudent().getName(),
-                "SUCCESS");
+        if (!isToxicReview) {
+            notificationService.createNotification(
+                    mentor,
+                    "Session Completed! You earned +50 Skill Points for teaching " + session.getStudent().getName(),
+                    "SUCCESS");
+        } else {
+            notificationService.createNotification(
+                    mentor,
+                    "Session completed but received negative feedback. Under admin review.",
+                    "WARNING");
+        }
 
         return savedSession;
     }
