@@ -18,6 +18,8 @@
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/dto/ProfileRequest.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/dto/RecommendationRequest.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/dto/ResumeResponseDTO.java
+/Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/dto/SentimentRequest.java
+/Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/dto/SentimentResponse.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/dto/SessionRequest.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/dto/SignupRequest.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/dto/UserSummaryDTO.java
@@ -39,4 +41,5 @@
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/service/NotificationService.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/service/RecommendationService.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/service/ResumeService.java
+/Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/service/SentimentService.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/service/SessionService.java

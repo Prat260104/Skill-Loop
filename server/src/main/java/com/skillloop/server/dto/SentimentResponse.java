@@ -1,16 +1,9 @@
 package com.skillloop.server.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 /**
  * Response DTO from ML service sentiment analysis
  * Contains sentiment score, label, and confidence
  */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class SentimentResponse {
 
     /**
@@ -29,6 +22,43 @@ public class SentimentResponse {
      * Example: 0.95 = 95% confident in the prediction
      */
     private Double confidence;
+
+    // Constructors
+    public SentimentResponse() {
+    }
+
+    public SentimentResponse(Double score, String label, Double confidence) {
+        this.score = score;
+        this.label = label;
+        this.confidence = confidence;
+    }
+
+    // Getters and Setters
+    public Double getScore() {
+        return score;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public Double getConfidence() {
+        return confidence;
+    }
+
+    public void setConfidence(Double confidence) {
+        this.confidence = confidence;
+    }
+
+    // Helper Methods
 
     /**
      * Check if review is toxic (highly negative)

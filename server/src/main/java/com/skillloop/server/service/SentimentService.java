@@ -2,7 +2,6 @@ package com.skillloop.server.service;
 
 import com.skillloop.server.dto.SentimentRequest;
 import com.skillloop.server.dto.SentimentResponse;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,7 +16,6 @@ import org.springframework.web.client.RestTemplate;
  * Calls the FastAPI sentiment analysis endpoint
  */
 @Service
-@Slf4j
 public class SentimentService {
 
     @Value("${ml.service.url:http://localhost:8001}")
@@ -37,8 +35,8 @@ public class SentimentService {
      * @throws RuntimeException if ML service call fails
      */
     public SentimentResponse analyzeSentiment(String text) {
-        log.info("Analyzing sentiment for text: {}",
-                text.length() > 50 ? text.substring(0, 50) + "..." : text);
+        System.out.println("Analyzing sentiment for text: " +
+                (text.length() > 50 ? text.substring(0, 50) + "..." : text));
 
         try {
             // Prepare request
@@ -61,16 +59,16 @@ public class SentimentService {
             SentimentResponse result = response.getBody();
 
             if (result != null) {
-                log.info("Sentiment analysis result - Score: {}, Label: {}, Confidence: {}",
-                        result.getScore(), result.getLabel(), result.getConfidence());
+                System.out.println("Sentiment analysis result - Score: " + result.getScore() +
+                        ", Label: " + result.getLabel() + ", Confidence: " + result.getConfidence());
                 return result;
             } else {
-                log.error("ML service returned null response");
+                System.err.println("ML service returned null response");
                 throw new RuntimeException("ML service returned null response");
             }
 
         } catch (RestClientException e) {
-            log.error("Failed to call ML service for sentiment analysis", e);
+            System.err.println("Failed to call ML service for sentiment analysis: " + e.getMessage());
             throw new RuntimeException("Sentiment analysis failed: " + e.getMessage(), e);
         }
     }
