@@ -71,6 +71,12 @@ This document outlines the **missing features** from the original Startup Plan t
     *   Add review textarea on session completion modal.
     *   Display sentiment score/feedback to user.
     *   Admin panel to view flagged reviews.
+4.  **Future Production Improvements:**
+    *   🔄 **Retrain with RateMyProfessors Dataset** (~18M professor reviews for better domain fit).
+    *   📈 **Collect Real Skill Loop Reviews** (gather actual mentor feedback data).
+    *   🎯 **Fine-tune on Custom Data** (domain-specific training for 90%+ accuracy).
+    *   📊 **A/B Test Thresholds** (optimize toxic score cutoff beyond -0.7).
+    *   🌐 **Multi-language Support** (Hindi/regional language sentiment analysis).
 
 ### **C. Auto-Summarization & Notes**
 **Goal:** Provide "Key Takeaways" after a session.

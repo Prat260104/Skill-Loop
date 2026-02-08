@@ -7,39 +7,72 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
+def jaccard_similarity(list1, list2):
+    """
+    Calculate Jaccard similarity between two lists.
+    Used for experience matching.
+    
+    Returns: float (0.0 to 1.0)
+    """
+    set1 = set(list1 or [])
+    set2 = set(list2 or [])
+    
+    if not set1 or not set2:
+        return 0.0
+    
+    intersection = len(set1 & set2)
+    union = len(set1 | set2)
+    
+    return intersection / union if union > 0 else 0.0
+
+
+def normalize_activity_score(skill_points, max_points=500):
+    """
+    Normalize skill points to 0-1 range.
+    Assumes max_points is a reasonable upper bound.
+    
+    Returns: float (0.0 to 1.0)
+    """
+    return min(skill_points / max_points, 1.0) if skill_points > 0 else 0.0
+
+
 class RecommenderSystem:
     def __init__(self):
         self.vectorizer = TfidfVectorizer(stop_words='english')
 
-    def _prepare_text_features(self, user):
+    def _calculate_skill_similarity(self, target_skills, candidate_skills):
         """
-        Combines relevant user fields into a single text string for TF-IDF.
+        Calculate TF-IDF cosine similarity between skill sets.
         
-        For a STUDENT (Target), we care about what they WANT.
-        For a MENTOR (Candidate), we care about what they OFFER + their BIO.
+        Args:
+            target_skills (list): Skills the target user wants
+            candidate_skills (list): Skills the candidate offers
+            
+        Returns:
+            float: Similarity score (0.0 to 1.0)
         """
-        if not user:
-            return ""
-
-        # Extract fields safely
-        skills_offered = " ".join(user.get("skills_offered", []) or [])
-        skills_wanted = " ".join(user.get("skills_wanted", []) or [])
-        bio = user.get("bio", "") or ""
-        role = user.get("role", "") or ""
+        if not target_skills or not candidate_skills:
+            return 0.0
         
-        # If the user is the one LOOKING for a match (e.g. Student), 
-        # we want to match their "Wanted" skills against others' "Offered" skills.
-        # But for generic profile similarity, we normally combine everything.
+        # Convert to text
+        target_text = " ".join(target_skills)
+        candidate_text = " ".join(candidate_skills)
         
-        # Strategy: Combine everything into a "Semantic Soup"
-        # We emphasize skills by repeating them? (Optional, maybe later)
-        
-        features = f"{skills_offered} {skills_wanted} {bio} {role}"
-        return features.strip()
+        try:
+            tfidf_matrix = self.vectorizer.fit_transform([target_text, candidate_text])
+            similarity = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])[0][0]
+            return float(similarity)
+        except ValueError:
+            # Empty vocabulary
+            return 0.0
 
     def recommend_mentors(self, target_user, candidates, top_k=5):
         """
-        Ranks candidates based on similarity to the target_user.
+        Ranks candidates using WEIGHTED MULTI-FACTOR SCORING:
+        - Skill Match: 50%
+        - Experience Match: 30%
+        - Activity Score: 20%
         
         Args:
             target_user (dict): The user looking for a mentor.
@@ -47,57 +80,69 @@ class RecommenderSystem:
             top_k (int): Number of top matches to return.
             
         Returns:
-            list[dict]: Top k candidates with 'match_score' added.
+            list[dict]: Top k candidates with 'match_score' and breakdown.
         """
         if not candidates:
             return []
 
-        # 1. Prepare Text Data
-        # For Target User: We mostly care about what they WANT (`skills_wanted`) and their `bio`.
-        # (Assuming the target user is a student looking for a mentor)
-        target_features = " ".join(target_user.get("skills_wanted", []) or []) + " " + (target_user.get("bio", "") or "")
-        
-        # For Candidates: We care about what they OFFER (`skills_offered`) and their `bio`.
-        candidate_features = []
-        for cand in candidates:
-            feats = " ".join(cand.get("skills_offered", []) or []) + " " + (cand.get("bio", "") or "")
-            candidate_features.append(feats)
-
-        # 2. Vectorization (TF-IDF)
-        all_documents = [target_features] + candidate_features
-        try:
-            tfidf_matrix = self.vectorizer.fit_transform(all_documents)
-        except ValueError:
-            # Handle empty vocabulary or stop words issues
-            logger.warning("Empty vocabulary for TF-IDF. Returning empty list.")
-            return []
-
-        # 3. Compute Cosine Similarity
-        # The first vector (index 0) is the Target User.
-        # The rest (indices 1 to N) are Candidates.
-        
-        # cosine_similarity returns a matrix. We want row 0 (target) vs all others.
-        cosine_sim = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:]).flatten()
-
-        # 4. Rank Candidates
-        ranked_indices = cosine_sim.argsort()[::-1] # Indices sorting by score descending
-        
         results = []
-        for idx in ranked_indices:
-            score = float(cosine_sim[idx])
+        
+        for candidate in candidates:
+            # ========================================
+            # FACTOR 1: Skill Similarity (50% weight)
+            # ========================================
+            target_wants = target_user.get("skills_wanted", []) or []
+            candidate_offers = candidate.get("skills_offered", []) or []
             
-            # Use a threshold? Maybe return all and let frontend decide?
-            # Let's return non-zero matches primarily, but if top_k is requested, just give top_k.
+            skill_similarity = self._calculate_skill_similarity(
+                target_wants,
+                candidate_offers
+            )
             
-            if score > 0.0:  # Only meaningful matches
-                candidate = candidates[idx].copy()
-                candidate['match_score'] = round(score * 100, 1) # Percentage 0-100
-                results.append(candidate)
+            # ========================================
+            # FACTOR 2: Experience Match (30% weight)
+            # ========================================
+            target_exp = target_user.get("experience", []) or []
+            candidate_exp = candidate.get("experience", []) or []
             
-            if len(results) >= top_k:
-                break
-                
-        return results
+            experience_match = jaccard_similarity(target_exp, candidate_exp)
+            
+            # ========================================
+            # FACTOR 3: Activity Score (20% weight)
+            # ========================================
+            skill_points = candidate.get("skill_points", 0) or 0
+            activity_score = normalize_activity_score(skill_points)
+            
+            # ========================================
+            # WEIGHTED COMBINATION
+            # ========================================
+            final_score = (
+                skill_similarity * 0.50 +
+                experience_match * 0.30 +
+                activity_score * 0.20
+            )
+            
+            # Add to results
+            candidate_copy = candidate.copy()
+            candidate_copy['match_score'] = round(final_score * 100, 1)  # 0-100
+            
+            # Optional: Add breakdown for debugging/transparency
+            candidate_copy['score_breakdown'] = {
+                'skill_similarity': round(skill_similarity * 100, 1),
+                'experience_match': round(experience_match * 100, 1),
+                'activity_score': round(activity_score * 100, 1)
+            }
+            
+            results.append(candidate_copy)
+        
+        # Sort by final score (descending)
+        results.sort(key=lambda x: x['match_score'], reverse=True)
+        
+        # Return top K with non-zero scores
+        filtered_results = [r for r in results if r['match_score'] > 0]
+        
+        return filtered_results[:top_k]
+
 
 # Singleton instance
 recommender = RecommenderSystem()
