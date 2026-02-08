@@ -10,6 +10,7 @@ Usage:
 """
 
 import pickle
+import re
 import numpy as np
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -50,9 +51,10 @@ class SentimentAnalyzer:
         
         Steps:
         1. Convert to lowercase
-        2. Split into words
-        3. Convert words to indices using tokenizer
-        4. Pad sequence to fixed length (200)
+        2. Remove punctuation
+        3. Split into words
+        4. Convert words to indices using tokenizer (+3 offset for IMDB)
+        5. Pad sequence to fixed length (200)
         
         Args:
             text: Raw text input (e.g., "This mentor was great!")
@@ -60,16 +62,25 @@ class SentimentAnalyzer:
         Returns:
             Padded sequence ready for model input
         """
-        # Convert to lowercase and split
-        words = text.lower().split()
+        # Convert to lowercase
+        text = text.lower()
+        
+        # Remove punctuation (keep only letters and spaces)
+        text = re.sub(r'[^a-z\s]', '', text)
+        
+        # Split into words
+        words = text.split()
         
         # Convert words to indices
         sequence = []
         for word in words:
             if word in self.word_index:
-                idx = self.word_index[word]
-                # Only use words in vocabulary (top 10k)
-                if idx < self.vocab_size:
+                # IMDB dataset uses +3 offset:
+                # 0 = padding, 1 = start, 2 = unknown, 3+ = actual words
+                idx = self.word_index[word] + 3
+                
+                # Only use words in vocabulary (top 10k + offset)
+                if idx < self.vocab_size + 3:
                     sequence.append(idx)
         
         # Pad sequence to max_length (200)
