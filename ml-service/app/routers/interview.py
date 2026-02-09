@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from app.services.gemini_interviewer import GeminiInterviewer
+from app.services.ai_interviewer import GeminiInterviewer
 
 router = APIRouter()
 

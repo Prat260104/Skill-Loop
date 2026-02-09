@@ -30,11 +30,11 @@ class SentimentAnalyzer:
         print("🔄 Loading sentiment model...")
         
         # Load trained LSTM model (15-20 MB)
-        self.model = load_model('models/sentiment_model.h5')
+        self.model = load_model('app/services/sentiment_analyzer/models/sentiment_model.h5')
         print("✅ Model loaded: sentiment_model.h5")
         
         # Load tokenizer (word-to-index mapping)
-        with open('models/tokenizer.pkl', 'rb') as f:
+        with open('app/services/sentiment_analyzer/models/tokenizer.pkl', 'rb') as f:
             tokenizer_data = pickle.load(f)
         
         self.word_index = tokenizer_data['word_index']
