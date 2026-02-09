@@ -19,12 +19,12 @@ import json
 from pathlib import Path
 
 # Configuration
-TRAINING_DATA_PATH = "app/services/resume_parser/data/clean_resume_dataset.json"
+TRAINING_DATA_PATH = "app/services/resume_parser/data/ner_training_data.json"  # Original clean dataset
 MODEL_OUTPUT_PATH = "app/services/resume_parser/models/custom_ner_model"
-EPOCHS = 50  # Increased for early stopping
-DROPOUT = 0.5  # Dropout rate for regularization
-VALIDATION_SPLIT = 0.2  # 20% data for validation
-EARLY_STOPPING_PATIENCE = 5  # Stop if no improvement for 5 epochs
+EPOCHS = 100  # More epochs for better learning
+DROPOUT = 0.35  # Lower dropout for small dataset
+VALIDATION_SPLIT = 0.15  # Smaller val split (only 25 examples)
+EARLY_STOPPING_PATIENCE = 10  # More patience
 
 
 def load_training_data(file_path):
