@@ -132,24 +132,23 @@ def train_model(nlp, training_data, epochs=50, dropout=0.5, validation_split=0.2
                     losses=train_losses
                 )
             
-            # Validation phase (no dropout)
-            val_losses = {}
+            # Validation phase - use evaluate for proper scoring
+            val_examples = []
             for text, annotations in val_data:
                 doc = nlp.make_doc(text)
                 example = Example.from_dict(doc, annotations)
-                nlp.update(
-                    [example],
-                    drop=0.0,  # No dropout during validation
-                    sgd=None,  # No optimizer updates
-                    losses=val_losses
-                )
+                val_examples.append(example)
+            
+            # Evaluate on validation set
+            scores = nlp.evaluate(val_examples)
+            val_loss = scores['ents_f']  # Use F1 score (higher is better, so invert for "loss")
+            val_loss = 100 - (val_loss * 100)  # Convert to loss-like metric (lower is better)
             
             train_loss = train_losses.get('ner', 0)
-            val_loss = val_losses.get('ner', 0)
             
             # Print progress
             if (epoch + 1) % 5 == 0 or epoch == 0:
-                print(f"Epoch {epoch + 1:2d}/{epochs} | Train Loss: {train_loss:.4f} | Val Loss: {val_loss:.4f}")
+                print(f"Epoch {epoch + 1:2d}/{epochs} | Train Loss: {train_loss:.4f} | Val F1: {scores['ents_f']*100:.2f}%")
             
             # Early stopping check
             if val_loss < best_val_loss:
@@ -173,7 +172,7 @@ def train_model(nlp, training_data, epochs=50, dropout=0.5, validation_split=0.2
     
     print("=" * 60)
     print("✅ Training complete!")
-    print(f"   Final best validation loss: {best_val_loss:.4f}")
+    print(f"   Best validation F1 score: {(100 - best_val_loss):.2f}%")
     return nlp
 
 
@@ -183,22 +182,22 @@ def test_model(nlp):
     print("=" * 60)
     
     test_cases = [
-        "Python developer with AWS experience",
-        "Software Engineer at Google",
-        "Skilled in React, Node.js, and MongoDB",
-        "Data Scientist at Microsoft India",
-        "Expert in Machine Learning and TensorFlow"
+        "John Doe is a Senior Python Developer with 5 years of experience at Google working with AWS, Docker, and Kubernetes for cloud infrastructure.",
+        "Software Engineer at Microsoft with expertise in React, Node.js, TypeScript, and MongoDB. Previously worked at Amazon as Full Stack Developer.",
+        "Data Scientist at IBM India specializing in Machine Learning, TensorFlow, PyTorch, and Deep Learning. Skilled in Python and R programming.",
+        "DevOps Engineer with experience at Infosys. Expert in Jenkins, Docker, Kubernetes, Terraform, and CI/CD pipelines.",
+        "Backend Developer proficient in Java, Spring Boot, Microservices, and REST APIs. Currently working at Oracle."
     ]
     
     for test_text in test_cases:
         doc = nlp(test_text)
         
-        print(f"\nInput: \"{test_text}\"")
+        print(f"\nInput: \"{test_text[:80]}...\"")
         
         if doc.ents:
             print("Entities found:")
             for ent in doc.ents:
-                print(f"   • {ent.text:20s} → {ent.label_}")
+                print(f"   • {ent.text:30s} → {ent.label_}")
         else:
             print("   ⚠️ No entities detected")
     
@@ -234,8 +233,15 @@ def main():
     # Step 3: Add labels
     labels = add_labels(ner, training_data)
     
-    # Step 4: Train model
-    nlp = train_model(nlp, training_data, epochs=EPOCHS, dropout=DROPOUT)
+    # Step 4: Train model with early stopping
+    nlp = train_model(
+        nlp, 
+        training_data, 
+        epochs=EPOCHS, 
+        dropout=DROPOUT,
+        validation_split=VALIDATION_SPLIT,
+        patience=EARLY_STOPPING_PATIENCE
+    )
     
     # Step 5: Test model
     test_model(nlp)
