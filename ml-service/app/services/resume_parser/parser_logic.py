@@ -6,12 +6,22 @@ import os
 import re
 from fastapi import UploadFile, HTTPException
 
-# Load the AI Brain (spaCy Model)
+# Load the Custom NER Model
 try:
-    nlp = spacy.load("en_core_web_sm")
+    # Try loading custom NER model first
+    nlp = spacy.load("app/services/resume_parser/models/custom_ner_model")
+    print("✅ Custom NER model loaded successfully!")
+    USE_CUSTOM_NER = True
 except OSError:
-    print("⚠️ Model not found. Please run: python -m spacy download en_core_web_sm")
-    nlp = None
+    # Fallback to base model
+    try:
+        nlp = spacy.load("en_core_web_sm")
+        print("⚠️ Custom NER model not found. Using base model.")
+        USE_CUSTOM_NER = False
+    except OSError:
+        print("⚠️ No spaCy model found. Please run: python -m spacy download en_core_web_sm")
+        nlp = None
+        USE_CUSTOM_NER = False
 
 # Load Skills Database
 SKILLS_DB = []
@@ -43,8 +53,26 @@ async def extract_text_from_pdf(file: UploadFile) -> str:
     
     return text_content
 
+def find_nearest_org(job_role_entity, doc):
+    """
+    Finds the nearest ORG entity after a JOB_ROLE.
+    Used to extract complete experience: 'Software Engineer at Google'
+    
+    Args:
+        job_role_entity: The JOB_ROLE entity
+        doc: spaCy Doc object
+    
+    Returns:
+        str: Organization name or None
+    """
+    for ent in doc.ents:
+        if ent.label_ == "ORG" and ent.start > job_role_entity.end:
+            # Return first ORG found after the job role
+            return ent.text
+    return None
+
 def analyze_resume_text(text: str) -> dict:
-    """Analyzes text using spaCy and Keyword Matching"""
+    """Analyzes text using Custom NER Model or fallback to Keyword Matching"""
     if nlp is None:
         raise HTTPException(status_code=500, detail="AI Model not loaded")
 
@@ -56,7 +84,8 @@ def analyze_resume_text(text: str) -> dict:
         "skills": [],
         "experience": [],
         "summary": None,
-        "raw_text_length": len(text)
+        "raw_text_length": len(text),
+        "extraction_method": "custom_ner" if USE_CUSTOM_NER else "regex_fallback"
     }
 
     # 📝 Extract Summary (Smart Section-Aware)
@@ -160,11 +189,20 @@ def analyze_resume_text(text: str) -> dict:
     # STRICT: Removed 'for' and 'with' to prevent "Responsible for Project" matches.
     role_at_company_pattern = fr"(?i)\b({job_roles}[\w\s]*?)\s+(?:at|@)\s+([A-Z][\w\s&]+?)(?=\s+from|\s+in|\s*[\(\|]|\s*[\d]|$)"
     
+    
     matches = re.findall(role_at_company_pattern, target_text)
-    for role, company in matches:
-        # Clean up
-        role = role.strip()
-        company = company.strip()
+    for match in matches:
+        # Regex pattern has nested groups, flatten it
+        if isinstance(match, tuple):
+            # Get first two non-empty values
+            values = [v for v in match if v]
+            if len(values) >= 2:
+                role = values[0].strip()
+                company = values[1].strip()
+            else:
+                continue
+        else:
+            continue
         
         # Filter out common false positives
         if len(company) < 2 or company.lower() in ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december", "present", "various", "university", "college", "school", "institute", "linkedin", "github", "gitlab", "twitter", "medium", "facebook", "instagram", "youtube"]:
@@ -177,10 +215,50 @@ def analyze_resume_text(text: str) -> dict:
     # Fallback removed to enforce strict section-based extraction.
     # If no Experience section is found, we return no experience rather than guessing from full text.
 
-    # NER Name Extraction (Keep this)
-    for ent in doc.ents:
-        if ent.label_ == "PERSON" and extracted_data["name"] is None:
-            extracted_data["name"] = ent.text
+    # ========================================
+    # CUSTOM NER EXTRACTION (If Model Loaded)
+    # ========================================
+    if USE_CUSTOM_NER:
+        print("🤖 Using Custom NER Model for extraction")
+        
+        # Extract SKILL entities from NER model
+        ner_skills = set()
+        ner_jobs = []
+        
+        for ent in doc.ents:
+            if ent.label_ == "PERSON" and extracted_data["name"] is None:
+                extracted_data["name"] = ent.text
+            
+            elif ent.label_ == "SKILL":
+                # Add skill from NER
+                ner_skills.add(ent.text.strip().title())
+            
+            elif ent.label_ == "JOB_ROLE":
+                # Find nearest ORG entity for complete experience
+                org_text = find_nearest_org(ent, doc)
+                if org_text:
+                    job_entry = f"{ent.text} at {org_text}"
+                else:
+                    job_entry = ent.text
+                
+                if job_entry not in [e.get('org', '') for e in extracted_data['experience']]:
+                    ner_jobs.append({"org": job_entry, "type": "Experience (NER)"})
+        
+        # Priority: Use NER skills if found, otherwise fallback to keyword matching
+        if ner_skills:
+            extracted_data["skills"] = sorted(list(ner_skills))
+            print(f"   ✓ Found {len(ner_skills)} skills via NER")
+        
+        if ner_jobs:
+            # Combine with regex results (if any) and deduplicate
+            extracted_data["experience"].extend(ner_jobs)
+            print(f"   ✓ Found {len(ner_jobs)} job roles via NER")
+    
+    else:
+        # Fallback: Use base NER for name only
+        for ent in doc.ents:
+            if ent.label_ == "PERSON" and extracted_data["name"] is None:
+                extracted_data["name"] = ent.text
 
     # 🎯 Skill Extraction (Section-Aware Only)
     # Strategy: Only look for skills in "Skills", "Technical Skills", "Technologies" sections.

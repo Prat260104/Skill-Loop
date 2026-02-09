@@ -1,0 +1,477 @@
+[
+    {
+        "text": "Proficient in Python, Django, and React",
+        "entities": [
+            [
+                14,
+                20,
+                "SKILL"
+            ],
+            [
+                22,
+                28,
+                "SKILL"
+            ],
+            [
+                34,
+                39,
+                "SKILL"
+            ]
+        ]
+    },
+    {
+        "text": "Software Engineer at Google India",
+        "entities": [
+            [
+                0,
+                17,
+                "JOB_ROLE"
+            ],
+            [
+                21,
+                27,
+                "ORG"
+            ]
+        ]
+    },
+    {
+        "text": "Experienced Python developer with expertise in Docker and AWS cloud services",
+        "entities": [
+            [
+                12,
+                18,
+                "SKILL"
+            ],
+            [
+                47,
+                53,
+                "SKILL"
+            ],
+            [
+                58,
+                61,
+                "SKILL"
+            ]
+        ]
+    },
+    {
+        "text": "Full Stack Developer at Microsoft",
+        "entities": [
+            [
+                0,
+                20,
+                "JOB_ROLE"
+            ],
+            [
+                24,
+                33,
+                "ORG"
+            ]
+        ]
+    },
+    {
+        "text": "Skills: Java, Spring Boot, MySQL, Redis",
+        "entities": [
+            [
+                8,
+                12,
+                "SKILL"
+            ],
+            [
+                14,
+                25,
+                "SKILL"
+            ],
+            [
+                27,
+                32,
+                "SKILL"
+            ],
+            [
+                34,
+                39,
+                "SKILL"
+            ]
+        ]
+    },
+    {
+        "text": "Data Scientist at Amazon Web Services",
+        "entities": [
+            [
+                0,
+                14,
+                "JOB_ROLE"
+            ],
+            [
+                18,
+                37,
+                "ORG"
+            ]
+        ]
+    },
+    {
+        "text": "Technical skills include JavaScript, TypeScript, Node.js, and MongoDB",
+        "entities": [
+            [
+                25,
+                35,
+                "SKILL"
+            ],
+            [
+                37,
+                47,
+                "SKILL"
+            ],
+            [
+                49,
+                56,
+                "SKILL"
+            ],
+            [
+                62,
+                69,
+                "SKILL"
+            ]
+        ]
+    },
+    {
+        "text": "Backend Engineer at Flipkart",
+        "entities": [
+            [
+                0,
+                16,
+                "JOB_ROLE"
+            ],
+            [
+                20,
+                28,
+                "ORG"
+            ]
+        ]
+    },
+    {
+        "text": "Expertise in Machine Learning, TensorFlow, and PyTorch",
+        "entities": [
+            [
+                13,
+                30,
+                "SKILL"
+            ],
+            [
+                32,
+                42,
+                "SKILL"
+            ],
+            [
+                48,
+                55,
+                "SKILL"
+            ]
+        ]
+    },
+    {
+        "text": "Frontend Developer at Zomato",
+        "entities": [
+            [
+                0,
+                18,
+                "JOB_ROLE"
+            ],
+            [
+                22,
+                28,
+                "ORG"
+            ]
+        ]
+    },
+    {
+        "text": "Skilled in React Native, Flutter, and Kotlin for mobile development",
+        "entities": [
+            [
+                11,
+                23,
+                "SKILL"
+            ],
+            [
+                25,
+                32,
+                "SKILL"
+            ],
+            [
+                38,
+                44,
+                "SKILL"
+            ]
+        ]
+    },
+    {
+        "text": "DevOps Engineer at TATA Consultancy Services",
+        "entities": [
+            [
+                0,
+                15,
+                "JOB_ROLE"
+            ],
+            [
+                19,
+                44,
+                "ORG"
+            ]
+        ]
+    },
+    {
+        "text": "Proficient in Kubernetes, Jenkins, and Terraform",
+        "entities": [
+            [
+                14,
+                24,
+                "SKILL"
+            ],
+            [
+                26,
+                33,
+                "SKILL"
+            ],
+            [
+                39,
+                48,
+                "SKILL"
+            ]
+        ]
+    },
+    {
+        "text": "ML Engineer at OpenAI",
+        "entities": [
+            [
+                0,
+                11,
+                "JOB_ROLE"
+            ],
+            [
+                15,
+                21,
+                "ORG"
+            ]
+        ]
+    },
+    {
+        "text": "Experience with GraphQL, REST APIs, and PostgreSQL databases",
+        "entities": [
+            [
+                16,
+                23,
+                "SKILL"
+            ],
+            [
+                25,
+                34,
+                "SKILL"
+            ],
+            [
+                40,
+                50,
+                "SKILL"
+            ]
+        ]
+    },
+    {
+        "text": "SDE Intern at Adobe Systems",
+        "entities": [
+            [
+                0,
+                10,
+                "JOB_ROLE"
+            ],
+            [
+                14,
+                27,
+                "ORG"
+            ]
+        ]
+    },
+    {
+        "text": "Working knowledge of Git, GitHub, and CI/CD pipelines",
+        "entities": [
+            [
+                21,
+                24,
+                "SKILL"
+            ],
+            [
+                26,
+                32,
+                "SKILL"
+            ],
+            [
+                38,
+                43,
+                "SKILL"
+            ]
+        ]
+    },
+    {
+        "text": "Cloud Architect at IBM",
+        "entities": [
+            [
+                0,
+                15,
+                "JOB_ROLE"
+            ],
+            [
+                19,
+                22,
+                "ORG"
+            ]
+        ]
+    },
+    {
+        "text": "Expert in AWS Lambda, S3, EC2, and CloudFormation",
+        "entities": [
+            [
+                10,
+                13,
+                "SKILL"
+            ],
+            [
+                14,
+                20,
+                "SKILL"
+            ],
+            [
+                22,
+                24,
+                "SKILL"
+            ],
+            [
+                26,
+                29,
+                "SKILL"
+            ],
+            [
+                35,
+                49,
+                "SKILL"
+            ]
+        ]
+    },
+    {
+        "text": "Research Scientist at Meta AI",
+        "entities": [
+            [
+                0,
+                18,
+                "JOB_ROLE"
+            ],
+            [
+                22,
+                29,
+                "ORG"
+            ]
+        ]
+    },
+    {
+        "text": "Skilled in Deep Learning, CNNs, RNNs, and Transformer models",
+        "entities": [
+            [
+                11,
+                25,
+                "SKILL"
+            ],
+            [
+                27,
+                31,
+                "SKILL"
+            ],
+            [
+                33,
+                37,
+                "SKILL"
+            ],
+            [
+                43,
+                60,
+                "SKILL"
+            ]
+        ]
+    },
+    {
+        "text": "Technical Lead at Infosys",
+        "entities": [
+            [
+                0,
+                14,
+                "JOB_ROLE"
+            ],
+            [
+                18,
+                25,
+                "ORG"
+            ]
+        ]
+    },
+    {
+        "text": "Proficient in Angular, Vue.js, HTML5, CSS3, and SASS",
+        "entities": [
+            [
+                14,
+                21,
+                "SKILL"
+            ],
+            [
+                23,
+                29,
+                "SKILL"
+            ],
+            [
+                31,
+                36,
+                "SKILL"
+            ],
+            [
+                38,
+                42,
+                "SKILL"
+            ],
+            [
+                48,
+                52,
+                "SKILL"
+            ]
+        ]
+    },
+    {
+        "text": "SDE-2 at Uber Technologies",
+        "entities": [
+            [
+                0,
+                5,
+                "JOB_ROLE"
+            ],
+            [
+                9,
+                26,
+                "ORG"
+            ]
+        ]
+    },
+    {
+        "text": "Experience with Hadoop, Spark, and Apache Kafka",
+        "entities": [
+            [
+                16,
+                22,
+                "SKILL"
+            ],
+            [
+                24,
+                29,
+                "SKILL"
+            ],
+            [
+                35,
+                47,
+                "SKILL"
+            ]
+        ]
+    }
+]
