@@ -14,9 +14,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Initialize Embeddings
-# Using text-embedding-004 is generally better, but user suspects model
-# compatibility. Sticking to a known free-tier friendly embedding model.
-embeddings = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004") 
+# Using gemini-embedding-001 as text-embedding-004 is not available for this account
+embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001") 
 
 # Initialize Vector DB (Persisted)
 # Collection name 'resume_store' ensures we keep resumes separate

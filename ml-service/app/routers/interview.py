@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+from typing import Union
 from app.services.rag.service import get_interview_question, evaluate_answer
 
 router = APIRouter()
@@ -7,7 +8,7 @@ router = APIRouter()
 class QuestionRequest(BaseModel):
     skill: str
     difficulty: str = "Medium"
-    user_id: str  # Required for RAG context
+    user_id: Union[str, int]  # Accept both string and int from different services
 
 class AnswerRequest(BaseModel):
     question: str
@@ -16,7 +17,7 @@ class AnswerRequest(BaseModel):
 @router.post("/generate")
 def generate_question(request: QuestionRequest):
     # Use RAG service with user_id context
-    result = get_interview_question(request.skill, request.user_id)
+    result = get_interview_question(request.skill, str(request.user_id))
     
     if "error" in result:
         raise HTTPException(status_code=500, detail=result["error"])
