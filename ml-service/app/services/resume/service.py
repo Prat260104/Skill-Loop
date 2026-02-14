@@ -9,7 +9,7 @@ from fastapi import UploadFile, HTTPException
 # Load the Custom NER Model
 try:
     # Try loading custom NER model first
-    nlp = spacy.load("app/services/resume_parser/models/custom_ner_model")
+    nlp = spacy.load("app/services/resume/models/custom_ner_model")
     print("✅ Custom NER model loaded successfully!")
     USE_CUSTOM_NER = True
 except OSError:
