@@ -26,7 +26,7 @@ public class ResumeService {
     @Value("${ml.service.url:http://localhost:8001}")
     private String mlServiceUrl;
 
-    public ResumeResponseDTO parseResume(MultipartFile file) throws IOException {
+    public ResumeResponseDTO parseResume(MultipartFile file, Long userId) throws IOException {
         // 1. Prepare Headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -45,6 +45,7 @@ public class ResumeService {
         };
 
         body.add("file", fileResource);
+        body.add("user_id", userId.toString());
 
         // 3. Create Request Entity
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);

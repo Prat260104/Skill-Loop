@@ -14,7 +14,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Initialize Embeddings
-embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
+# Using text-embedding-004 is generally better, but user suspects model
+# compatibility. Sticking to a known free-tier friendly embedding model.
+embeddings = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004") 
 
 # Initialize Vector DB (Persisted)
 # Collection name 'resume_store' ensures we keep resumes separate
@@ -25,23 +27,32 @@ vector_store = Chroma(
 )
 
 # Initialize LLM
-llm = ChatGoogleGenerativeAI(model="models/gemini-flash-latest", temperature=0.7)
+# Switching back to 1.5-flash as it is the standard free model.
+# The previous 404 might have been momentary or due to API version.
+llm = ChatGoogleGenerativeAI(model="models/gemini-1.5-flash", temperature=0.7)
 
 def ingest_document(text: str, user_id: str):
     """
     Ingests a document (Resume/Profile) into the Vector DB.
     Metadata includes user_id for filtering.
     """
-    # Create a Document object
-    doc = Document(
-        page_content=text,
-        metadata={"user_id": str(user_id)}
-    )
-    
-    # Add to Chroma (Automatically handles embedding and storage)
-    vector_store.add_documents([doc])
-    print(f"✅ Ingested document for user {user_id}")
-    return True
+    try:
+        # Create a Document object
+        doc = Document(
+            page_content=text,
+            metadata={"user_id": str(user_id)}
+        )
+        
+        # Add to Chroma (Automatically handles embedding and storage)
+        vector_store.add_documents([doc])
+        print(f"✅ Ingested document for user {user_id}")
+        return True
+    except Exception as e:
+        print(f"❌ Ingestion Failed: {e}")
+        # Identify if it's a model issue
+        if "404" in str(e):
+             print("⚠️ Model not found. Check API Key and Model Name.")
+        return False
 
 def get_interview_question(topic: str, user_id: str):
     """

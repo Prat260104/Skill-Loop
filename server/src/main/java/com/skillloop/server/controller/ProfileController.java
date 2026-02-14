@@ -22,7 +22,7 @@ public class ProfileController {
         public ResponseEntity<?> uploadResume(@PathVariable Long id,
                         @RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
                 try {
-                        com.skillloop.server.dto.ResumeResponseDTO parsedData = resumeService.parseResume(file);
+                        com.skillloop.server.dto.ResumeResponseDTO parsedData = resumeService.parseResume(file, id);
                         // In a real app, we would save this data to the user profile here.
                         // For now, we return it to the frontend for verification.
                         return ResponseEntity.ok(parsedData);

@@ -41,14 +41,23 @@ async def extract_text_from_pdf(file: UploadFile) -> str:
     """Reads PDF and returns raw text string."""
     text_content = ""
     try:
+        # Read file into memory
         file_bytes = await file.read()
+        
+        # Reset file pointer just in case
+        await file.seek(0)
+        
         with pdfplumber.open(io.BytesIO(file_bytes)) as pdf:
             for page in pdf.pages:
-                text_content += page.extract_text() + "\n"
+                extracted = page.extract_text()
+                if extracted:
+                    text_content += extracted + "\n"
+                    
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to read PDF: {str(e)}")
     
     if not text_content.strip():
+        # Fallback for scanned PDFs or empty files could go here
         raise HTTPException(status_code=400, detail="PDF is empty or unreadable.")
     
     return text_content
