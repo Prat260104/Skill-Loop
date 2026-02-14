@@ -55,7 +55,8 @@ def analyze_github_profile(username: str):
         # 2. AI ANALYSIS (The Brain)
         # We feed the collected context to Gemini
         # Switched to flash-latest for better quota stability
-        model = genai.GenerativeModel('gemini-flash-latest')
+        print(f"DEBUG: Using model models/gemini-flash-latest")
+        model = genai.GenerativeModel('models/gemini-flash-latest')
         
         prompt = f"""
         You are a Technical Recruiter and Senior Engineer. Analyze these {len(project_descriptions)} GitHub projects to build a candidate profile.

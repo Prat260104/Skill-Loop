@@ -2,15 +2,19 @@ import json
 from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
 from langchain_community.vectorstores import Chroma
 from langchain_core.documents import Document
-from langchain.chains import create_retrieval_chain
-from langchain.chains.combine_documents import create_stuff_documents_chain
+try:
+    from langchain.chains import create_retrieval_chain
+    from langchain.chains.combine_documents import create_stuff_documents_chain
+except ImportError:
+    from langchain_classic.chains import create_retrieval_chain
+    from langchain_classic.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 from dotenv import load_dotenv
 
 load_dotenv()
 
 # Initialize Embeddings
-embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
 
 # Initialize Vector DB (Persisted)
 # Collection name 'resume_store' ensures we keep resumes separate
@@ -21,7 +25,7 @@ vector_store = Chroma(
 )
 
 # Initialize LLM
-llm = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.7)
+llm = ChatGoogleGenerativeAI(model="models/gemini-flash-latest", temperature=0.7)
 
 def ingest_document(text: str, user_id: str):
     """
@@ -85,7 +89,8 @@ def get_interview_question(topic: str, user_id: str):
     
     # 4. Invoke the Chain
     try:
-        response = rag_chain.invoke({"topic": topic})
+        # Pass 'input' for the retriever and 'topic' for the prompt
+        response = rag_chain.invoke({"input": topic, "topic": topic})
         clean_text = response["answer"].replace("```json", "").replace("```", "").strip()
         return json.loads(clean_text)
     except Exception as e:
@@ -122,7 +127,12 @@ def evaluate_answer(question: str, user_answer: str):
     
     try:
         response = llm.invoke(prompt)
-        clean_text = response.content.replace("```json", "").replace("```", "").strip()
+        content = response.content
+        if isinstance(content, list):
+            # content might be a list of parts, join them
+            content = " ".join([str(c) for c in content])
+            
+        clean_text = content.replace("```json", "").replace("```", "").strip()
         return json.loads(clean_text)
     except Exception as e:
         return {"error": str(e)}
