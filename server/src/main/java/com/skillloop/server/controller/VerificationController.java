@@ -23,13 +23,14 @@ public class VerificationController {
     @Autowired
     private UserRepository userRepository;
 
-    private final String ML_SERVICE_URL = "http://localhost:8000/api/v1/interview";
+    @org.springframework.beans.factory.annotation.Value("${ml.service.url:http://localhost:8001}")
+    private String mlServiceBaseUrl;
 
     @PostMapping("/generate")
     public ResponseEntity<?> generateQuestion(@RequestBody InterviewPayload.QuestionRequest request) {
         try {
             // Forward to ML Service
-            return restTemplate.postForEntity(ML_SERVICE_URL + "/generate", request, Map.class);
+            return restTemplate.postForEntity(mlServiceBaseUrl + "/api/v1/interview/generate", request, Map.class);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("ML Service Error: " + e.getMessage());
         }
@@ -39,7 +40,8 @@ public class VerificationController {
     public ResponseEntity<?> evaluateAnswer(@RequestBody InterviewPayload.AnswerRequest request) {
         try {
             // 1. Get Evaluation from ML Service
-            ResponseEntity<Map> response = restTemplate.postForEntity(ML_SERVICE_URL + "/evaluate", request, Map.class);
+            ResponseEntity<Map> response = restTemplate.postForEntity(mlServiceBaseUrl + "/api/v1/interview/evaluate",
+                    request, Map.class);
             Map<String, Object> body = response.getBody();
 
             if (body != null && body.containsKey("is_verified") && (Boolean) body.get("is_verified")) {

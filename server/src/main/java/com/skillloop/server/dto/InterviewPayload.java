@@ -5,12 +5,16 @@ public class InterviewPayload {
         private String skill;
         private String difficulty;
 
+        @com.fasterxml.jackson.annotation.JsonProperty("user_id")
+        private Long userId;
+
         public QuestionRequest() {
         }
 
-        public QuestionRequest(String skill, String difficulty) {
+        public QuestionRequest(String skill, String difficulty, Long userId) {
             this.skill = skill;
             this.difficulty = difficulty;
+            this.userId = userId;
         }
 
         public String getSkill() {
@@ -27,6 +31,14 @@ public class InterviewPayload {
 
         public void setDifficulty(String difficulty) {
             this.difficulty = difficulty;
+        }
+
+        public Long getUserId() {
+            return userId;
+        }
+
+        public void setUserId(Long userId) {
+            this.userId = userId;
         }
     }
 
