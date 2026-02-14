@@ -15,7 +15,7 @@ export default function InterviewModal({ isOpen, onClose, skill, userId, onVerif
         setStep('loading');
         setError(null);
         try {
-            const data = await verificationApi.generateQuestion(skill);
+            const data = await verificationApi.generateQuestion(skill, userId);
             if (data.error) throw new Error(data.error);
             setQuestionData(data);
             setStep('question');
