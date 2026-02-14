@@ -321,6 +321,10 @@ def analyze_resume_text(text: str) -> dict:
             found_skills.add(skill.strip().title())
             
     # Explicitly ensure uniqueness (though Set does it) and sort for consistency
-    extracted_data["skills"] = sorted(list(set(found_skills)))
+    # MERGE: Combine NER skills with Keyword skills
+    existing_skills = set(extracted_data["skills"])
+    all_skills = existing_skills.union(found_skills)
+    
+    extracted_data["skills"] = sorted(list(all_skills))
     
     return extracted_data

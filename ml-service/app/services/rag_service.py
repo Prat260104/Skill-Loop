@@ -27,9 +27,8 @@ vector_store = Chroma(
 )
 
 # Initialize LLM
-# Switching back to 1.5-flash as it is the standard free model.
-# The previous 404 might have been momentary or due to API version.
-llm = ChatGoogleGenerativeAI(model="models/gemini-1.5-flash", temperature=0.7)
+# Switching back to flash-latest as 1.5-flash failed with 404 in github test.
+llm = ChatGoogleGenerativeAI(model="models/gemini-flash-latest", temperature=0.7)
 
 def ingest_document(text: str, user_id: str):
     """
