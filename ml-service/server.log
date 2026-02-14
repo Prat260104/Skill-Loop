@@ -1,0 +1,66 @@
+PyTorch was not found. Models won't be available and only tokenizers, configuration and file/data utilities can be used.
+/Users/prateekrai/Desktop/Skill LOOp/ml-service/app/services/rag/service.py:23: LangChainDeprecationWarning: The class `Chroma` was deprecated in LangChain 0.2.9 and will be removed in 1.0. An updated version of the class exists in the `langchain-chroma package and should be used instead. To use it run `pip install -U `langchain-chroma` and import as `from `langchain_chroma import Chroma``.
+  vector_store = Chroma(
+/Users/prateekrai/Desktop/Skill LOOp/ml-service/venv/lib/python3.13/site-packages/pydantic/_internal/_config.py:383: UserWarning: Valid config keys have changed in V2:
+* 'allow_population_by_field_name' has been renamed to 'validate_by_name'
+  warnings.warn(message, UserWarning)
+/Users/prateekrai/Desktop/Skill LOOp/ml-service/app/services/github/service.py:2: FutureWarning: 
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving 
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+WARNING:absl:Compiled the loaded model, but the compiled metrics have yet to be built. `model.compile_metrics` will be empty until you train or evaluate the model.
+INFO:     Started server process [60505]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+✅ Custom NER model loaded successfully!
+✅ Loaded 151 skills from /Users/prateekrai/Desktop/Skill LOOp/ml-service/app/services/resume/data/skills.json
+🔄 Loading sentiment model...
+✅ Model loaded: sentiment_model.h5
+✅ Tokenizer loaded: tokenizer.pkl
+   Vocabulary size: 10000
+   Max sequence length: 200
+✅ Sentiment analyzer ready!
+
+✅ FOUND Section [SUMMARY]: 361 chars
+✅ FOUND Section [SKILLS]: 349 chars
+✅ FOUND Section [CERTIFICATIONS]: 85 chars
+✅ FOUND Section [EXPERIENCE]: 782 chars
+✅ FOUND Section [PROJECTS]: 897 chars
+✅ FOUND Section [EDUCATION]: 261 chars
+🧐 NER Candidate Role: 'Technical Lead'
+   -> Associated ORG: 'None'
+🧐 NER Candidate Role: 'Mentoring students'
+   -> Associated ORG: 'None'
+🧐 NER Candidate Role: 'ML fundamentals'
+   -> Associated ORG: 'None'
+🧐 NER Candidate Role: 'ML models'
+   -> Associated ORG: 'None'
+🧐 NER Candidate Role: 'ML model'
+   -> Associated ORG: 'None'
+🧐 NER Candidate Role: 'Internship Coordinator'
+   -> Associated ORG: 'None'
+🧐 NER Candidate Role: 'Institutions Jan'
+   -> Associated ORG: 'None'
+🧐 NER Candidate Role: 'Nov 2025'
+   -> Associated ORG: 'None'
+✅ Found 23 skills in SKILLS section
+INFO:     127.0.0.1:58089 - "POST /api/v1/resume/parse HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:batchEmbedContents "HTTP/1.1 404 Not Found"
+❌ Ingestion Failed: Error embedding content (NOT_FOUND): 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/text-embedding-004 is not found for API version v1beta, or is not supported for embedContent. Call ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+⚠️ Model not found. Check API Key and Model Name.
+✅ FOUND Section [SUMMARY]: 41 chars
+✅ FOUND Section [EXPERIENCE]: 27 chars
+✅ FOUND Section [SKILLS]: 26 chars
+🧐 Regex Candidate: Role='Engineer' | Company='Engineer'
+✅ ACCEPTED (Regex): Engineer at Engineer
+🧐 NER Candidate Role: 'Software Engineer'
+   -> Associated ORG: 'Google'
+✅ Found 3 skills in SKILLS section
+INFO:     127.0.0.1:58098 - "POST /api/v1/resume/parse HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:batchEmbedContents "HTTP/1.1 404 Not Found"

@@ -90,12 +90,24 @@ def is_valid_role(role: str) -> bool:
         "work", "worked", "working", "responsible", "involved", "participated", "contributed",
         "managing", "managed", "developing", "developed", "creating", "created",
         "using", "used", "utilized", "assist", "assisted", "handling", "handled",
-        "team", "member", "project", "role", "task", "duties"
+        "team", "member", "project", "role", "task", "duties", 
+        # New blocklist based on logs
+        "mentoring", "mentor", "teaching", "fundamentals", "basics", "concepts", "models", "model",
+        "institutions", "institution", "coordinator", "activities"
     }
     
-    if role.lower() in invalid_roles:
+    role_lower = role.lower()
+    if role_lower in invalid_roles:
         return False
         
+    # Block roles that start with a month (e.g., "Nov 2025")
+    if re.match(r"^(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)", role_lower):
+        return False
+        
+    # Block roles that look like years "2023" or "2023-2024"
+    if re.match(r"^\d{4}", role): 
+        return False
+
     return True
 
 def is_valid_company(company: str) -> bool:
@@ -246,10 +258,18 @@ def analyze_resume_text(text: str) -> dict:
         for match in matches:
             if isinstance(match, tuple) and len(match) >= 2:
                 role, company = match[0].strip(), match[1].strip()
-                 # Filter out false positives
-                if not is_valid_role(role) or not is_valid_company(company):
+                
+                print(f"🧐 Regex Candidate: Role='{role}' | Company='{company}'")
+                
+                # Filter out false positives
+                if not is_valid_role(role):
+                    print(f"❌ REJECTED ROLE (Regex): '{role}'")
+                    continue
+                if not is_valid_company(company):
+                    print(f"❌ REJECTED COMPANY (Regex): '{company}'")
                     continue
                     
+                print(f"✅ ACCEPTED (Regex): {role} at {company}")
                 extracted_data["experience"].append({"org": f"{role} at {company}", "type": "Experience (Regex)"})
 
         # B. NER Extraction (Specific to Experience Section)
@@ -258,15 +278,20 @@ def analyze_resume_text(text: str) -> dict:
             ner_jobs = []
             for ent in doc_exp.ents:
                 if ent.label_ == "JOB_ROLE":
+                    print(f"🧐 NER Candidate Role: '{ent.text}'")
+                    
                     # Validate the role itself
                     if not is_valid_role(ent.text):
+                        print(f"❌ REJECTED ROLE (NER): '{ent.text}'")
                         continue
                         
                     # Find nearest ORG in this specific text block
                     org_text = find_nearest_org(ent, doc_exp)
+                    print(f"   -> Associated ORG: '{org_text}'")
                     
                     if org_text:
                         if not is_valid_company(org_text):
+                            print(f"   ❌ REJECTED COMPANY (NER): '{org_text}' - Falling back to role only")
                             job_entry = ent.text # Fallback to just role
                         else:
                             job_entry = f"{ent.text} at {org_text}"
