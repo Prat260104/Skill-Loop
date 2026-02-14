@@ -13,6 +13,21 @@ class QuestionRequest(BaseModel):
 class AnswerRequest(BaseModel):
     question: str
     user_answer: str
+    
+    class Config:
+        # Allow both userAnswer (from Java) and user_answer (Python convention)
+        populate_by_name = True
+        
+    # Accept both field names
+    @classmethod
+    def __init_subclass__(cls):
+        super().__init_subclass__()
+    
+    def __init__(self, **data):
+        # Convert userAnswer to user_answer if present
+        if 'userAnswer' in data and 'user_answer' not in data:
+            data['user_answer'] = data.pop('userAnswer')
+        super().__init__(**data)
 
 @router.post("/generate")
 def generate_question(request: QuestionRequest):

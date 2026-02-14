@@ -6,6 +6,7 @@ public class InterviewPayload {
         private String difficulty;
 
         @com.fasterxml.jackson.annotation.JsonProperty("user_id")
+        @com.fasterxml.jackson.annotation.JsonAlias({ "userId", "user_id" })
         private Long userId;
 
         public QuestionRequest() {
@@ -47,7 +48,11 @@ public class InterviewPayload {
         @com.fasterxml.jackson.annotation.JsonProperty("user_answer")
         @com.fasterxml.jackson.annotation.JsonAlias("userAnswer")
         private String userAnswer;
+
+        @com.fasterxml.jackson.annotation.JsonAlias({ "userId", "user_id" })
         private Long userId; // To save verification
+
+        @com.fasterxml.jackson.annotation.JsonAlias({ "skill" })
         private String skill; // To save verification
 
         public AnswerRequest() {
