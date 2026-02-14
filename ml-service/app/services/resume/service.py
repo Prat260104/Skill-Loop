@@ -112,12 +112,25 @@ def analyze_resume_text(text: str) -> dict:
     # Define Header Patterns
     # (?i) = case-insensitive
     # (?:[:\-]|\r?\n|$) = matches colon, dash, OR newline, OR end of string
+    # Define Header Patterns
+    # (?i) = case-insensitive
+    # (?:[:\-]|\r?\n|$) = matches colon, dash, OR newline, OR end of string
     header_patterns = {
-        "SUMMARY": r"(?:^|\n)\s*(?:Professional\s+|Career\s+|Exec(?:utive)?\s+)?(Summary|Objective|Profile|About Me|Bio)\s*(?:[:\-]|\r?\n|$)",
-        "EXPERIENCE": r"(?:^|\n)\s*(?:Professional\s+|Work\s+|Relevant\s+|Additional\s+)?(Experience|Employment|Internships|Work\s+History|Experience\s+Summary)\s*(?:[:\-]|\r?\n|$)(?!\s*\d)",
-        "SKILLS": r"(?:^|\n)\s*(?:Technical\s+|Professional\s+|Core\s+|Soft\s+)?(Skills|Technologies|Tech\s+Stack|Competencies|Languages\s+and\s+Technologies|Tool(?:s)?)\s*(?:[:\-]|\r?\n|$)",
-        "EDUCATION": r"(?:^|\n)\s*(?:Academic\s+)?(Education|Qualifications|Academic\s+History|Degrees)\s*(?:[:\-]|\r?\n|$)",
-        "PROJECTS": r"(?:^|\n)\s*(?:Key\s+|Academic\s+|Personal\s+)?(Projects|Portfolio)\s*(?:[:\-]|\r?\n|$)"
+        "SUMMARY": r"(?:^|\n)\s*(?:Professional\s+|Career\s+|Exec(?:utive)?\s+)?(Summary|Objective|Profile|About\s+Me|Bio(?:graphy)?|Summary\s+of\s+Qualifications|Career\s+Highligts|Professional\s+Overview)\s*(?:[:\-]|\r?\n|$)",
+        "EXPERIENCE": r"(?:^|\n)\s*(?:Professional\s+|Work\s+|Relevant\s+|Additional\s+|Industry\s+|Career\s+)?(Experience|Employment|Internships|Work\s+History|Experience\s+Summary|Career\s+History|Professional\s+Background)\s*(?:[:\-]|\r?\n|$)(?!\s*\d)",
+        "SKILLS": r"(?:^|\n)\s*(?:Technical\s+|Professional\s+|Core\s+|Soft\s+|Hard\s+|Key\s+|Computer\s+|Software\s+|IT\s+)?(Skills|Technologies|Tech\s+Stack|Competencies|Languages\s+and\s+Technologies|Tool(?:s)?|Technical\s+Proficiency|Skills\s+&\s+Expertise|Technical\s+Set)\s*(?:[:\-]|\r?\n|$)",
+        "EDUCATION": r"(?:^|\n)\s*(?:Academic\s+|Educational\s+)?(Education|Qualifications|Academic\s+History|Degrees|Academic\s+Background|Education\s+&\s+Credentials|Scholastic\s+Achievements)\s*(?:[:\-]|\r?\n|$)",
+        "PROJECTS": r"(?:^|\n)\s*(?:Key\s+|Academic\s+|Personal\s+|Major\s+|Selected\s+|Capstone\s+)?(Projects|Portfolio|Project\s+Experience|Notable\s+Projects)\s*(?:[:\-]|\r?\n|$)",
+        
+        # Delimiters: Sections we don't extract but use to stop other sections
+        "ACHIEVEMENTS": r"(?:^|\n)\s*(?:Key\s+|Scholastic\s+|Academic\s+)?(Achievements|Awards|Honors|Accomplishments|Co-curricular\s+Activities|Awards\s+&\s+Honors|Distinctions)\s*(?:[:\-]|\r?\n|$)",
+        "CERTIFICATIONS": r"(?:^|\n)\s*(?:Professional\s+|Technical\s+)?(Certifications|Courses|Licenses|Training|Workshops|Credentials|Accreditations)\s*(?:[:\-]|\r?\n|$)",
+        "LANGUAGES": r"(?:^|\n)\s*(?:Spoken\s+|Foreign\s+)?(Languages?|Language\s+Proficiency|Linguistic\s+Skills)\s*(?:[:\-]|\r?\n|$)",
+        "HOBBIES": r"(?:^|\n)\s*(?:Personal\s+)?(Hobbies|Interests|Extracurricular(?:\s+Activities)?|Pastimes|Leisure)\s*(?:[:\-]|\r?\n|$)",
+        "REFERENCES": r"(?:^|\n)\s*(?:Professional\s+)?(References|Referees)\s*(?:[:\-]|\r?\n|$)",
+        "DECLARATION": r"(?:^|\n)\s*(?:Author'?s\s+)?(Declaration|Signature|Statement)\s*(?:[:\-]|\r?\n|$)",
+        "PUBLICATIONS": r"(?:^|\n)\s*(?:Research\s+)?(Publications|Papers|Presentations|Conference\s+Proceedings|Research\s+Work)\s*(?:[:\-]|\r?\n|$)",
+        "VOLUNTEER": r"(?:^|\n)\s*(?:Community\s+|Social\s+)?(Volunteer(?:\s+Experience|\s+Work)?|Community\s+Service|Pro\s+Bono)\s*(?:[:\-]|\r?\n|$)"
     }
     
     # Helper to find the start index of a section
