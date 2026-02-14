@@ -1,4 +1,4 @@
-from app.services.rag_service import ingest_document, get_interview_question, evaluate_answer
+from app.services.rag.service import ingest_document, get_interview_question, evaluate_answer
 import os
 from dotenv import load_dotenv
 

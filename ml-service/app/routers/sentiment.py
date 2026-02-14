@@ -9,7 +9,7 @@ Endpoints:
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
-from app.services.sentiment_analyzer import get_analyzer
+from app.services.sentiment import get_analyzer
 
 # Create router instance
 router = APIRouter(

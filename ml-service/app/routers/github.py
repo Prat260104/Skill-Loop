@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from app.services.github_scraper import analyze_github_profile
+from app.services.github import analyze_github_profile
 import re
 
 router = APIRouter()

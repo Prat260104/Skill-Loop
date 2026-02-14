@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import List, Dict, Optional, Any
-from app.services.recommender import recommender
+from app.services.recommendation import recommender
 
 router = APIRouter()
 

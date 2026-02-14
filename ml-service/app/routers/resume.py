@@ -1,6 +1,6 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
-from app.services.resume_parser import extract_text_from_pdf, analyze_resume_text
-from app.services.rag_service import ingest_document
+from app.services.resume import extract_text_from_pdf, analyze_resume_text
+from app.services.rag.service import ingest_document
 from fastapi import Form
 
 router = APIRouter()
