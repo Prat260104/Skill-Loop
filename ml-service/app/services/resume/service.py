@@ -90,16 +90,23 @@ def is_valid_role(role: str) -> bool:
         "work", "worked", "working", "responsible", "involved", "participated", "contributed",
         "managing", "managed", "developing", "developed", "creating", "created",
         "using", "used", "utilized", "assist", "assisted", "handling", "handled",
-        "team", "member", "project", "role", "task", "duties", 
+        "team", "project", "role", "task", "duties", 
         # New blocklist based on logs
         "mentoring", "mentor", "teaching", "fundamentals", "basics", "concepts", "models", "model",
-        "institutions", "institution", "coordinator", "activities"
+        "institutions", "institution", "activities"
     }
     
     role_lower = role.lower()
-    if role_lower in invalid_roles:
-        return False
-        
+    
+    # Check if any word in the role is in the restricted list
+    # usage: "Mentoring students" -> ["mentoring", "students"] -> "mentoring" is blocked -> Return False
+    tokens = role_lower.split()
+    for token in tokens:
+        # Strip punctuation
+        token = re.sub(r'[^\w\s]', '', token)
+        if token in invalid_roles:
+            return False
+            
     # Block roles that start with a month (e.g., "Nov 2025")
     if re.match(r"^(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)", role_lower):
         return False
@@ -251,7 +258,7 @@ def analyze_resume_text(text: str) -> dict:
     target_exp_text = sections["EXPERIENCE"]
     if target_exp_text:
         # A. Regex Extraction (Specific to Experience Section)
-        job_roles = r"(Intern|Engineer|Developer|Lead|Manager|Head|Coordinator|Volunteer|Member|Fellow|Specialist|Analyst|Consultant|Director|Founder|Co-Founder|Architect|Administrator|Associate|Researcher)"
+        job_roles = r"(Intern|Engineer|Developer|Lead|Manager|Head|Coordinator|Volunteer|Member|Fellow|Specialist|Analyst|Consultant|Director|Founder|Co-Founder|Architect|Administrator|Associate|Researcher|Contributor)"
         role_pattern = fr"(?i)\b({job_roles}[\w\s]*?)\s+(?:at|@)\s+([A-Z][\w\s&]+?)(?=\s+from|\s+in|\s*[\(\|]|\s*[\d]|$)"
         
         matches = re.findall(role_pattern, target_exp_text)

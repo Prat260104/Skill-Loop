@@ -90,7 +90,7 @@ export default function ProfilePage() {
             if (parsedData.experience && parsedData.experience.length > 0) {
                 // parsedData.experience is likely List<Map> from API: [{org: "Google", type: "AI"}, ...]
                 // We want to format it nicely for the text area
-                const newExpLines = parsedData.experience.map(exp => `Worked at ${exp.org}`);
+                const newExpLines = parsedData.experience.map(exp => exp.org);
                 setExperience(newExpLines.join('\n'));
             }
 
