@@ -80,6 +80,51 @@ def find_nearest_org(job_role_entity, doc):
             return ent.text
     return None
 
+def is_valid_role(role: str) -> bool:
+    """Refined check to see if a string is likely a valid job role."""
+    role = role.strip()
+    if len(role) < 3: return False
+    
+    # Common verbs/junk that NER might pick up
+    invalid_roles = {
+        "work", "worked", "working", "responsible", "involved", "participated", "contributed",
+        "managing", "managed", "developing", "developed", "creating", "created",
+        "using", "used", "utilized", "assist", "assisted", "handling", "handled",
+        "team", "member", "project", "role", "task", "duties"
+    }
+    
+    if role.lower() in invalid_roles:
+        return False
+        
+    return True
+
+def is_valid_company(company: str) -> bool:
+    """Refined check to see if a string is likely a valid company/org."""
+    company = company.strip()
+    if len(company) < 2: return False
+    
+    company_lower = company.lower()
+    
+    # Check for dates (Months, Years)
+    months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december", 
+              "jan", "feb", "mar", "apr", "jun", "jul", "aug", "sep", "sept", "oct", "nov", "dec"]
+    
+    # If the company is JUST a month or year, reject it
+    if company_lower in months: return False
+    if re.match(r"^\d{4}$", company): return False # Year only
+    if re.match(r"^(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s+\d{4}$", company_lower): return False # "Nov 2025"
+    
+    # Common false positives
+    invalid_companies = {
+        "present", "current", "various", "university", "college", "school", "institute", 
+        "linkedin", "github", "gitlab", "twitter", "medium", "facebook", "instagram", "youtube", "project", "model"
+    }
+    
+    if company_lower in invalid_companies:
+        return False
+        
+    return True
+
 def analyze_resume_text(text: str) -> dict:
     """Analyzes text using Custom NER Model or fallback to Keyword Matching"""
     if nlp is None:
@@ -202,8 +247,9 @@ def analyze_resume_text(text: str) -> dict:
             if isinstance(match, tuple) and len(match) >= 2:
                 role, company = match[0].strip(), match[1].strip()
                  # Filter out false positives
-                if len(company) < 2 or company.lower() in ["january", "present", "university", "linkedin", "github"]:
+                if not is_valid_role(role) or not is_valid_company(company):
                     continue
+                    
                 extracted_data["experience"].append({"org": f"{role} at {company}", "type": "Experience (Regex)"})
 
         # B. NER Extraction (Specific to Experience Section)
@@ -212,9 +258,20 @@ def analyze_resume_text(text: str) -> dict:
             ner_jobs = []
             for ent in doc_exp.ents:
                 if ent.label_ == "JOB_ROLE":
+                    # Validate the role itself
+                    if not is_valid_role(ent.text):
+                        continue
+                        
                     # Find nearest ORG in this specific text block
                     org_text = find_nearest_org(ent, doc_exp)
-                    job_entry = f"{ent.text} at {org_text}" if org_text else ent.text
+                    
+                    if org_text:
+                        if not is_valid_company(org_text):
+                            job_entry = ent.text # Fallback to just role
+                        else:
+                            job_entry = f"{ent.text} at {org_text}"
+                    else:
+                        job_entry = ent.text
                     
                     # Deduplicate with Regex results
                     if job_entry not in [e['org'] for e in extracted_data['experience']]:
