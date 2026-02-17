@@ -1,6 +1,7 @@
+PyTorch was not found. Models won't be available and only tokenizers, configuration and file/data utilities can be used.
 /Users/prateekrai/Desktop/Skill LOOp/ml-service/app/services/rag/service.py:22: LangChainDeprecationWarning: The class `Chroma` was deprecated in LangChain 0.2.9 and will be removed in 1.0. An updated version of the class exists in the `langchain-chroma package and should be used instead. To use it run `pip install -U `langchain-chroma` and import as `from `langchain_chroma import Chroma``.
   vector_store = Chroma(
-/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/pydantic/_internal/_config.py:373: UserWarning: Valid config keys have changed in V2:
+/Users/prateekrai/Desktop/Skill LOOp/ml-service/venv/lib/python3.13/site-packages/pydantic/_internal/_config.py:383: UserWarning: Valid config keys have changed in V2:
 * 'allow_population_by_field_name' has been renamed to 'validate_by_name'
   warnings.warn(message, UserWarning)
 /Users/prateekrai/Desktop/Skill LOOp/ml-service/app/services/github/service.py:2: FutureWarning: 
@@ -12,74 +13,16 @@ See README for more details:
 https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
 
   import google.generativeai as genai
-Traceback (most recent call last):
-  File "<frozen runpy>", line 198, in _run_module_as_main
-  File "<frozen runpy>", line 88, in _run_code
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/uvicorn/__main__.py", line 4, in <module>
-    uvicorn.main()
-    ~~~~~~~~~~~~^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/click/core.py", line 1161, in __call__
-    return self.main(*args, **kwargs)
-           ~~~~~~~~~^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/click/core.py", line 1082, in main
-    rv = self.invoke(ctx)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/click/core.py", line 1443, in invoke
-    return ctx.invoke(self.callback, **ctx.params)
-           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/click/core.py", line 788, in invoke
-    return __callback(*args, **kwargs)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/uvicorn/main.py", line 412, in main
-    run(
-    ~~~^
-        app,
-        ^^^^
-    ...<45 lines>...
-        h11_max_incomplete_event_size=h11_max_incomplete_event_size,
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    )
-    ^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/uvicorn/main.py", line 579, in run
-    server.run()
-    ~~~~~~~~~~^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/uvicorn/server.py", line 65, in run
-    return asyncio.run(self.serve(sockets=sockets))
-           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 194, in run
-    return runner.run(main)
-           ~~~~~~~~~~^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 118, in run
-    return self._loop.run_until_complete(task)
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
-  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/uvicorn/server.py", line 69, in serve
-    await self._serve(sockets)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/uvicorn/server.py", line 76, in _serve
-    config.load()
-    ~~~~~~~~~~~^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/uvicorn/config.py", line 434, in load
-    self.loaded_app = import_from_string(self.app)
-                      ~~~~~~~~~~~~~~~~~~^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/uvicorn/importer.py", line 22, in import_from_string
-    raise exc from None
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/uvicorn/importer.py", line 19, in import_from_string
-    module = importlib.import_module(module_str)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py", line 88, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
-  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
-  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
-  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
-  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
-  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
-  File "/Users/prateekrai/Desktop/Skill LOOp/ml-service/app/main.py", line 3, in <module>
-    from app.routers import resume, interview, recommendation, github, sentiment, churn
-  File "/Users/prateekrai/Desktop/Skill LOOp/ml-service/app/routers/sentiment.py", line 12, in <module>
-    from app.services.sentiment import get_analyzer
-  File "/Users/prateekrai/Desktop/Skill LOOp/ml-service/app/services/sentiment/__init__.py", line 2, in <module>
-    from .service import SentimentAnalyzer, get_analyzer
-  File "/Users/prateekrai/Desktop/Skill LOOp/ml-service/app/services/sentiment/service.py", line 15, in <module>
-    from tensorflow.keras.models import load_model
-ModuleNotFoundError: No module named 'tensorflow'
+INFO:     Started server process [19552]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
 ✅ Custom NER model loaded successfully!
 ✅ Loaded 151 skills from /Users/prateekrai/Desktop/Skill LOOp/ml-service/app/services/resume/data/skills.json
+✅ Loaded existing Churn Pipeline (Scaler + RF).
+INFO:     127.0.0.1:54747 - "POST /api/v1/churn/predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54752 - "POST /api/v1/churn/predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54759 - "POST /api/v1/churn/predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54775 - "POST /api/v1/churn/predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54785 - "POST /api/v1/churn/predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54791 - "POST /api/v1/churn/predict HTTP/1.1" 200 OK

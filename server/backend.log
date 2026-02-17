@@ -157,3 +157,59 @@ Users already exist. Skipping seeding. 🚀
 📊 Found 1 potentially inactive users.
 ❌ Error processing user 4: I/O error on POST request for "http://localhost:8001/api/v1/churn/predict": Connection refused
 ✅ Churn Job Completed. Sent re-engagement alerts to 0 users.
+🕵️‍♂️ Starting Churn Prediction Job: Analyzing User Behavior...
+📊 Found 1 potentially inactive users.
+❌ Error processing user 4: I/O error on POST request for "http://localhost:8001/api/v1/churn/predict": Connection refused
+✅ Churn Job Completed. Sent re-engagement alerts to 0 users.
+2026-02-18T03:30:05.798+05:30  INFO 17588 --- [server] [nio-9090-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-02-18T03:30:05.800+05:30  INFO 17588 --- [server] [nio-9090-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-02-18T03:30:05.802+05:30  INFO 17588 --- [server] [nio-9090-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+🕵️‍♂️ Starting Churn Prediction Job: Analyzing User Behavior...
+📊 Found 1 potentially inactive users.
+❌ Error processing user 4: I/O error on POST request for "http://localhost:8001/api/v1/churn/predict": Connection refused
+✅ Churn Job Completed. Sent re-engagement alerts to 0 users.
+🕵️‍♂️ Starting Churn Prediction Job: Analyzing User Behavior...
+📊 Found 1 potentially inactive users.
+❌ Error processing user 4: I/O error on POST request for "http://localhost:8001/api/v1/churn/predict": Connection refused
+✅ Churn Job Completed. Sent re-engagement alerts to 0 users.
+🕵️‍♂️ Starting Churn Prediction Job: Analyzing User Behavior...
+📊 Found 1 potentially inactive users.
+❌ Error processing user 4: I/O error on POST request for "http://localhost:8001/api/v1/churn/predict": Connection refused
+✅ Churn Job Completed. Sent re-engagement alerts to 0 users.
+🕵️‍♂️ Starting Churn Prediction Job: Analyzing User Behavior...
+📊 Found 1 potentially inactive users.
+❌ Error processing user 4: I/O error on POST request for "http://localhost:8001/api/v1/churn/predict": Connection refused
+✅ Churn Job Completed. Sent re-engagement alerts to 0 users.
+🕵️‍♂️ Starting Churn Prediction Job: Analyzing User Behavior...
+📊 Found 1 potentially inactive users.
+❌ Error processing user 4: I/O error on POST request for "http://localhost:8001/api/v1/churn/predict": Connection refused
+✅ Churn Job Completed. Sent re-engagement alerts to 0 users.
+🕵️‍♂️ Starting Churn Prediction Job: Analyzing User Behavior...
+📊 Found 1 potentially inactive users.
+❌ Error processing user 4: I/O error on POST request for "http://localhost:8001/api/v1/churn/predict": Connection refused
+✅ Churn Job Completed. Sent re-engagement alerts to 0 users.
+🕵️‍♂️ Starting Churn Prediction Job: Analyzing User Behavior...
+📊 Found 1 potentially inactive users.
+⚠️ High Risk User Identified: Student Steve (Prob: 0.89)
+✅ Churn Job Completed. Sent re-engagement alerts to 1 users.
+🕵️‍♂️ Starting Churn Prediction Job: Analyzing User Behavior...
+📊 Found 1 potentially inactive users.
+⚠️ High Risk User Identified: Student Steve (Prob: 0.89)
+✅ Churn Job Completed. Sent re-engagement alerts to 1 users.
+🕵️‍♂️ Starting Churn Prediction Job: Analyzing User Behavior...
+📊 Found 1 potentially inactive users.
+⚠️ High Risk User Identified: Student Steve (Prob: 0.89)
+✅ Churn Job Completed. Sent re-engagement alerts to 1 users.
+🕵️‍♂️ Starting Churn Prediction Job: Analyzing User Behavior...
+📊 Found 1 potentially inactive users.
+⚠️ High Risk User Identified: Student Steve (Prob: 0.89)
+✅ Churn Job Completed. Sent re-engagement alerts to 1 users.
+🕵️‍♂️ Starting Churn Prediction Job: Analyzing User Behavior...
+2026-02-18T03:40:38.765+05:30  INFO 17588 --- [server] [MessageBroker-3] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 8, active threads = 2, queued tasks = 0, completed tasks = 32]
+📊 Found 1 potentially inactive users.
+⚠️ High Risk User Identified: Student Steve (Prob: 0.89)
+✅ Churn Job Completed. Sent re-engagement alerts to 1 users.
+🕵️‍♂️ Starting Churn Prediction Job: Analyzing User Behavior...
+📊 Found 1 potentially inactive users.
+⚠️ High Risk User Identified: Student Steve (Prob: 0.89)
+✅ Churn Job Completed. Sent re-engagement alerts to 1 users.
