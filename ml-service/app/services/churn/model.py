@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
 import joblib
@@ -10,12 +12,12 @@ class ChurnPredictor:
     def __init__(self):
         self.model_path = "churn_rf_model.pkl"
         self.data_path = "churn_training_data.csv"
-        self.model = None
+        self.pipeline = None
         
         # Load or Train
         if os.path.exists(self.model_path):
-            self.model = joblib.load(self.model_path)
-            print("✅ Loaded existing Churn Model.")
+            self.pipeline = joblib.load(self.model_path)
+            print("✅ Loaded existing Churn Pipeline (Scaler + RF).")
         else:
             print("⚠️ Model not found. Starting training pipeline...")
             self.train_model()
@@ -88,7 +90,7 @@ class ChurnPredictor:
 
     def train_model(self):
         """
-        Trains the Random Forest model using the CSV dataset.
+        Trains the Pipeline (Scaling + Random Forest) using the CSV dataset.
         """
         # 1. Load Data
         if os.path.exists(self.data_path):
@@ -103,31 +105,37 @@ class ChurnPredictor:
         # 3. Train/Test Split
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-        # 4. Initialize Random Forest
-        # n_estimators=100 -> 100 Decisions Trees (Standard)
-        clf = RandomForestClassifier(n_estimators=100, random_state=42)
+        # 4. Create Pipeline: Scaler -> Random Forest
+        # Why Pipeline? Scaling ensures model works well even if feature ranges differ drastically.
+        # This is strictly followed in production ML systems.
+        pipeline = Pipeline([
+            ('scaler', StandardScaler()), 
+            ('rf', RandomForestClassifier(n_estimators=100, random_state=42))
+        ])
         
-        # 5. Fit
-        clf.fit(X_train, y_train)
+        # 5. Fit Pipeline
+        pipeline.fit(X_train, y_train)
 
         # 6. Evaluate
-        y_pred = clf.predict(X_test)
+        y_pred = pipeline.predict(X_test)
         acc = accuracy_score(y_test, y_pred)
-        print(f"🚀 Model Trained! Accuracy: {acc*100:.2f}%")
+        print(f"🚀 Model Pipeline Trained! Accuracy: {acc*100:.2f}%")
         print(classification_report(y_test, y_pred))
 
-        # 7. Save
-        self.model = clf
-        joblib.dump(self.model, self.model_path)
+        # 7. Save Whole Pipeline (Scaler + Model)
+        self.pipeline = pipeline
+        joblib.dump(self.pipeline, self.model_path)
 
     def predict(self, days_since_login: int, sessions_attended: int, profile_score: int):
-        if not self.model:
+        if not self.pipeline:
             self.train_model()
             
+        # Must pass a DataFrame with same columns as training
         input_data = pd.DataFrame([[days_since_login, sessions_attended, profile_score]], 
                                 columns=['days_since_login', 'sessions_attended', 'profile_score'])
         
-        return self.model.predict_proba(input_data)[0][1]
+        # Pipeline automatically handles scaling for new data!
+        return self.pipeline.predict_proba(input_data)[0][1]
 
 # Singleton instance
 churn_model = ChurnPredictor()
