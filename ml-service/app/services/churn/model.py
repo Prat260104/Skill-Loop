@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
+from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
@@ -25,16 +26,11 @@ class ChurnPredictor:
     def generate_synthetic_data(self):
         """
         Simulates fetching 1 year of historical user data from a Data Warehouse.
-        We create 5000 users with realistic patterns to train our model.
-        
-        Placement Tip: Tell the interviewer you solved the 'Cold Start Problem' 
-        by simulating data based on industry benchmarks.
         """
         np.random.seed(42)
         n_samples = 5000
         
         # Feature 1: Days Since Last Login (0 to 60 days)
-        # Mix of active users (0-7 days) and inactive ones (30+ days)
         days_since_login = np.concatenate([
             np.random.normal(3, 2, 2500),   # Active users
             np.random.normal(45, 10, 2500)  # Inactive users
@@ -42,7 +38,6 @@ class ChurnPredictor:
         days_since_login = np.clip(days_since_login, 0, 100).astype(int)
 
         # Feature 2: Sessions Attended (0 to 50)
-        # Active users usually attend more sessions
         sessions_attended = []
         for days in days_since_login:
             if days < 7:
@@ -51,78 +46,63 @@ class ChurnPredictor:
                 sessions_attended.append(np.random.randint(0, 5))
         
         # Feature 3: Profile Completion Score (0 to 100)
-        profile_score = np.random.randint(20, 100, n_samples)
+        # Introduce some missing values (NaNs) to test Imputer
+        profile_score = np.random.randint(20, 100, n_samples).astype(float)
+        profile_score[np.random.choice(n_samples, 50, replace=False)] = np.nan # 50 missing values
         
-        # Create DataFrame
         df = pd.DataFrame({
             'days_since_login': days_since_login,
             'sessions_attended': sessions_attended,
             'profile_score': profile_score
         })
         
-        # LABEL GENERATION (Ground Truth)
-        # Logic: If inactive > 20 days OR (inactive > 14 days AND low sessions), they Churn (1)
+        # LABEL GENERATION
         churn_labels = []
         for _, row in df.iterrows():
             churn = 0
-            # High Risk Rule
-            if row['days_since_login'] > 21:
-                churn = 1
-            # Medium Risk Rule
-            elif row['days_since_login'] > 14 and row['sessions_attended'] < 2:
-                churn = 1
-            # Profile Completion Rule
-            elif row['profile_score'] < 30 and row['days_since_login'] > 10:
-                churn = 1
+            if row['days_since_login'] > 21: churn = 1
+            elif row['days_since_login'] > 14 and row['sessions_attended'] < 2: churn = 1
+            elif row['profile_score'] < 30 and row['days_since_login'] > 10: churn = 1
                 
-            # Add some noise (Real life isn't perfect)
-            if np.random.random() < 0.05: # 5% random flip
-                churn = 1 - churn
-                
+            if np.random.random() < 0.05: churn = 1 - churn
             churn_labels.append(churn)
             
         df['churn'] = churn_labels
-        
-        # Save to CSV (Simulating Data Lake)
         df.to_csv(self.data_path, index=False)
-        print(f"📊 Generated {n_samples} historical records in '{self.data_path}'")
+        print(f"📊 Generated {n_samples} historical records (with missing values) in '{self.data_path}'")
         return df
 
     def train_model(self):
         """
-        Trains the Pipeline (Scaling + Random Forest) using the CSV dataset.
+        Trains the Production Pipeline: Imputer -> Scaler -> Balanced Random Forest.
         """
-        # 1. Load Data
         if os.path.exists(self.data_path):
             df = pd.read_csv(self.data_path)
         else:
             df = self.generate_synthetic_data()
 
-        # 2. Preprocessing
         X = df[['days_since_login', 'sessions_attended', 'profile_score']]
         y = df['churn']
 
-        # 3. Train/Test Split
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-        # 4. Create Pipeline: Scaler -> Random Forest
-        # Why Pipeline? Scaling ensures model works well even if feature ranges differ drastically.
-        # This is strictly followed in production ML systems.
+        # PRODUCTION PIPELINE DESIGN
+        # 1. SimpleImputer: Fills missing values (e.g., avg profile score) so model doesn't crash.
+        # 2. StandardScaler: Normalizes features to standard scale.
+        # 3. RandomForest (Balanced): Handles Class Imbalance (e.g., if Churn is only 10% of users).
         pipeline = Pipeline([
+            ('imputer', SimpleImputer(strategy='mean')),
             ('scaler', StandardScaler()), 
-            ('rf', RandomForestClassifier(n_estimators=100, random_state=42))
+            ('rf', RandomForestClassifier(n_estimators=100, class_weight='balanced', random_state=42))
         ])
         
-        # 5. Fit Pipeline
         pipeline.fit(X_train, y_train)
 
-        # 6. Evaluate
         y_pred = pipeline.predict(X_test)
         acc = accuracy_score(y_test, y_pred)
-        print(f"🚀 Model Pipeline Trained! Accuracy: {acc*100:.2f}%")
+        print(f"🚀 Production Pipeline Trained! Accuracy: {acc*100:.2f}%")
         print(classification_report(y_test, y_pred))
 
-        # 7. Save Whole Pipeline (Scaler + Model)
         self.pipeline = pipeline
         joblib.dump(self.pipeline, self.model_path)
 
@@ -130,11 +110,9 @@ class ChurnPredictor:
         if not self.pipeline:
             self.train_model()
             
-        # Must pass a DataFrame with same columns as training
         input_data = pd.DataFrame([[days_since_login, sessions_attended, profile_score]], 
                                 columns=['days_since_login', 'sessions_attended', 'profile_score'])
         
-        # Pipeline automatically handles scaling for new data!
         return self.pipeline.predict_proba(input_data)[0][1]
 
 # Singleton instance
