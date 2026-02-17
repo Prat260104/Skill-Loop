@@ -36,6 +36,7 @@
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/repository/NotificationRepository.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/repository/SessionRepository.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/repository/UserRepository.java
+/Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/scheduler/ChurnScheduler.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/service/AuthService.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/service/ConnectionService.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/service/GithubService.java
