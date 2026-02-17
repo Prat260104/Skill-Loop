@@ -155,8 +155,8 @@ This document outlines the **missing features** from the original Startup Plan t
 
 - [x] GitHub Scraper (Completed)
 - [x] Sentiment Analysis (Backend Complete - Frontend Pending)
-- [ ] Recommendation Engine (Custom Algo)
-- [ ] Churn Prediction Job
+- [x] Recommendation Engine (Custom Algo)
+- [x] Churn Prediction Job
 - [ ] Video Calling (WebRTC)
 - [ ] Badges System
 - [ ] Department-wise Leaderboards

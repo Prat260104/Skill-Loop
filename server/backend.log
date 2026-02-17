@@ -129,3 +129,31 @@ Users already exist. Skipping seeding. 🚀
 📊 Found 1 potentially inactive users.
 ❌ Error processing user 4: I/O error on POST request for "http://localhost:8001/api/v1/churn/predict": Connection refused
 ✅ Churn Job Completed. Sent re-engagement alerts to 0 users.
+🕵️‍♂️ Starting Churn Prediction Job: Analyzing User Behavior...
+📊 Found 1 potentially inactive users.
+❌ Error processing user 4: I/O error on POST request for "http://localhost:8001/api/v1/churn/predict": Connection refused
+✅ Churn Job Completed. Sent re-engagement alerts to 0 users.
+🕵️‍♂️ Starting Churn Prediction Job: Analyzing User Behavior...
+📊 Found 1 potentially inactive users.
+❌ Error processing user 4: I/O error on POST request for "http://localhost:8001/api/v1/churn/predict": Connection refused
+✅ Churn Job Completed. Sent re-engagement alerts to 0 users.
+🕵️‍♂️ Starting Churn Prediction Job: Analyzing User Behavior...
+📊 Found 1 potentially inactive users.
+❌ Error processing user 4: I/O error on POST request for "http://localhost:8001/api/v1/churn/predict": Connection refused
+✅ Churn Job Completed. Sent re-engagement alerts to 0 users.
+🕵️‍♂️ Starting Churn Prediction Job: Analyzing User Behavior...
+📊 Found 1 potentially inactive users.
+❌ Error processing user 4: I/O error on POST request for "http://localhost:8001/api/v1/churn/predict": Connection refused
+✅ Churn Job Completed. Sent re-engagement alerts to 0 users.
+🕵️‍♂️ Starting Churn Prediction Job: Analyzing User Behavior...
+📊 Found 1 potentially inactive users.
+❌ Error processing user 4: I/O error on POST request for "http://localhost:8001/api/v1/churn/predict": Connection refused
+✅ Churn Job Completed. Sent re-engagement alerts to 0 users.
+🕵️‍♂️ Starting Churn Prediction Job: Analyzing User Behavior...
+📊 Found 1 potentially inactive users.
+❌ Error processing user 4: I/O error on POST request for "http://localhost:8001/api/v1/churn/predict": Connection refused
+✅ Churn Job Completed. Sent re-engagement alerts to 0 users.
+🕵️‍♂️ Starting Churn Prediction Job: Analyzing User Behavior...
+📊 Found 1 potentially inactive users.
+❌ Error processing user 4: I/O error on POST request for "http://localhost:8001/api/v1/churn/predict": Connection refused
+✅ Churn Job Completed. Sent re-engagement alerts to 0 users.

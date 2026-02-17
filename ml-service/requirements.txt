@@ -12,6 +12,7 @@ transformers>=4.40.0
 # Data processing
 requests>=2.28.0
 datasets>=2.14.0
+tensorflow>=2.15.0
 
 # Utilities
 python-multipart>=0.0.9
