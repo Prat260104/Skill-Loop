@@ -37,6 +37,9 @@ public class AuthController {
         }
     }
 
+    @Autowired
+    private com.skillloop.server.repository.UserRepository userRepository;
+
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
         try {
@@ -57,5 +60,18 @@ public class AuthController {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    // TEST ENDPOINT: Simulate inactivity for a user
+    @PostMapping("/test/age-user")
+    public ResponseEntity<?> ageUser(@RequestParam String email, @RequestParam int days) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setLastLoginDate(java.time.LocalDateTime.now().minusDays(days));
+        userRepository.save(user);
+
+        return ResponseEntity
+                .ok("User " + email + " aged by " + days + " days. Churn Scheduler should pick them up soon.");
     }
 }
