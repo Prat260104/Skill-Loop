@@ -33,8 +33,8 @@ public class ChurnScheduler {
     // Run every day at 2:00 AM
     // Cron: Second Minute Hour Day Month Weekday
     // TEST MODE: Run every 60 seconds
-    // @Scheduled(cron = "0 0 2 * * ?")
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(cron = "0 0 2 * * ?")
+    // @Scheduled(fixedRate = 60000)
     public void runChurnPredictionJob() {
         System.out.println("🕵️‍♂️ Starting Churn Prediction Job: Analyzing User Behavior...");
 
