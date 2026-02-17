@@ -49,8 +49,9 @@ graph TD
     *   Decision lega (Email bhejna hai ya nahi).
 
 3.  **ML Service (The Brain):**
-    *   Iske paas ek trained Model hai using **Logistic Regression**.
-    *   Input: `DaysSinceLogin`, `SessionsAttended`, `ProfileCompletion`.
+    *   Iske paas ek trained Model hai using **Random Forest Classifier** (ya **XGBoost** for advanced cases).
+    *   **Why Random Forest?** Kyunki ye non-linear patterns (complex user behavior) ko better samajhta hai compared to simple queries.
+    *   Input: `DaysSinceLogin`, `SessionsAttended`, `ProfileCompletion`, `ResponseTime`.
     *   Output: `Churn Probability` (e.g., 0.85).
 
 4.  **Notification Service (The Messenger):**
