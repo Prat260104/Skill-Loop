@@ -3,13 +3,12 @@ import { motion } from 'framer-motion';
 import UserCard from './UserCard';
 import RecommendedMentors from './dashboard/RecommendedMentors';
 import IncomingRequests from './dashboard/IncomingRequests';
-import SessionCard from './SessionCard';
+import MySessions from './dashboard/MySessions';
 import { sessionApi } from '../api/sessionApi';
 import { userApi } from '../api/userApi';
 
 export default function Dashboard() {
     const [users, setUsers] = useState([]);
-    const [sessions, setSessions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [activeTab, setActiveTab] = useState('explore'); // 'explore' | 'sessions'
@@ -25,51 +24,16 @@ export default function Dashboard() {
     const fetchData = async () => {
         setLoading(true);
         try {
+            // Only fetch users for explore tab. MySessions component handles its own data.
             if (activeTab === 'explore') {
                 const data = await userApi.getAllUsers();
                 // Filter out myself from explore
                 setUsers(data.filter(u => u.id !== CURRENT_USER_ID));
-            } else {
-                const data = await sessionApi.getMySessions(CURRENT_USER_ID);
-                setSessions(data);
             }
         } catch (error) {
             console.error("Error fetching data:", error);
         } finally {
             setLoading(false);
-        }
-    };
-
-    const handleAcceptSession = async (sessionId) => {
-        try {
-            await sessionApi.acceptSession(sessionId, CURRENT_USER_ID);
-            // Refresh list
-            fetchData();
-            alert("Session Accepted!");
-        } catch (error) {
-            alert("Error accepting session");
-        }
-    };
-
-    const handleRejectSession = async (sessionId) => {
-        if (!confirm("Are you sure?")) return;
-        try {
-            await sessionApi.rejectSession(sessionId, CURRENT_USER_ID);
-            fetchData();
-            alert("Session Rejected!");
-        } catch (error) {
-            alert("Error rejecting session");
-        }
-    };
-
-    const handleCompleteSession = async (sessionId) => {
-        if (!confirm("Did this session actually happen? (This will award points to the Mentor)")) return;
-        try {
-            await sessionApi.completeSession(sessionId, CURRENT_USER_ID);
-            fetchData();
-            alert("Session Completed! Points Awarded! 🏆");
-        } catch (error) {
-            alert("Error completing session: " + error.message);
         }
     };
 
@@ -160,31 +124,7 @@ export default function Dashboard() {
                             // SESSIONS TAB
                             <div className="col-span-full">
                                 <IncomingRequests userId={CURRENT_USER_ID} />
-
-                                {sessions.length > 0 ? (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-6">
-                                        {sessions.map(session => (
-                                            <SessionCard
-                                                key={session.id}
-                                                session={session}
-                                                currentUserId={CURRENT_USER_ID}
-                                                onAccept={handleAcceptSession}
-                                                onReject={handleRejectSession}
-                                                onComplete={handleCompleteSession}
-                                            />
-                                        ))}
-                                    </div>
-                                ) : (
-                                    <div className="text-center py-20">
-                                        <p className="text-gray-500 text-lg">You have no scheduled sessions yet.</p>
-                                        <button
-                                            onClick={() => setActiveTab('explore')}
-                                            className="mt-4 text-primary font-semibold hover:underline"
-                                        >
-                                            Browse Mentors
-                                        </button>
-                                    </div>
-                                )}
+                                <MySessions user={user} />
                             </div>
                         )}
                     </div>

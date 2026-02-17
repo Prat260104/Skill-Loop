@@ -70,10 +70,14 @@ export const sessionApi = {
 
     // 5. Mark Session Complete (Award Points)
     // PUT /api/sessions/{sessionId}/complete/{studentId}
-    completeSession: async (sessionId, studentId) => {
+    completeSession: async (sessionId, studentId, review) => {
         try {
             const response = await fetch(`${API_URL}/${sessionId}/complete/${studentId}`, {
-                method: 'PUT'
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ review })
             });
             return handleResponse(response);
         } catch (error) {
