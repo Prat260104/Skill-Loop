@@ -1,5 +1,5 @@
 PyTorch was not found. Models won't be available and only tokenizers, configuration and file/data utilities can be used.
-/Users/prateekrai/Desktop/Skill LOOp/ml-service/app/services/rag/service.py:22: LangChainDeprecationWarning: The class `Chroma` was deprecated in LangChain 0.2.9 and will be removed in 1.0. An updated version of the class exists in the `langchain-chroma package and should be used instead. To use it run `pip install -U `langchain-chroma` and import as `from `langchain_chroma import Chroma``.
+/Users/prateekrai/Desktop/Skill LOOp/ml-service/app/services/rag/service.py:23: LangChainDeprecationWarning: The class `Chroma` was deprecated in LangChain 0.2.9 and will be removed in 1.0. An updated version of the class exists in the `langchain-chroma package and should be used instead. To use it run `pip install -U `langchain-chroma` and import as `from `langchain_chroma import Chroma``.
   vector_store = Chroma(
 /Users/prateekrai/Desktop/Skill LOOp/ml-service/venv/lib/python3.13/site-packages/pydantic/_internal/_config.py:383: UserWarning: Valid config keys have changed in V2:
 * 'allow_population_by_field_name' has been renamed to 'validate_by_name'
@@ -13,16 +13,30 @@ See README for more details:
 https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
 
   import google.generativeai as genai
-INFO:     Started server process [19552]
+INFO:     Started server process [20852]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
 ✅ Custom NER model loaded successfully!
 ✅ Loaded 151 skills from /Users/prateekrai/Desktop/Skill LOOp/ml-service/app/services/resume/data/skills.json
 ✅ Loaded existing Churn Pipeline (Scaler + RF).
-INFO:     127.0.0.1:54747 - "POST /api/v1/churn/predict HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54752 - "POST /api/v1/churn/predict HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54759 - "POST /api/v1/churn/predict HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54775 - "POST /api/v1/churn/predict HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54785 - "POST /api/v1/churn/predict HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54791 - "POST /api/v1/churn/predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55050 - "GET / HTTP/1.1" 200 OK
+✅ FOUND Section [SKILLS]: 51 chars
+⚠️ Using Top-of-File Heuristic for SUMMARY
+⚠️ Empty EXPERIENCE section. Skipping extraction.
+✅ Found 5 skills in SKILLS section
+INFO:     127.0.0.1:55053 - "POST /api/v1/resume/parse HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+✅ Ingested document for user 1
+INFO:     127.0.0.1:55058 - "POST /api/v1/churn/predict HTTP/1.1" 200 OK
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:55056 - "POST /api/v1/interview/generate HTTP/1.1" 200 OK
+INFO:google_genai.models:AFC is enabled with max remote calls: 10.
+INFO:httpx:HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent "HTTP/1.1 200 OK"
+DEBUG: evaluate_answer called with question: In the context of building scalable microservices at TechCorp, how does the Java Memory Model's 'happens-before' guarantee influence your choice between using 'volatile' variables versus 'Atomic' classes (like AtomicInteger) when managing shared state across multiple concurrent threads, and what are the performance implications of each in a high-throughput environment?
+DEBUG: Invoking LLM for evaluation...
+DEBUG: LLM returned response.
+DEBUG: Raw content: [{'type': 'text', 'text': '{\n"score": 0,\n"feedback": "The candidate failed to address any part of the question regarding the Java Memory Model, happens-before guarantees, or concurrency primitives, providing instead a generic and irrelevant definition of Java. This response demonstrates a total lack of the required technical depth for high-throughput system design.",\n"is_verified": false\n}', 'extras': {'signature': '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'}}]
+INFO:     127.0.0.1:55056 - "POST /api/v1/interview/evaluate HTTP/1.1" 200 OK

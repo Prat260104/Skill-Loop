@@ -1,0 +1,63 @@
+👤 Found User ID: 1
+📄 Created dummy resume: test_resume.pdf
+
+📤 Uploading Resume for User 1...
+✅ Resume Uploaded Successfully!
+   Parsed Data: ['Docker', 'Java', 'Kubernetes', 'Machine Learning', 'Python']
+⏳ Waiting 5 seconds for Vector DB Ingestion...
+
+🤖 Generating Interview Question for 'Java'...
+✅ Question Generated: Given your experience building scalable microservices at TechCorp, how do you handle the potential for 'Thread Starvation' when using Java's CompletableFuture or Parallel Streams, and what are the specific implications of relying on the common ForkJoinPool when your service is running inside a resource-constrained Docker container or Kubernetes pod?
+
+📝 Submitting Answer...
+✅ Evaluation Result: Score None/100
+   Feedback: None
+   Verified: None
+
+🎉 RAG Pipeline Verification Complete!
+👤 Found User ID: 1
+📄 Created dummy resume: test_resume.pdf
+
+📤 Uploading Resume for User 1...
+❌ Upload Failed: 500 - ML Service Error: I/O error on POST request for "http://localhost:8001/api/v1/resume/parse": Connection refused
+👤 Found User ID: 1
+📄 Created dummy resume: test_resume.pdf
+
+📤 Uploading Resume for User 1...
+❌ Upload Failed: 500 - ML Service Error: I/O error on POST request for "http://localhost:8001/api/v1/resume/parse": Connection refused
+👤 Found User ID: 1
+📄 Created dummy resume: test_resume.pdf
+
+📤 Uploading Resume for User 1...
+✅ Resume Uploaded Successfully!
+   Parsed Data: ['Docker', 'Java', 'Kubernetes', 'Machine Learning', 'Python']
+⏳ Waiting 5 seconds for Vector DB Ingestion...
+
+🤖 Generating Interview Question for 'Java'...
+✅ Question Generated: Given your experience building scalable microservices with Spring Boot, how do Java's Virtual Threads (Project Loom) fundamentally change the threading model for high-concurrency applications compared to the traditional platform thread-per-request model, and how does this shift impact memory overhead and context switching in a resource-constrained Docker container?
+
+📝 Submitting Answer...
+✅ Evaluation Response: {'type': 'text', 'text': '{\n"score": 0,\n"feedback": "The candidate failed to address any part of the technical question regarding Virtual Threads, instead providing generic, entry-level facts about the JVM. This response demonstrates a complete lack of the required architectural knowledge for high-concurrency systems.",\n"is_verified": false\n}', 'extras': {'signature': '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'}}
+✅ Evaluation Result: Score None/100
+   Feedback: None
+   Verified: None
+
+🎉 RAG Pipeline Verification Complete!
+👤 Found User ID: 1
+📄 Created dummy resume: test_resume.pdf
+
+📤 Uploading Resume for User 1...
+✅ Resume Uploaded Successfully!
+   Parsed Data: ['Docker', 'Java', 'Kubernetes', 'Machine Learning', 'Python']
+⏳ Waiting 5 seconds for Vector DB Ingestion...
+
+🤖 Generating Interview Question for 'Java'...
+✅ Question Generated: In the context of building scalable microservices at TechCorp, how does the Java Memory Model's 'happens-before' guarantee influence your choice between using 'volatile' variables versus 'Atomic' classes (like AtomicInteger) when managing shared state across multiple concurrent threads, and what are the performance implications of each in a high-throughput environment?
+
+📝 Submitting Answer...
+✅ Evaluation Response: {'score': 0, 'feedback': 'The candidate failed to address any part of the question regarding the Java Memory Model, happens-before guarantees, or concurrency primitives, providing instead a generic and irrelevant definition of Java. This response demonstrates a total lack of the required technical depth for high-throughput system design.', 'is_verified': False}
+✅ Evaluation Result: Score 0/100
+   Feedback: The candidate failed to address any part of the question regarding the Java Memory Model, happens-before guarantees, or concurrency primitives, providing instead a generic and irrelevant definition of Java. This response demonstrates a total lack of the required technical depth for high-throughput system design.
+   Verified: False
+
+🎉 RAG Pipeline Verification Complete!

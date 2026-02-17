@@ -1,11 +1,25 @@
+import logging
 import requests
 import time
 import os
 from fpdf import FPDF
 
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(message)s',
+    handlers=[
+        logging.FileHandler("verification.log"),
+        logging.StreamHandler()
+    ]
+)
+
+def print(msg):
+    logging.info(msg)
+
 # Configuration
-BACKEND_URL = "http://localhost:9090/api"
-ML_SERVICE_URL = "http://localhost:8001/api/v1"
+BACKEND_URL = "http://127.0.0.1:9090/api"
+ML_SERVICE_URL = "http://127.0.0.1:8001/api/v1"
 
 def create_dummy_resume(filename="test_resume.pdf"):
     pdf = FPDF()
@@ -99,6 +113,7 @@ def verify_rag_flow():
         response = requests.post(f"{BACKEND_URL}/verification/evaluate", json=answer_payload)
         if response.status_code == 200:
             eval_data = response.json()
+            print(f"✅ Evaluation Response: {eval_data}")
             print(f"✅ Evaluation Result: Score {eval_data.get('score')}/100")
             print(f"   Feedback: {eval_data.get('feedback')}")
             print(f"   Verified: {eval_data.get('is_verified')}")

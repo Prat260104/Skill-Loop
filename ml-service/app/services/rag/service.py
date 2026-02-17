@@ -1,4 +1,5 @@
 import json
+import ast
 from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
 from langchain_community.vectorstores import Chroma
 from langchain_core.documents import Document
@@ -138,10 +139,28 @@ def evaluate_answer(question: str, user_answer: str):
         response = llm.invoke(prompt)
         content = response.content
         if isinstance(content, list):
-            # content might be a list of parts, join them
-            content = " ".join([str(c) for c in content])
+            # Handle list of dicts (e.g. [{'type': 'text', 'text': '...'}])
+            text_parts = []
+            for c in content:
+                if isinstance(c, dict) and 'text' in c:
+                    text_parts.append(c['text'])
+                else:
+                    text_parts.append(str(c))
+            content = " ".join(text_parts)
             
+
+
         clean_text = content.replace("```json", "").replace("```", "").strip()
-        return json.loads(clean_text)
+        start = clean_text.find("{")
+        end = clean_text.rfind("}")
+        if start != -1 and end != -1:
+            clean_text = clean_text[start:end+1]
+        
+        try:
+            return json.loads(clean_text)
+        except json.JSONDecodeError:
+            print(f"⚠️ JSON Parse Failed. Trying literal_eval. Content: {clean_text}")
+            return ast.literal_eval(clean_text)
     except Exception as e:
-        return {"error": str(e)}
+        print(f"❌ Evaluation Error: {e}")
+        return {"error": str(e), "raw": content}
