@@ -20,6 +20,10 @@ app.include_router(recommendation.router, prefix="/api/v1/recommend", tags=["Sma
 app.include_router(github.router, prefix="/api/v1/github", tags=["GitHub Scraper"])
 app.include_router(sentiment.router)  # Uses prefix from router definition
 
+# New Churn Prediction Router
+from app.routers import churn
+app.include_router(churn.router, prefix="/api/v1/churn", tags=["Churn Prediction"])
+
 @app.get("/")
 def home():
     return {"message": "SkillLoop ML Service Gateway Active 🚀"}
