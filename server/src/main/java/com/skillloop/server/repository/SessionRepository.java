@@ -13,5 +13,11 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
     List<Session> findByStudentId(Long studentId);
 
     // Find sessions where I am the mentor
+    // Find sessions where I am the mentor
     List<Session> findByMentorId(Long mentorId);
+
+    // Count sessions (For Churn Prediction Metrics)
+    int countByStudentId(Long studentId);
+
+    int countByMentorId(Long mentorId);
 }
