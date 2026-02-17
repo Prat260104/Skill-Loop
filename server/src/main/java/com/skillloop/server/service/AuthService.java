@@ -44,6 +44,10 @@ public class AuthService {
             throw new RuntimeException("Error: Invalid password!");
         }
 
+        // 3. Update Last Login Date (For Churn Prediction)
+        user.setLastLoginDate(java.time.LocalDateTime.now());
+        userRepository.save(user);
+
         return user;
     }
 }
