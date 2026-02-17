@@ -61,6 +61,7 @@ public class ChurnScheduler {
 
                 // Expecting response: { "churn_probability": 0.85, "is_high_risk": true,
                 // "message": "..." }
+                @SuppressWarnings("unchecked")
                 Map<String, Object> response = restTemplate.postForObject(ML_SERVICE_URL, request, Map.class);
 
                 if (response != null && (Boolean) response.get("is_high_risk")) {

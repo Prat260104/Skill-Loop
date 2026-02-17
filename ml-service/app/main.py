@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import resume, interview, recommendation, github, sentiment
+from app.routers import resume, interview, recommendation, github, sentiment, churn
 
 app = FastAPI(title="SkillLoop ML Service", version="1.0.0")
 
@@ -21,7 +21,7 @@ app.include_router(github.router, prefix="/api/v1/github", tags=["GitHub Scraper
 app.include_router(sentiment.router)  # Uses prefix from router definition
 
 # New Churn Prediction Router
-from app.routers import churn
+# Churn Prediction Router
 app.include_router(churn.router, prefix="/api/v1/churn", tags=["Churn Prediction"])
 
 @app.get("/")
