@@ -22,10 +22,18 @@ export default function Leaderboard() {
     };
 
     const getMedal = (index) => {
-        if (index === 0) return '🥇';
-        if (index === 1) return '🥈';
-        if (index === 2) return '🥉';
-        return `#${index + 1}`;
+        if (index === 0) return (
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-300 to-yellow-500 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-yellow-500/30">1</div>
+        );
+        if (index === 1) return (
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-gray-400/30">2</div>
+        );
+        if (index === 2) return (
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-amber-600/30">3</div>
+        );
+        return (
+            <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-700 flex items-center justify-center text-gray-600 dark:text-gray-300 font-bold text-sm">{index + 1}</div>
+        );
     };
 
     const getRowStyle = (index) => {
@@ -40,7 +48,7 @@ export default function Leaderboard() {
             <div className="max-w-4xl mx-auto">
                 <div className="text-center mb-12">
                     <h1 className="text-4xl font-bold bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent mb-2">
-                        Hall of Fame 🏆
+                        Hall of Fame
                     </h1>
                     <p className="text-gray-500 dark:text-gray-400">
                         Top Mentors making an impact in Skill Loop.
@@ -64,7 +72,7 @@ export default function Leaderboard() {
                                 className={`flex items-center p-4 rounded-xl border-2 shadow-sm ${getRowStyle(index)}`}
                             >
                                 {/* Rank / Medal */}
-                                <div className="w-16 text-3xl font-bold text-center flex-shrink-0">
+                                <div className="w-16 flex items-center justify-center flex-shrink-0">
                                     {getMedal(index)}
                                 </div>
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { HiBell } from 'react-icons/hi';
 import { getPendingRequests, acceptConnectionRequest, rejectConnectionRequest } from '../../api/connectionApi';
 
 const IncomingRequests = ({ userId }) => {
@@ -54,7 +55,7 @@ const IncomingRequests = ({ userId }) => {
             className="mb-8 p-6 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-white/10 shadow-sm"
         >
             <h3 className="text-lg font-bold mb-4 text-gray-800 dark:text-white flex items-center gap-2">
-                🔔 Incoming Requests
+                <HiBell className="w-5 h-5 text-primary" /> Incoming Requests
                 <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">{requests.length}</span>
             </h3>
 

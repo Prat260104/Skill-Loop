@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { HiCalendar, HiCheck } from 'react-icons/hi';
 import { sessionApi } from '../api/sessionApi';
 
 export default function SessionRequestModal({ isOpen, onClose, mentor, currentUser }) {
@@ -61,7 +62,7 @@ export default function SessionRequestModal({ isOpen, onClose, mentor, currentUs
                 <div className="bg-gradient-to-r from-primary to-purple-600 p-6 text-white flex justify-between items-center">
                     <div>
                         <h2 className="text-xl font-bold flex items-center gap-2">
-                            📅 Request Session
+                            <HiCalendar className="w-5 h-5" /> Request Session
                         </h2>
                         <p className="text-indigo-100 text-sm">with <span className="font-bold">{mentor.name}</span></p>
                     </div>
@@ -72,7 +73,9 @@ export default function SessionRequestModal({ isOpen, onClose, mentor, currentUs
                 <div className="p-6">
                     {status === 'success' ? (
                         <div className="text-center py-8">
-                            <div className="text-5xl mb-4">✅</div>
+                            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center">
+                                <HiCheck className="w-8 h-8 text-green-600" />
+                            </div>
                             <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">Request Sent!</h3>
                             <p className="text-gray-500">Wait for {mentor.name} to accept.</p>
                         </div>
@@ -117,8 +120,8 @@ export default function SessionRequestModal({ isOpen, onClose, mentor, currentUs
                                             type="button"
                                             onClick={() => setDuration(mins)}
                                             className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all border ${duration === mins
-                                                    ? 'bg-primary text-white border-primary'
-                                                    : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-white/10 hover:bg-gray-50'
+                                                ? 'bg-primary text-white border-primary'
+                                                : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-white/10 hover:bg-gray-50'
                                                 }`}
                                         >
                                             {mins} min
@@ -148,7 +151,7 @@ export default function SessionRequestModal({ isOpen, onClose, mentor, currentUs
                                 disabled={loading}
                                 className="w-full py-3 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all disabled:opacity-50"
                             >
-                                {loading ? 'Sending...' : 'Send Request 🚀'}
+                                {loading ? 'Sending...' : 'Send Request'}
                             </button>
                         </form>
                     )}

@@ -40,8 +40,8 @@ export default function SessionCard({ session, currentUserId, onAccept, onReject
 
             {/* Main Info */}
             <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-xl">
-                    {isMentor ? '👨‍🏫' : '👨‍🎓'}
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg">
+                    {isMentor ? 'S' : 'M'}
                 </div>
                 <div>
                     <h3 className="font-bold text-gray-800 dark:text-white">
@@ -56,46 +56,52 @@ export default function SessionCard({ session, currentUserId, onAccept, onReject
             </div>
 
             {/* Actions (Only for Mentor looking at Pending Request) */}
-            {isMentor && isPending && (
-                <div className="flex gap-2 mt-2">
-                    <button
-                        onClick={() => onAccept(session.id)}
-                        className="flex-1 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg text-sm font-semibold transition-colors"
-                    >
-                        Accept
-                    </button>
-                    <button
-                        onClick={() => onReject(session.id)}
-                        className="flex-1 py-2 bg-red-100 hover:bg-red-200 text-red-600 rounded-lg text-sm font-semibold transition-colors"
-                    >
-                        Decline
-                    </button>
-                </div>
-            )}
+            {
+                isMentor && isPending && (
+                    <div className="flex gap-2 mt-2">
+                        <button
+                            onClick={() => onAccept(session.id)}
+                            className="flex-1 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg text-sm font-semibold transition-colors"
+                        >
+                            Accept
+                        </button>
+                        <button
+                            onClick={() => onReject(session.id)}
+                            className="flex-1 py-2 bg-red-100 hover:bg-red-200 text-red-600 rounded-lg text-sm font-semibold transition-colors"
+                        >
+                            Decline
+                        </button>
+                    </div>
+                )
+            }
 
             {/* Actions (Only for Student looking at Accepted Session) */}
-            {!isMentor && session.status === 'ACCEPTED' && (
-                <div className="mt-2">
-                    <button
-                        onClick={() => onComplete(session.id)}
-                        className="w-full py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-semibold transition-colors shadow-md shadow-blue-500/20"
-                    >
-                        ✅ Mark as Completed
-                    </button>
-                    <p className="text-xs text-center text-gray-400 mt-2">
-                        Clicking this will award +50 points to your mentor.
-                    </p>
-                </div>
-            )}
+            {
+                !isMentor && session.status === 'ACCEPTED' && (
+                    <div className="mt-2">
+                        <button
+                            onClick={() => onComplete(session.id)}
+                            className="w-full py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-semibold transition-colors shadow-md shadow-blue-500/20"
+                        >
+                            Mark as Completed
+                        </button>
+                        <p className="text-xs text-center text-gray-400 mt-2">
+                            Clicking this will award +50 points to your mentor.
+                        </p>
+                    </div>
+                )
+            }
 
             {/* Contact Info (Only if Accepted) */}
-            {session.status === 'ACCEPTED' && (
-                <div className="mt-2 p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg text-sm text-center">
-                    <p className="text-gray-600 dark:text-gray-300">
-                        Meet at: <span className="font-mono text-primary">zoom.us/j/123456</span>
-                    </p>
-                </div>
-            )}
-        </motion.div>
+            {
+                session.status === 'ACCEPTED' && (
+                    <div className="mt-2 p-3 bg-gray-50 dark:bg-slate-700/50 rounded-lg text-sm text-center">
+                        <p className="text-gray-600 dark:text-gray-300">
+                            Meet at: <span className="font-mono text-primary">zoom.us/j/123456</span>
+                        </p>
+                    </div>
+                )
+            }
+        </motion.div >
     );
 }

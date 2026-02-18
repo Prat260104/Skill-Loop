@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link as ScrollLink, scroller } from 'react-scroll';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
-import { HiMenu, HiX, HiChevronDown, HiLogout, HiViewGrid } from 'react-icons/hi';
+import { HiMenu, HiX, HiChevronDown, HiLogout, HiViewGrid, HiUser, HiStar } from 'react-icons/hi';
+import { FaGithub } from 'react-icons/fa';
 import ThemeToggle from './ThemeToggle';
 import NotificationBell from './NotificationBell';
 
@@ -145,7 +146,7 @@ export default function Navbar() {
                                                     <RouterLink to={`/profile/${user.id}`} onClick={() => setIsProfileOpen(false)}>
                                                         <div className="px-3 py-2 rounded-xl flex items-center gap-3 hover:bg-primary/5 dark:hover:bg-primary/20 cursor-pointer transition-colors text-gray-700 dark:text-gray-200 group">
                                                             <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
-                                                                👤
+                                                                <HiUser className="w-4 h-4" />
                                                             </div>
                                                             <div>
                                                                 <p className="text-sm font-semibold">Profile</p>
@@ -165,7 +166,7 @@ export default function Navbar() {
                                                     <RouterLink to="/github-scraper" onClick={() => setIsProfileOpen(false)}>
                                                         <div className="px-3 py-2 rounded-xl flex items-center gap-3 hover:bg-purple-500/5 dark:hover:bg-purple-500/20 cursor-pointer transition-colors text-gray-700 dark:text-gray-200 group">
                                                             <div className="w-8 h-8 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-600 group-hover:bg-purple-500 group-hover:text-white transition-colors">
-                                                                🐙
+                                                                <FaGithub className="w-4 h-4" />
                                                             </div>
                                                             <span className="text-sm font-semibold">GitHub Scraper</span>
                                                         </div>
@@ -174,7 +175,7 @@ export default function Navbar() {
                                                     <RouterLink to="/leaderboard" onClick={() => setIsProfileOpen(false)}>
                                                         <div className="px-3 py-2 rounded-xl flex items-center gap-3 hover:bg-yellow-500/5 dark:hover:bg-yellow-500/20 cursor-pointer transition-colors text-gray-700 dark:text-gray-200 group">
                                                             <div className="w-8 h-8 rounded-full bg-yellow-500/10 flex items-center justify-center text-yellow-600 group-hover:bg-yellow-500 group-hover:text-white transition-colors">
-                                                                🏆
+                                                                <HiStar className="w-4 h-4" />
                                                             </div>
                                                             <span className="text-sm font-semibold">Leaderboard</span>
                                                         </div>
@@ -247,7 +248,7 @@ export default function Navbar() {
                                         </RouterLink>
                                         <RouterLink to="/github-scraper" onClick={() => setIsOpen(false)}>
                                             <button className="block w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 text-purple-500">
-                                                GitHub Scraper 🐙
+                                                GitHub Scraper
                                             </button>
                                         </RouterLink>
                                         <button

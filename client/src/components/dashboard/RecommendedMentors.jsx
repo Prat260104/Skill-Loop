@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import MentorCard from '../cards/MentorCard';
 import { motion } from 'framer-motion';
+import { HiSparkles } from 'react-icons/hi';
 
 const RecommendedMentors = ({ userId }) => {
     const [mentors, setMentors] = useState([]);
@@ -57,9 +58,9 @@ const RecommendedMentors = ({ userId }) => {
             <motion.h2
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="text-2xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
+                className="text-2xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent flex items-center gap-2"
             >
-                ✨ Recommended Mentors
+                <HiSparkles className="w-6 h-6 text-purple-400" /> Recommended Mentors
             </motion.h2>
 
             {/* Horizontal Scroll Container */}

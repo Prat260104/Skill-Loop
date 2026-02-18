@@ -50,8 +50,8 @@ export default function Hero() {
                         transition={{ duration: 0.6 }}
                         className="inline-block mb-6 px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5 backdrop-blur-md"
                     >
-                        <span className="text-sm font-medium text-primary shadow-[0_0_10px_rgba(99,102,241,0.5)]">
-                            ✨ The Future of Learning
+                        <span className="text-sm font-medium text-primary">
+                            The Future of Learning
                         </span>
                     </motion.div>
 

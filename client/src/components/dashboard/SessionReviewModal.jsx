@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { HiStar } from 'react-icons/hi';
 
 const SessionReviewModal = ({ isOpen, onClose, onSubmit, session }) => {
     const [review, setReview] = useState('');
@@ -37,8 +38,8 @@ const SessionReviewModal = ({ isOpen, onClose, onSubmit, session }) => {
                     className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-gray-100 dark:border-slate-700"
                 >
                     <div className="p-6">
-                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                            Rate your Session 🌟
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                            Rate your Session <HiStar className="w-6 h-6 text-yellow-400" />
                         </h2>
                         <p className="text-gray-600 dark:text-gray-400 mb-6">
                             How was your session with <span className="font-semibold text-indigo-600 dark:text-indigo-400">{session?.mentor?.name}</span>?
@@ -55,8 +56,8 @@ const SessionReviewModal = ({ isOpen, onClose, onSubmit, session }) => {
                                             type="button"
                                             key={ratingValue}
                                             className={`text-3xl mx-1 transition-colors duration-200 focus:outline-none ${ratingValue <= (hover || rating)
-                                                    ? "text-yellow-400"
-                                                    : "text-gray-300 dark:text-gray-600"
+                                                ? "text-yellow-400"
+                                                : "text-gray-300 dark:text-gray-600"
                                                 }`}
                                             onClick={() => setRating(ratingValue)}
                                             onMouseEnter={() => setHover(ratingValue)}

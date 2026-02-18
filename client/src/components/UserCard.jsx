@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { HiStar } from 'react-icons/hi';
 
 export default function UserCard({ user }) {
     const navigate = useNavigate();
@@ -33,7 +34,7 @@ export default function UserCard({ user }) {
                 </div>
                 <div className="text-right shrink-0">
                     <span className="text-sm font-bold text-yellow-500 flex items-center gap-1">
-                        🏆 {user.skillPoints}
+                        <HiStar className="w-4 h-4" /> {user.skillPoints}
                     </span>
                 </div>
             </div>
