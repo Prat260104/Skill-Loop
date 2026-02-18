@@ -57,7 +57,7 @@ const GitHubScraper = () => {
         setData(null);
 
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/v1/github/analyze', {
+            const response = await fetch('http://127.0.0.1:8001/api/v1/github/analyze', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ github_url: username })
@@ -231,8 +231,8 @@ const GitHubScraper = () => {
                                         {data.top_projects_count} repos scanned
                                     </span>
                                     <span className={`px-3 py-1 rounded-lg text-sm font-bold border ${data.ai_analysis.seniority === 'Advanced' ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/20' :
-                                            data.ai_analysis.seniority === 'Intermediate' ? 'bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-500/20' :
-                                                'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-500/20'
+                                        data.ai_analysis.seniority === 'Intermediate' ? 'bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-500/20' :
+                                            'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-500/20'
                                         }`}>
                                         {data.ai_analysis.seniority} Level
                                     </span>
@@ -268,8 +268,8 @@ const GitHubScraper = () => {
                                 initial={{ opacity: 0, y: -10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 className={`mb-6 p-4 rounded-xl text-sm font-medium text-center border ${saveMessage.type === 'success'
-                                        ? 'bg-green-50 dark:bg-green-500/10 text-green-700 dark:text-green-400 border-green-200 dark:border-green-500/20'
-                                        : 'bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-400 border-red-200 dark:border-red-500/20'
+                                    ? 'bg-green-50 dark:bg-green-500/10 text-green-700 dark:text-green-400 border-green-200 dark:border-green-500/20'
+                                    : 'bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-400 border-red-200 dark:border-red-500/20'
                                     }`}
                             >
                                 {saveMessage.text}
