@@ -1943,3 +1943,23 @@ org.springframework.web.client.HttpServerErrorException$InternalServerError: 500
 📊 Found 1 potentially inactive users.
 ⚠️ High Risk User Identified: Student Steve (Prob: 1.0)
 ✅ Churn Job Completed. Sent re-engagement alerts to 1 users.
+🕵️‍♂️ Starting Churn Prediction Job: Analyzing User Behavior...
+📊 Found 1 potentially inactive users.
+⚠️ High Risk User Identified: Student Steve (Prob: 1.0)
+✅ Churn Job Completed. Sent re-engagement alerts to 1 users.
+🕵️‍♂️ Starting Churn Prediction Job: Analyzing User Behavior...
+📊 Found 1 potentially inactive users.
+⚠️ High Risk User Identified: Student Steve (Prob: 1.0)
+✅ Churn Job Completed. Sent re-engagement alerts to 1 users.
+🕵️‍♂️ Starting Churn Prediction Job: Analyzing User Behavior...
+📊 Found 1 potentially inactive users.
+⚠️ High Risk User Identified: Student Steve (Prob: 1.0)
+✅ Churn Job Completed. Sent re-engagement alerts to 1 users.
+2026-02-19T03:31:52.321+05:30  INFO 17588 --- [server] [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-02-19T03:31:52.330+05:30  INFO 17588 --- [server] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-02-19T03:31:52.335+05:30  INFO 17588 --- [server] [ionShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2026-02-19T03:31:52.335+05:30  INFO 17588 --- [server] [ionShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@58df2864]]
+2026-02-19T03:31:52.335+05:30  INFO 17588 --- [server] [ionShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2026-02-19T03:31:52.346+05:30  INFO 17588 --- [server] [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-19T03:31:52.359+05:30  INFO 17588 --- [server] [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-02-19T03:31:52.363+05:30  INFO 17588 --- [server] [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

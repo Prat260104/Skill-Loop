@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { HiBriefcase, HiMail, HiStar, HiPencil, HiCalendar, HiUpload, HiLightningBolt, HiBookOpen, HiCheck, HiX, HiClock } from 'react-icons/hi';
 import { userApi } from '../api/userApi';
 import InterviewModal from './InterviewModal';
 import SessionRequestModal from './SessionRequestModal';
@@ -127,10 +128,10 @@ export default function ProfilePage() {
 
     // Calculate Rank based on Points
     const getRank = (points) => {
-        if (points > 1000) return { title: 'Grandmaster 🏆', color: 'text-yellow-500' };
-        if (points > 500) return { title: 'Expert 🥇', color: 'text-purple-500' };
-        if (points > 100) return { title: 'Advanced 🥈', color: 'text-blue-500' };
-        return { title: 'Beginner 🥉', color: 'text-green-500' };
+        if (points > 1000) return { title: 'Grandmaster', color: 'text-yellow-500' };
+        if (points > 500) return { title: 'Expert', color: 'text-purple-500' };
+        if (points > 100) return { title: 'Advanced', color: 'text-blue-500' };
+        return { title: 'Beginner', color: 'text-green-500' };
     };
 
     if (loading) return <div className="min-h-screen pt-24 text-center">Loading...</div>;
@@ -154,8 +155,8 @@ export default function ProfilePage() {
                                 'bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-400'
                             }`}
                     >
-                        <span className="text-xl">
-                            {notification.type === 'success' ? '✨' : notification.type === 'error' ? '❌' : '⏳'}
+                        <span className="w-6 h-6 flex items-center justify-center">
+                            {notification.type === 'success' ? <HiCheck className="w-5 h-5" /> : notification.type === 'error' ? <HiX className="w-5 h-5" /> : <HiClock className="w-5 h-5" />}
                         </span>
                         <span className="font-semibold">{notification.message}</span>
                     </motion.div>
@@ -260,10 +261,10 @@ export default function ProfilePage() {
                                     className="flex flex-wrap gap-3 justify-center md:justify-start items-center text-gray-600 dark:text-gray-300 font-medium"
                                 >
                                     <span className="px-3 py-1 bg-gray-100 dark:bg-white/5 rounded-lg border border-gray-200 dark:border-white/10 flex items-center gap-2">
-                                        💼 {profileUser.role || 'Member'}
+                                        <HiBriefcase className="w-4 h-4 text-gray-500" /> {profileUser.role || 'Member'}
                                     </span>
                                     <span className="px-3 py-1 bg-gray-100 dark:bg-white/5 rounded-lg border border-gray-200 dark:border-white/10 flex items-center gap-2">
-                                        📧 {profileUser.email}
+                                        <HiMail className="w-4 h-4 text-gray-500" /> {profileUser.email}
                                     </span>
                                     <span className={`px-3 py-1 rounded-lg border font-bold flex items-center gap-2 ${rank.color} bg-white/5`}>
                                         {rank.title}
@@ -300,7 +301,7 @@ export default function ProfilePage() {
                                                 onClick={() => setShowVerifyDropdown(!showVerifyDropdown)}
                                                 className="relative px-6 py-3 rounded-xl font-bold text-white bg-gradient-to-r from-indigo-500 to-purple-500 shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:-translate-y-0.5 transition-all flex items-center gap-2"
                                             >
-                                                <span>Verify Skills 🤖</span>
+                                                <span>Verify Skills</span>
                                                 {showVerifyDropdown && (
                                                     <div className="absolute top-full right-0 mt-3 w-56 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-gray-100 dark:border-white/10 overflow-hidden z-50 text-left">
                                                         <div className="p-2">
@@ -332,7 +333,7 @@ export default function ProfilePage() {
                                                 onClick={() => setIsEditing(true)}
                                                 className="px-6 py-3 rounded-xl font-bold text-gray-700 dark:text-white border-2 border-gray-200 dark:border-white/10 hover:border-primary hover:text-primary dark:hover:border-primary transition-all flex items-center gap-2"
                                             >
-                                                <span>Edit Profile ✏️</span>
+                                                <span className="flex items-center gap-2"><HiPencil className="w-4 h-4" /> Edit Profile</span>
                                             </button>
                                         </div>
                                     )
@@ -341,7 +342,7 @@ export default function ProfilePage() {
                                         onClick={() => setIsSessionRequestOpen(true)}
                                         className="px-8 py-3 rounded-xl font-bold text-white bg-gradient-to-r from-pink-500 to-rose-500 shadow-lg shadow-pink-500/30 hover:shadow-pink-500/50 transform hover:-translate-y-0.5 transition-all text-lg flex items-center gap-2 animate-pulse-soft"
                                     >
-                                        <span>📅 Request Session</span>
+                                        <span className="flex items-center gap-2"><HiCalendar className="w-4 h-4" /> Request Session</span>
                                     </button>
                                 )}
                             </motion.div>
@@ -356,7 +357,7 @@ export default function ProfilePage() {
                             >
                                 <div>
                                     <h3 className="text-lg font-bold text-blue-800 dark:text-blue-300 flex items-center gap-2">
-                                        ✨ AI Auto-Fill
+                                        <HiUpload className="w-5 h-5" /> AI Auto-Fill
                                     </h3>
                                     <p className="text-sm text-blue-600 dark:text-blue-400">Upload your resume to automatically populate Bio, Experience, and Skills.</p>
                                 </div>
@@ -372,7 +373,7 @@ export default function ProfilePage() {
                                             </>
                                         ) : (
                                             <>
-                                                <span>📄 Upload PDF</span>
+                                                <span className="flex items-center gap-2"><HiUpload className="w-4 h-4" /> Upload PDF</span>
                                             </>
                                         )}
                                     </button>
@@ -421,7 +422,9 @@ export default function ProfilePage() {
                                         <p className="text-sm font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider">Skill Points</p>
                                         <p className="text-4xl font-black text-amber-500 mt-1">{profileUser.skillPoints}</p>
                                     </div>
-                                    <div className="text-4xl">🏆</div>
+                                    <div className="text-4xl text-amber-500">
+                                        <HiStar className="w-10 h-10" />
+                                    </div>
                                 </div>
                             </div>
 
@@ -453,7 +456,7 @@ export default function ProfilePage() {
                                                         className="flex items-start gap-4 p-4 rounded-2xl hover:bg-gray-50 dark:hover:bg-white/5 transition-colors group cursor-default"
                                                     >
                                                         <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
-                                                            💼
+                                                            <HiBriefcase className="w-5 h-5" />
                                                         </div>
                                                         <div>
                                                             <p className="font-semibold text-gray-800 dark:text-gray-200 text-lg group-hover:text-primary transition-colors">{exp}</p>
@@ -476,7 +479,7 @@ export default function ProfilePage() {
                                     {/* Offered Skills */}
                                     <section>
                                         <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
-                                            🚀 Can Teach
+                                            <HiLightningBolt className="w-5 h-5 text-indigo-500" /> Can Teach
                                         </h3>
                                         {isEditing ? (
                                             <textarea
@@ -508,7 +511,7 @@ export default function ProfilePage() {
                                     {/* Wanted Skills */}
                                     <section>
                                         <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
-                                            🎯 Wants to Learn
+                                            <HiBookOpen className="w-5 h-5 text-pink-500" /> Wants to Learn
                                         </h3>
                                         {isEditing ? (
                                             <textarea
@@ -543,7 +546,7 @@ export default function ProfilePage() {
                     userId={profileUser.id}
                     onVerified={(skill) => {
                         setIsInterviewOpen(false);
-                        setNotification({ type: 'success', message: `${skill} Verified! Points Awarded! 🏆` });
+                        setNotification({ type: 'success', message: `${skill} Verified! Points Awarded!` });
                         fetchProfile();
                     }}
                 />

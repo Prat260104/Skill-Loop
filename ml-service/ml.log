@@ -406,3 +406,8 @@ INFO:     127.0.0.1:58580 - "POST /api/v1/churn/predict HTTP/1.1" 200 OK
 INFO:     127.0.0.1:58590 - "POST /api/v1/churn/predict HTTP/1.1" 200 OK
 INFO:     127.0.0.1:58601 - "POST /api/v1/churn/predict HTTP/1.1" 200 OK
 INFO:     127.0.0.1:58612 - "POST /api/v1/churn/predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58676 - "POST /api/v1/churn/predict HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [21226]
