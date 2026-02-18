@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 @Service
 public class GithubService {
 
@@ -66,20 +67,32 @@ public class GithubService {
             newSkills.addAll(request.getAiAnalysis().getFrameworks());
         }
 
-        // Add to existing user skills without duplicates
-        List<String> currentSkills = user.getVerifiedSkills();
-        if (currentSkills == null) {
-            currentSkills = new ArrayList<>();
+        // 1. Add to verifiedSkills (without duplicates)
+        List<String> currentVerified = user.getVerifiedSkills();
+        if (currentVerified == null) {
+            currentVerified = new ArrayList<>();
         }
 
         for (String skill : newSkills) {
-            if (!currentSkills.contains(skill)) {
-                currentSkills.add(skill);
+            if (!currentVerified.contains(skill)) {
+                currentVerified.add(skill);
             }
         }
+        user.setVerifiedSkills(currentVerified);
 
-        user.setVerifiedSkills(currentSkills);
-        // User is saved automatically due to Transactional context or explicit save
+        // 2. Also merge into skillsOffered so they appear on the profile
+        List<String> currentOffered = user.getSkillsOffered();
+        if (currentOffered == null) {
+            currentOffered = new ArrayList<>();
+        }
+
+        for (String skill : newSkills) {
+            if (!currentOffered.contains(skill)) {
+                currentOffered.add(skill);
+            }
+        }
+        user.setSkillsOffered(currentOffered);
+
         userRepository.save(user);
     }
 }

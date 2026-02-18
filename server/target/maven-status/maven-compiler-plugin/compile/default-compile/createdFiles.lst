@@ -1,5 +1,6 @@
 com/skillloop/server/service/ResumeService$1.class
 com/skillloop/server/ServerApplication.class
+com/skillloop/server/scheduler/ChurnScheduler.class
 com/skillloop/server/controller/AuthController.class
 com/skillloop/server/controller/SessionController.class
 com/skillloop/server/model/ConnectionRequest.class
@@ -8,14 +9,19 @@ com/skillloop/server/dto/ProfileRequest.class
 com/skillloop/server/model/Notification.class
 com/skillloop/server/model/ConnectionStatus.class
 com/skillloop/server/dto/GithubProfileRequest$AiAnalysis.class
+com/skillloop/server/dto/CompleteSessionRequest.class
+com/skillloop/server/repository/GithubProfileRepository.class
 com/skillloop/server/service/AuthService.class
 com/skillloop/server/service/SessionService.class
 com/skillloop/server/dto/UserSummaryDTO.class
 com/skillloop/server/dto/InterviewPayload$QuestionRequest.class
 com/skillloop/server/repository/ConnectionRepository.class
 com/skillloop/server/controller/VerificationController.class
+com/skillloop/server/service/GithubService.class
 com/skillloop/server/service/ResumeService.class
+com/skillloop/server/dto/SentimentResponse.class
 com/skillloop/server/service/ConnectionService.class
+com/skillloop/server/dto/SentimentRequest.class
 com/skillloop/server/dto/LoginRequest.class
 com/skillloop/server/dto/GithubProfileRequest.class
 com/skillloop/server/model/User.class
@@ -23,6 +29,7 @@ com/skillloop/server/TestController.class
 com/skillloop/server/config/DataSeeder.class
 com/skillloop/server/model/Session.class
 com/skillloop/server/model/SessionStatus.class
+com/skillloop/server/model/GithubProfile.class
 com/skillloop/server/config/WebSocketConfig.class
 com/skillloop/server/repository/NotificationRepository.class
 com/skillloop/server/dto/InterviewPayload$AnswerRequest.class
@@ -30,6 +37,7 @@ com/skillloop/server/dto/InterviewPayload.class
 com/skillloop/server/dto/AuthResponse.class
 com/skillloop/server/controller/ConnectionController.class
 com/skillloop/server/controller/ProfileController.class
+com/skillloop/server/service/SentimentService.class
 com/skillloop/server/dto/SignupRequest.class
 com/skillloop/server/controller/NotificationController.class
 com/skillloop/server/service/NotificationService.class
