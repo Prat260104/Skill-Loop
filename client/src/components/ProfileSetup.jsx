@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { HiPencil, HiLightningBolt, HiBookOpen } from 'react-icons/hi';
 
 export default function ProfileSetup() {
     const navigate = useNavigate();
@@ -81,58 +82,86 @@ export default function ProfileSetup() {
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Bio</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-1.5">
+                            <HiPencil className="w-4 h-4 text-primary" />
+                            Bio
+                        </label>
                         <textarea
                             name="bio"
                             rows="3"
                             required
-                            placeholder="I am a software engineer..."
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary outline-none transition-all dark:text-white"
+                            placeholder="Tell us about yourself..."
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all dark:text-white"
                             onChange={handleChange}
                         />
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-6">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Skills You Offer (Comma separated)</label>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-1.5">
+                                <HiLightningBolt className="w-4 h-4 text-yellow-500" />
+                                Skills You Offer
+                            </label>
                             <input
                                 type="text"
                                 name="skillsOffered"
                                 required
-                                placeholder="Java, React, Reading"
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary outline-none transition-all dark:text-white"
+                                placeholder="Java, React, Python"
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all dark:text-white"
                                 onChange={handleChange}
                             />
+                            <p className="text-xs text-gray-400 mt-1">Separate with commas</p>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Skills You Want (Comma separated)</label>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-1.5">
+                                <HiBookOpen className="w-4 h-4 text-blue-500" />
+                                Skills You Want
+                            </label>
                             <input
                                 type="text"
                                 name="skillsWanted"
                                 required
-                                placeholder="Guitar, Cooking, Spanish"
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary outline-none transition-all dark:text-white"
+                                placeholder="Machine Learning, DSA"
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all dark:text-white"
                                 onChange={handleChange}
                             />
+                            <p className="text-xs text-gray-400 mt-1">Separate with commas</p>
                         </div>
                     </div>
 
                     <button
                         type="submit"
-                        className="w-full py-3 bg-gradient-to-r from-primary to-purple-600 text-white rounded-xl font-bold shadow-lg hover:shadow-primary/25 hover:scale-[1.02] transition-all"
+                        disabled={status === 'loading'}
+                        className="w-full py-3 bg-gradient-to-r from-primary to-purple-600 text-white rounded-xl font-bold shadow-lg hover:shadow-primary/25 hover:scale-[1.02] transition-all disabled:opacity-70 disabled:hover:scale-100"
                     >
-                        {status === 'loading' ? 'Saving...' : 'Save Profile'}
+                        {status === 'loading' ? (
+                            <span className="flex items-center justify-center gap-2">
+                                <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Saving...
+                            </span>
+                        ) : 'Save Profile'}
                     </button>
 
                     {status === 'success' && (
-                        <div className="p-4 rounded-xl text-sm bg-green-100 text-green-700 text-center">
-                            Profile Updated! Redirecting to Home...
-                        </div>
+                        <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="p-4 rounded-xl text-sm bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800 text-center"
+                        >
+                            Profile Updated! Redirecting to Dashboard...
+                        </motion.div>
                     )}
                     {status === 'error' && (
-                        <div className="p-4 rounded-xl text-sm bg-red-100 text-red-700 text-center">
-                            Something went wrong.
-                        </div>
+                        <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="p-4 rounded-xl text-sm bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800 text-center"
+                        >
+                            Something went wrong. Please try again.
+                        </motion.div>
                     )}
                 </form>
             </motion.div>

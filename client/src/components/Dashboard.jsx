@@ -133,4 +133,3 @@ export default function Dashboard() {
         </div>
     );
 }
-//we still have to implement chat interface betweeen mentors and students

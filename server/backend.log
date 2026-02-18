@@ -1939,3 +1939,7 @@ org.springframework.web.client.HttpServerErrorException$InternalServerError: 500
 📊 Found 1 potentially inactive users.
 ⚠️ High Risk User Identified: Student Steve (Prob: 1.0)
 ✅ Churn Job Completed. Sent re-engagement alerts to 1 users.
+🕵️‍♂️ Starting Churn Prediction Job: Analyzing User Behavior...
+📊 Found 1 potentially inactive users.
+⚠️ High Risk User Identified: Student Steve (Prob: 1.0)
+✅ Churn Job Completed. Sent re-engagement alerts to 1 users.
