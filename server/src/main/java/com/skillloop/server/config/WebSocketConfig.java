@@ -1,4 +1,4 @@
- package com.skillloop.server.config;
+package com.skillloop.server.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -12,13 +12,17 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        // Enable a simple memory-based message broker to carry the greeting messages
-        // back to the client on destinations prefixed with "/topic"
-        config.enableSimpleBroker("/topic");
+        // Enable a simple memory-based message broker to carry the messages
+        // back to the client on destinations prefixed with "/topic" and "/queue" (for
+        // private messages)
+        config.enableSimpleBroker("/topic", "/queue");
 
         // Designate the "/app" prefix for messages that are bound for methods annotated
         // with @MessageMapping
         config.setApplicationDestinationPrefixes("/app");
+
+        // Designate the "/user" prefix for setting up private routing destinations
+        config.setUserDestinationPrefix("/user");
     }
 
     @Override
