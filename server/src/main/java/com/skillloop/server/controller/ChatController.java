@@ -12,11 +12,13 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class ChatController {
 
     @Autowired
@@ -50,6 +52,13 @@ public class ChatController {
         // STOMP Destination: /user/{receiverId}/queue/messages
         messagingTemplate.convertAndSendToUser(
                 String.valueOf(savedMsg.getReceiver().getId()),
+                "/queue/messages",
+                responsePayload);
+
+        // 4. Also broadcast it back to the sender so their UI updates
+        // STOMP Destination: /user/{senderId}/queue/messages
+        messagingTemplate.convertAndSendToUser(
+                String.valueOf(savedMsg.getSender().getId()),
                 "/queue/messages",
                 responsePayload);
     }
