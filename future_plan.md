@@ -151,12 +151,32 @@ This document outlines the **missing features** from the original Startup Plan t
 
 ---
 
+## 🏗️ 5. Production-Grade Architecture Refactoring
+*(To demonstrate enterprise-level frontend architecture)*
+
+### **A. Centralized Axios Interceptors**
+**Goal:** Remove repetitive `fetch()` calls and handle Auth/Errors globally.
+**Implementation Steps:**
+1.  **Tech:** `axios`.
+2.  **Logic:** Create `src/api/axiosConfig.js`. Interceptors will automatically attach `Bearer {Token}` to all requests.
+3.  **Error Handling:** Global 401 interceptor that clears session and redirects to `/login` if token expires.
+
+### **B. Environment Variables (.env)**
+**Goal:** Make the app deployable across Local, Staging, and Production environments without code changes.
+**Implementation Steps:**
+1.  **Refactor:** Replace hardcoded `http://localhost:9090` with Vite env variables (e.g., `import.meta.env.VITE_API_URL`).
+2.  **Security:** Never commit `.env` files. Demonstrates basic DevSecOps awareness.
+
+---
+
 ## ❌ Current Status Checklist
 
 - [x] GitHub Scraper (Completed)
 - [x] Sentiment Analysis (Backend Complete - Frontend Pending)
 - [x] Recommendation Engine (Custom Algo)
 - [x] Churn Prediction Job
+- [x] Real-time Chat (Post-Acceptance)
+- [ ] Production-Grade Axios Interceptors & Env Variables
 - [ ] Video Calling (WebRTC)
 - [ ] Badges System
 - [ ] Department-wise Leaderboards

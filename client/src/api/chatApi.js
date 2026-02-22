@@ -1,4 +1,13 @@
-import api from './api'; // Ensure this points to your configured axios instance
+const API_URL = 'http://localhost:9090/api/chat';
+
+// Helper to handle response
+const handleResponse = async (response) => {
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || 'Something went wrong');
+    }
+    return response.json();
+};
 
 /**
  * Fetches the entire chat history between two users.
@@ -9,9 +18,8 @@ import api from './api'; // Ensure this points to your configured axios instance
  */
 export const getChatHistory = async (userId1, userId2) => {
     try {
-        // Calls the @GetMapping("/api/chat/history/{userId1}/{userId2}") endpoint we built in Spring Boot
-        const response = await api.get(`/chat/history/${userId1}/${userId2}`);
-        return response.data;
+        const response = await fetch(`${API_URL}/history/${userId1}/${userId2}`);
+        return handleResponse(response);
     } catch (error) {
         console.error("Error fetching chat history:", error);
         throw error;
