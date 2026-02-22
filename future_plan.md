@@ -40,14 +40,14 @@ This document outlines the **missing features** from the original Startup Plan t
 3.  **Frontend:** Add "Connect GitHub" button in Profile Edit.
 4.  **DONE:** ✅ Implemented with Orbiting Animations & Dino Loader.
 
-### **A2. AI Mock Interviewer 2.0 (Deep Dive)**
+### **A2. AI Mock Interviewer 2.0 (Deep Dive) ✅**
 **Goal:** Project-specific technical interviews using scraped data.
 **Implementation Steps:**
 1.  **Context:** Use `GithubProfile` data (languages, repos) + `Resume` (experience).
 2.  **ML Service:** Verify code logic, ask "Why did you use Redux here?", assess architectural choices.
 3.  **Voice Mode:** Use WebSpeech API or OpenAI Realtime API for voice-to-voice interviews.
 
-### **A3. Resume Parser Refinement**
+### **A3. Resume Parser Refinement ✅**
 **Goal:** Fix existing bugs in Bio/Experience extraction.
 **Implementation Steps:**
 1.  **Refine Logic:** Better regex/NLP to identify "Experience" section boundaries.
@@ -178,6 +178,8 @@ This document outlines the **missing features** from the original Startup Plan t
 - [x] Recommendation Engine (Custom Algo)
 - [x] Churn Prediction Job
 - [x] Real-time Chat (Post-Acceptance)
+- [x] AI Mock Interviewer 2.0 (RAG)
+- [x] Resume Parser (Custom NER)
 - [ ] Production-Grade Axios Interceptors & Env Variables
 - [ ] Video Calling (WebRTC)
 - [ ] Badges System
