@@ -8,14 +8,15 @@ import { X, Send } from 'lucide-react'; // Make sure lucide-react is installed
  * @param {Object} props
  * @param {number} props.currentUserId - The logged in user's ID
  * @param {Object} props.peer - The user object they are chatting with { id, name, avatar }
+ * @param {number} props.sessionId - The ID of the session
  * @param {Function} props.onClose - Function to close the chat modal
  */
-const ChatBox = ({ currentUserId, peer, onClose }) => {
+const ChatBox = ({ currentUserId, peer, sessionId, onClose }) => {
     const [inputValue, setInputValue] = useState("");
     const messagesEndRef = useRef(null);
 
     // 1. Initialize our custom WebSocket hook
-    const { messages, sendMessage, isConnected } = useChat(currentUserId, peer.id);
+    const { messages, sendMessage, isConnected } = useChat(currentUserId, peer.id, sessionId);
 
     // 2. Auto-scroll to the bottom when a new message arrives
     const scrollToBottom = () => {
@@ -88,8 +89,8 @@ const ChatBox = ({ currentUserId, peer, onClose }) => {
                             <div key={msg.id || index} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
                                 <div
                                     className={`max-w-[75%] rounded-2xl px-4 py-2 text-sm shadow-sm ${isMe
-                                            ? 'bg-indigo-600 text-white rounded-br-none'
-                                            : 'bg-white text-gray-800 border border-gray-100 rounded-bl-none'
+                                        ? 'bg-indigo-600 text-white rounded-br-none'
+                                        : 'bg-white text-gray-800 border border-gray-100 rounded-bl-none'
                                         }`}
                                 >
                                     <p>{msg.content}</p>

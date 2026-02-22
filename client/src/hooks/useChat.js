@@ -8,9 +8,10 @@ import { getChatHistory } from '../api/chatApi';
  * 
  * @param {number} currentUserId - The ID of the logged in user
  * @param {number} peerId - The ID of the user they are chatting with
+ * @param {number} sessionId - The ID of the active session
  * @returns {Object} { messages, sendMessage, isConnected }
  */
-const useChat = (currentUserId, peerId) => {
+const useChat = (currentUserId, peerId, sessionId) => {
     const [messages, setMessages] = useState([]);
     const [isConnected, setIsConnected] = useState(false);
 
@@ -20,14 +21,14 @@ const useChat = (currentUserId, peerId) => {
 
     // Function to load the history when the chat is opened
     const loadHistory = useCallback(async () => {
-        if (!currentUserId || !peerId) return;
+        if (!currentUserId || !peerId || !sessionId) return;
         try {
-            const history = await getChatHistory(currentUserId, peerId);
+            const history = await getChatHistory(sessionId);
             setMessages(history);
         } catch (error) {
             console.error("Failed to load chat history", error);
         }
-    }, [currentUserId, peerId]);
+    }, [currentUserId, peerId, sessionId]);
 
     useEffect(() => {
         if (!currentUserId || !peerId) return;
@@ -97,6 +98,7 @@ const useChat = (currentUserId, peerId) => {
             const chatMessageRequest = {
                 senderId: currentUserId,
                 receiverId: peerId,
+                sessionId: sessionId,
                 content: content,
                 // The backend actually sets timestamp automatically, but we can pass it if we want
                 timestamp: new Date().toISOString()
@@ -111,7 +113,7 @@ const useChat = (currentUserId, peerId) => {
             // Why? Because we wait for the Server to process it and send it back to us via the STOMP subscriber above.
             // This guarantees the message was actually saved in the Database!
         }
-    }, [currentUserId, peerId, isConnected]);
+    }, [currentUserId, peerId, sessionId, isConnected]);
 
     return { messages, sendMessage, isConnected };
 };

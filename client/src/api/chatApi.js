@@ -10,15 +10,14 @@ const handleResponse = async (response) => {
 };
 
 /**
- * Fetches the entire chat history between two users.
+ * Fetches the entire chat history for a specific session.
  * 
- * @param {number} userId1 - ID of the first user (e.g., the logged-in user)
- * @param {number} userId2 - ID of the second user (e.g., the mentor/mentee)
+ * @param {number} sessionId - ID of the session
  * @returns {Promise<Array>} A promise that resolves to an array of ChatMessageResponse objects
  */
-export const getChatHistory = async (userId1, userId2) => {
+export const getChatHistory = async (sessionId) => {
     try {
-        const response = await fetch(`${API_URL}/history/${userId1}/${userId2}`);
+        const response = await fetch(`${API_URL}/history/${sessionId}`);
         return handleResponse(response);
     } catch (error) {
         console.error("Error fetching chat history:", error);

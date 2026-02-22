@@ -220,6 +220,7 @@ const MySessions = ({ user }) => {
                 <ChatBox
                     currentUserId={user.id}
                     peer={activeChatSession.student.id === user.id ? activeChatSession.mentor : activeChatSession.student}
+                    sessionId={activeChatSession.id}
                     onClose={() => setActiveChatSession(null)}
                 />
             )}

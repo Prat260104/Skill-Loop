@@ -38,6 +38,7 @@ public class ChatController {
         ChatMessage savedMsg = chatService.saveMessage(
                 chatMessageRequest.getSenderId(),
                 chatMessageRequest.getReceiverId(),
+                chatMessageRequest.getSessionId(),
                 chatMessageRequest.getContent());
 
         // 2. Convert Entity to DTO to prevent exposing database structure
@@ -66,13 +67,11 @@ public class ChatController {
     /**
      * Standard REST endpoint for fetching history when the chat window opens.
      */
-    @GetMapping("/api/chat/history/{userId1}/{userId2}")
-    public ResponseEntity<?> getChatHistory(
-            @PathVariable Long userId1,
-            @PathVariable Long userId2) {
+    @GetMapping("/api/chat/history/{sessionId}")
+    public ResponseEntity<?> getChatHistory(@PathVariable Long sessionId) {
 
         try {
-            List<ChatMessage> history = chatService.getChatHistory(userId1, userId2);
+            List<ChatMessage> history = chatService.getChatHistory(sessionId);
 
             // Convert Entities to clean DTOs
             List<ChatMessageResponse> responseHistory = history.stream()

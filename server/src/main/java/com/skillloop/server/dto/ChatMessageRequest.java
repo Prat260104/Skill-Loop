@@ -5,10 +5,19 @@ import java.time.LocalDateTime;
 public class ChatMessageRequest {
     private Long senderId;
     private Long receiverId;
+    private Long sessionId;
     private String content;
     private LocalDateTime timestamp;
 
     // Getters and Setters
+    public Long getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(Long sessionId) {
+        this.sessionId = sessionId;
+    }
+
     public Long getSenderId() {
         return senderId;
     }

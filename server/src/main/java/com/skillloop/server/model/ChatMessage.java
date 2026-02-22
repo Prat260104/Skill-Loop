@@ -21,10 +21,10 @@ public class ChatMessage {
     @JoinColumn(name = "receiver_id", nullable = false)
     private User receiver;
 
-    // Which connection does this belong to? (To ensure they only chat if connected)
+    // Which session does this belong to? (To ensure they only chat if connected)
     @ManyToOne
-    @JoinColumn(name = "connection_id", nullable = false)
-    private ConnectionRequest connection;
+    @JoinColumn(name = "session_id", nullable = false)
+    private Session session;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
@@ -35,10 +35,10 @@ public class ChatMessage {
         this.timestamp = LocalDateTime.now();
     }
 
-    public ChatMessage(User sender, User receiver, ConnectionRequest connection, String content) {
+    public ChatMessage(User sender, User receiver, Session session, String content) {
         this.sender = sender;
         this.receiver = receiver;
-        this.connection = connection;
+        this.session = session;
         this.content = content;
         this.timestamp = LocalDateTime.now();
     }
@@ -69,12 +69,12 @@ public class ChatMessage {
         this.receiver = receiver;
     }
 
-    public ConnectionRequest getConnection() {
-        return connection;
+    public Session getSession() {
+        return session;
     }
 
-    public void setConnection(ConnectionRequest connection) {
-        this.connection = connection;
+    public void setSession(Session session) {
+        this.session = session;
     }
 
     public String getContent() {
