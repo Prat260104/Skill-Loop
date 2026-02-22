@@ -67,22 +67,28 @@ public class ChatController {
      * Standard REST endpoint for fetching history when the chat window opens.
      */
     @GetMapping("/api/chat/history/{userId1}/{userId2}")
-    public ResponseEntity<List<ChatMessageResponse>> getChatHistory(
+    public ResponseEntity<?> getChatHistory(
             @PathVariable Long userId1,
             @PathVariable Long userId2) {
 
-        List<ChatMessage> history = chatService.getChatHistory(userId1, userId2);
+        try {
+            List<ChatMessage> history = chatService.getChatHistory(userId1, userId2);
 
-        // Convert Entities to clean DTOs
-        List<ChatMessageResponse> responseHistory = history.stream()
-                .map(msg -> new ChatMessageResponse(
-                        msg.getId(),
-                        msg.getSender().getId(),
-                        msg.getReceiver().getId(),
-                        msg.getContent(),
-                        msg.getTimestamp()))
-                .collect(Collectors.toList());
+            // Convert Entities to clean DTOs
+            List<ChatMessageResponse> responseHistory = history.stream()
+                    .map(msg -> new ChatMessageResponse(
+                            msg.getId(),
+                            msg.getSender().getId(),
+                            msg.getReceiver().getId(),
+                            msg.getContent(),
+                            msg.getTimestamp()))
+                    .collect(Collectors.toList());
 
-        return ResponseEntity.ok(responseHistory);
+            return ResponseEntity.ok(responseHistory);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("ERROR: " + e.getMessage() + " | CAUSE: "
+                    + (e.getCause() != null ? e.getCause().getMessage() : "none"));
+        }
     }
 }

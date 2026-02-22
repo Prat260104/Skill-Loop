@@ -57,10 +57,13 @@ public class ChatService {
         User user2 = userRepository.findById(userId2)
                 .orElseThrow(() -> new RuntimeException("User 2 not found"));
 
-        ConnectionRequest connection = connectionRepository.findBySenderAndReceiver(user1, user2)
-                .orElseGet(() -> connectionRepository.findBySenderAndReceiver(user2, user1)
-                        .orElseThrow(() -> new RuntimeException("No connection found between users")));
+        var connectionOpt = connectionRepository.findBySenderAndReceiver(user1, user2)
+                .or(() -> connectionRepository.findBySenderAndReceiver(user2, user1));
 
-        return chatMessageRepository.findByConnectionOrderByTimestampAsc(connection);
+        if (connectionOpt.isEmpty()) {
+            return new java.util.ArrayList<>();
+        }
+
+        return chatMessageRepository.findByConnectionOrderByTimestampAsc(connectionOpt.get());
     }
 }
