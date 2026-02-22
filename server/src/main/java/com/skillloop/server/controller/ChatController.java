@@ -1,6 +1,7 @@
 package com.skillloop.server.controller;
 
 import com.skillloop.server.dto.ChatMessageRequest;
+import com.skillloop.server.dto.ChatMessageResponse;
 import com.skillloop.server.model.ChatMessage;
 import com.skillloop.server.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class ChatController {
@@ -36,23 +38,42 @@ public class ChatController {
                 chatMessageRequest.getReceiverId(),
                 chatMessageRequest.getContent());
 
-        // 2. Broadcast it immediately to the receiver's private queue
+        // 2. Convert Entity to DTO to prevent exposing database structure
+        ChatMessageResponse responsePayload = new ChatMessageResponse(
+                savedMsg.getId(),
+                savedMsg.getSender().getId(),
+                savedMsg.getReceiver().getId(),
+                savedMsg.getContent(),
+                savedMsg.getTimestamp());
+
+        // 3. Broadcast it immediately to the receiver's private queue
         // STOMP Destination: /user/{receiverId}/queue/messages
         messagingTemplate.convertAndSendToUser(
                 String.valueOf(savedMsg.getReceiver().getId()),
                 "/queue/messages",
-                savedMsg);
+                responsePayload);
     }
 
     /**
      * Standard REST endpoint for fetching history when the chat window opens.
      */
     @GetMapping("/api/chat/history/{userId1}/{userId2}")
-    public ResponseEntity<List<ChatMessage>> getChatHistory(
+    public ResponseEntity<List<ChatMessageResponse>> getChatHistory(
             @PathVariable Long userId1,
             @PathVariable Long userId2) {
 
         List<ChatMessage> history = chatService.getChatHistory(userId1, userId2);
-        return ResponseEntity.ok(history);
+
+        // Convert Entities to clean DTOs
+        List<ChatMessageResponse> responseHistory = history.stream()
+                .map(msg -> new ChatMessageResponse(
+                        msg.getId(),
+                        msg.getSender().getId(),
+                        msg.getReceiver().getId(),
+                        msg.getContent(),
+                        msg.getTimestamp()))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(responseHistory);
     }
 }
