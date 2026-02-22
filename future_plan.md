@@ -118,6 +118,8 @@ This document outlines the **missing features** from the original Startup Plan t
 3.  **Frontend:**
     *   Show "Chat" button on `SessionCard` only if status is `ACCEPTED`.
     *   Open a floating Chat Window on click.
+4.  **Future Enhancements:**
+    *   Add **Double Tick (Delivered)** and **Blue Tick (Read Receipts)** features via WebSockets to mimic WhatsApp-like UX.
 
 ---
 
