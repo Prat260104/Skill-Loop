@@ -49,18 +49,10 @@ public class ChatController {
                 savedMsg.getContent(),
                 savedMsg.getTimestamp());
 
-        // 3. Broadcast it immediately to the receiver's private queue
-        // STOMP Destination: /user/{receiverId}/queue/messages
-        messagingTemplate.convertAndSendToUser(
-                String.valueOf(savedMsg.getReceiver().getId()),
-                "/queue/messages",
-                responsePayload);
-
-        // 4. Also broadcast it back to the sender so their UI updates
-        // STOMP Destination: /user/{senderId}/queue/messages
-        messagingTemplate.convertAndSendToUser(
-                String.valueOf(savedMsg.getSender().getId()),
-                "/queue/messages",
+        // 3. Broadcast it to the shared session chat room
+        // STOMP Destination: /topic/chat/{sessionId}
+        messagingTemplate.convertAndSend(
+                "/topic/chat/" + savedMsg.getSession().getId(),
                 responsePayload);
     }
 

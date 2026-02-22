@@ -51,19 +51,17 @@ const useChat = (currentUserId, peerId, sessionId) => {
         client.onConnect = () => {
             setIsConnected(true);
 
-            // Subscribe to our personal mailbox!
-            // This matches the `config.setUserDestinationPrefix("/user");` we set in Spring Boot
-            const myPrivateQueue = `/user/${currentUserId}/queue/messages`;
+            // Subscribe to the shared chat room for this specific session!
+            // This relies on the regular /topic broker instead of /user prefixes which require Spring Security
+            const sessionTopic = `/topic/chat/${sessionId}`;
 
-            client.subscribe(myPrivateQueue, (messageFrame) => {
+            client.subscribe(sessionTopic, (messageFrame) => {
                 if (messageFrame.body) {
                     const newMsg = JSON.parse(messageFrame.body);
 
-                    // Only add the message to the screen if it's from the person we are currently talking to.
-                    // This prevents messages from User C showing up while we are chatting with User B.
-                    if (newMsg.senderId === peerId || newMsg.senderId === currentUserId) {
-                        setMessages((prevMessages) => [...prevMessages, newMsg]);
-                    }
+                    // We add the timestamped message to the screen. 
+                    // No need to filter by senderId anymore since the session room is private
+                    setMessages((prevMessages) => [...prevMessages, newMsg]);
                 }
             });
         };
