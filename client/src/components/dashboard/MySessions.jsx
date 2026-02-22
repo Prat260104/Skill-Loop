@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { sessionApi } from '../../api/sessionApi';
 import SessionReviewModal from './SessionReviewModal';
+import ChatBox from '../chat/ChatBox';
 
 const MySessions = ({ user }) => {
     const [sessions, setSessions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('upcoming'); // upcoming, pending, completed
     const [selectedSession, setSelectedSession] = useState(null);
+    const [activeChatSession, setActiveChatSession] = useState(null); // Chat state
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
     const [error, setError] = useState(null);
 
@@ -147,6 +149,15 @@ const MySessions = ({ user }) => {
                                 Mark Complete
                             </button>
                         )}
+
+                        {session.status === 'ACCEPTED' && (
+                            <button
+                                onClick={() => setActiveChatSession(session)}
+                                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm"
+                            >
+                                Chat
+                            </button>
+                        )}
                     </div>
 
                     {session.status === 'COMPLETED' && session.review && (
@@ -173,8 +184,8 @@ const MySessions = ({ user }) => {
                             key={tab}
                             onClick={() => setActiveTab(tab)}
                             className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${activeTab === tab
-                                    ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-white shadow-sm'
-                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                                ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-white shadow-sm'
+                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
                                 }`}
                         >
                             {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -203,6 +214,15 @@ const MySessions = ({ user }) => {
                 onSubmit={handleReviewSubmit}
                 session={selectedSession}
             />
+
+            {/* Mount the ChatBox if there is an active chat session */}
+            {activeChatSession && (
+                <ChatBox
+                    currentUserId={user.id}
+                    peer={activeChatSession.student.id === user.id ? activeChatSession.mentor : activeChatSession.student}
+                    onClose={() => setActiveChatSession(null)}
+                />
+            )}
         </div>
     );
 };
