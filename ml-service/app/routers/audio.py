@@ -9,7 +9,7 @@ from typing import Optional
 from app.services.audio.service import get_transcriber
 
 router = APIRouter(
-    prefix="/audio",
+    prefix="",
     tags=["Audio Transcription"]
 )
 
