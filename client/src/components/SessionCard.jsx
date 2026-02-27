@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 
-export default function SessionCard({ session, currentUserId, onAccept, onReject, onComplete }) {
+export default function SessionCard({ session, currentUserId, onAccept, onReject, onComplete, onChat }) {
     const isMentor = session.mentor.id === parseInt(currentUserId);
     const isPending = session.status === 'PENDING';
 
@@ -78,16 +78,40 @@ export default function SessionCard({ session, currentUserId, onAccept, onReject
             {/* Actions (Only for Student looking at Accepted Session) */}
             {
                 !isMentor && session.status === 'ACCEPTED' && (
-                    <div className="mt-2">
+                    <div className="mt-2 flex gap-2">
                         <button
                             onClick={() => onComplete(session.id)}
-                            className="w-full py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-semibold transition-colors shadow-md shadow-blue-500/20"
+                            className="flex-1 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-semibold transition-colors shadow-md shadow-blue-500/20"
                         >
-                            Mark as Completed
+                            Mark Complete
                         </button>
-                        <p className="text-xs text-center text-gray-400 mt-2">
-                            Clicking this will award +50 points to your mentor.
-                        </p>
+                        <button
+                            onClick={() => onChat(session)}
+                            className="flex-1 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg text-sm font-semibold transition-colors shadow-md shadow-purple-500/20"
+                        >
+                            Chat
+                        </button>
+                    </div>
+                )
+            }
+            {
+                !isMentor && session.status === 'ACCEPTED' && (
+                    <p className="text-xs text-center text-gray-400 mt-2">
+                        Clicking 'Mark Complete' will award +50 points to your mentor.
+                    </p>
+                )
+            }
+
+            {/* Actions (Only for Mentor looking at Accepted Session) */}
+            {
+                isMentor && session.status === 'ACCEPTED' && (
+                    <div className="mt-2">
+                        <button
+                            onClick={() => onChat(session)}
+                            className="w-full py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg text-sm font-semibold transition-colors shadow-md shadow-purple-500/20"
+                        >
+                            Chat
+                        </button>
                     </div>
                 )
             }

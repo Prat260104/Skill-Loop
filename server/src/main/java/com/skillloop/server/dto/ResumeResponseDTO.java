@@ -2,7 +2,7 @@ package com.skillloop.server.dto;
 
 import java.util.List;
 import java.util.Map;
-import lombok.Data;
+
 
 public class ResumeResponseDTO {
     private String name;
