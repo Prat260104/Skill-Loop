@@ -171,6 +171,41 @@ This document outlines the **missing features** from the original Startup Plan t
 
 ---
 
+## 🏗️ 6. Project Structure & Codebase Organization
+
+### **A. Frontend (`client`) Revamp**
+*   **Pages vs. Components:** Move full views (like `Home.jsx`, `Profile.jsx`) into a `src/pages/` folder, reserving `src/components/` strictly for reusable elements (buttons, cards).
+*   **Layouts Folder:** Create `src/layouts/` for persistent UI like Navbar, Sidebar, and Footer.
+*   **Centralized Utilities:** Create `src/utils/` for helper functions (date formatting, regex logic).
+
+### **B. Backend (`server`) Enhancements**
+*   **Global Exception Handling:** Use `@ControllerAdvice` in an `exceptions/` package to map errors to standard JSON error responses instead of returning raw stack traces.
+*   **DTO Mappers:** Implement `MapStruct` or a dedicated `mapper/` package to cleanly convert Entities to DTOs outside of Services.
+
+### **C. ML Service (`ml-service`) Refinement**
+*   **Clear Separation of Concerns:** Ensure `routes/` (for FastAPI endpoints), `services/` (for execution logic), and `models/` (for serialized weight files like `.h5`/`.pkl`) are distinctly separated.
+
+---
+
+## 👶 7. Beginner-Friendly UX & Onboarding
+
+### **A. "Zero State" / Empty State Designs**
+*   **Goal:** Replace blank screens or dry "No sessions found" text with friendly illustrations and clear calls to action (e.g., "Looks like your schedule is clear! 🌟 Click here to find a mentor.").
+
+### **B. Interactive Guided Onboarding**
+*   **Goal:** Use a library like `react-joyride` for a 3-step pop-up tour on a user's first login (highlighting Profile, Dashboard, and AI Interview sections).
+
+### **C. "Demo" or "Ghost" Data**
+*   **Goal:** Provide a "Skill Loop Bot" or "Demo Mentor" for new users to safely practice clicking "Accept", "Chat", and "Start Video" without fear of making action with a real person.
+
+### **D. AI Explainability Tooltips**
+*   **Goal:** Add `(?)` tooltip hover icons next to complex features (like AI Interviewer) explaining how it works simply (e.g., "We use your GitHub and Resume to generate custom questions!").
+
+### **E. Instant Gratification (Gamification UX)**
+*   **Goal:** Reinforce positive actions (completing a profile, finishing a session) with immediate visual feedback like a toast notification or CSS confetti ("Awesome! You earned +50 Skill Points!").
+
+---
+
 ## ❌ Current Status Checklist
 
 - [x] GitHub Scraper (Completed)
