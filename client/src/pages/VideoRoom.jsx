@@ -19,8 +19,8 @@ export default function VideoRoom() {
 
         const initMeeting = async () => {
             // These would normally come from your environment variables (.env)
-            const appID = 144692827;
-            const serverSecret = "46ab368a35b2b668da3162abea6954ce";
+            const appID = Number(import.meta.env.VITE_ZEGO_APP_ID);
+            const serverSecret = import.meta.env.VITE_ZEGO_SERVER_SECRET;
 
             // Generate Kit Token (This authenticates the user for this specific room)
             const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
