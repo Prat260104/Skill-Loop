@@ -15,6 +15,7 @@ import Dashboard from './components/Dashboard'
 import Leaderboard from './components/Leaderboard'
 import ProfilePage from './components/ProfilePage'
 import GitHubScraper from './components/GitHubScraper'
+import VideoRoom from './pages/VideoRoom'
 
 function App() {
   const [showIntro, setShowIntro] = useState(true);
@@ -44,6 +45,7 @@ function App() {
                 <Route path="/leaderboard" element={<Leaderboard />} />
                 <Route path="/profile/:id" element={<ProfilePage />} />
                 <Route path="/github-scraper" element={<GitHubScraper />} />
+                <Route path="/room/:roomId" element={<VideoRoom />} />
               </Routes>
             </main>
             <Footer />
