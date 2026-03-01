@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { sessionApi } from '../../api/sessionApi';
 import SessionReviewModal from './SessionReviewModal';
@@ -12,6 +13,7 @@ const MySessions = ({ user }) => {
     const [activeChatSession, setActiveChatSession] = useState(null); // Chat state
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (user && user.id) {
@@ -151,12 +153,20 @@ const MySessions = ({ user }) => {
                         )}
 
                         {session.status === 'ACCEPTED' && (
-                            <button
-                                onClick={() => setActiveChatSession(session)}
-                                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm"
-                            >
-                                Chat
-                            </button>
+                            <>
+                                <button
+                                    onClick={() => navigate(`/room/${session.id}`)}
+                                    className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium rounded-lg transition-colors shadow-sm flex items-center gap-2"
+                                >
+                                    <span className="text-lg">📹</span> Join Class
+                                </button>
+                                <button
+                                    onClick={() => setActiveChatSession(session)}
+                                    className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm"
+                                >
+                                    Chat
+                                </button>
+                            </>
                         )}
                     </div>
 
