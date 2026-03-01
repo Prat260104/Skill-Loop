@@ -11,8 +11,8 @@ export default function VideoRoom() {
     const user = JSON.parse(localStorage.getItem('user'));
 
     // Fallback names/IDs just in case user is not logged in properly
-    const userId = user ? user.id : Math.floor(Math.random() * 10000).toString();
-    const userName = user ? user.name : `Guest-${userId}`;
+    const userId = (user && user.id) ? String(user.id) : Math.floor(Math.random() * 10000).toString();
+    const userName = (user && user.name) ? String(user.name) : `Guest-${userId}`;
 
     useEffect(() => {
         if (!containerRef.current) return;
