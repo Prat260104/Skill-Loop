@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { sessionApi } from '../../api/sessionApi';
 import SessionReviewModal from './SessionReviewModal';
@@ -13,13 +13,38 @@ const MySessions = ({ user }) => {
     const [activeChatSession, setActiveChatSession] = useState(null); // Chat state
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
     const [error, setError] = useState(null);
+
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         if (user && user.id) {
             fetchSessions();
         }
     }, [user]);
+
+    // Check URL for ?reviewSession=xxx and trigger modal if found
+    useEffect(() => {
+        if (sessions.length > 0) {
+            const params = new URLSearchParams(location.search);
+            const reviewSessionId = params.get('reviewSession');
+
+            if (reviewSessionId) {
+                // Find the session that matches this ID
+                const sessionToReview = sessions.find(s => s.id === Number(reviewSessionId));
+
+                // Only open the modal if the user is the STUDENT for this session
+                // Mentors can't review and get points for themselves!
+                if (sessionToReview && sessionToReview.student.id === user.id && sessionToReview.status === 'ACCEPTED') {
+                    setSelectedSession(sessionToReview);
+                    setIsReviewModalOpen(true);
+
+                    // Clean up the URL so it doesn't keep opening on refresh
+                    navigate('/dashboard', { replace: true });
+                }
+            }
+        }
+    }, [sessions, location.search, navigate, user.id]);
 
     const fetchSessions = async () => {
         try {
