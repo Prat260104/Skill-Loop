@@ -49,7 +49,8 @@ export default function VideoRoom() {
                 showScreenSharingButton: true, // Crucial for coding classes
                 onLeaveRoom: () => {
                     // When they click the red "End" button, go back to dashboard
-                    navigate('/dashboard');
+                    // Pass the roomId as `reviewSession` to trigger the Rating Modal
+                    navigate(`/dashboard?reviewSession=${roomId}`);
                 },
             });
         };
