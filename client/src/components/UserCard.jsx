@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { HiStar } from 'react-icons/hi';
+import BadgeIcon from './BadgeIcon';
 
 export default function UserCard({ user }) {
     const navigate = useNavigate();
@@ -14,7 +15,7 @@ export default function UserCard({ user }) {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             whileHover={{ y: -5 }}
-            className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-xl border border-gray-100 dark:border-white/5 relative overflow-hidden group cursor-pointer h-[420px] flex flex-col"
+            className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-xl border border-gray-100 dark:border-white/5 relative overflow-hidden group cursor-pointer min-h-[440px] flex flex-col"
             onClick={handleViewProfile}
         >
             {/* Gradient Border Effect */}
@@ -39,9 +40,22 @@ export default function UserCard({ user }) {
                 </div>
             </div>
 
-            <p className="text-gray-600 dark:text-gray-300 text-sm mb-6 line-clamp-2 h-[40px]">
+            <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2 h-[40px]">
                 {user.bio || "No bio available."}
             </p>
+
+            {/* Badges Preview */}
+            <div className="flex gap-2 mb-4 items-center">
+                {user.badges && user.badges.length > 0 ? (
+                    user.badges.slice(0, 4).map((badge, idx) => (
+                        <div key={idx} className="scale-75 origin-left -ml-1">
+                            <BadgeIcon badge={badge} />
+                        </div>
+                    ))
+                ) : (
+                    <span className="text-xs text-gray-400 italic mb-2">New unbadged member</span>
+                )}
+            </div>
 
             <div className="space-y-3 mb-6 flex-1 overflow-hidden">
                 <div>
