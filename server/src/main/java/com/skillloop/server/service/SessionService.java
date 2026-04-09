@@ -28,6 +28,9 @@ public class SessionService {
     @Autowired
     private SentimentService sentimentService;
 
+    @Autowired
+    private GamificationService gamificationService;
+
     public Session createSessionRequest(Long studentId, SessionRequest request) {
         User student = userRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
@@ -169,6 +172,10 @@ public class SessionService {
                     "Session completed but received negative feedback. Under admin review.",
                     "WARNING");
         }
+
+        // TRIGGER: Evaluate Badges
+        gamificationService.checkAndAwardSessionBadges(session.getStudent(), savedSession);
+        gamificationService.checkAndAwardSessionBadges(mentor, savedSession);
 
         return savedSession;
     }

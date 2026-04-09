@@ -22,6 +22,9 @@ public class GithubService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private GamificationService gamificationService;
+
     @Transactional
     public GithubProfile saveProfile(GithubProfileRequest request) {
         // 1. Find User
@@ -50,6 +53,10 @@ public class GithubService {
 
         // 4. Update User's Verified Skills (Smart Logic)
         updateUserVerifiedSkills(user, request);
+
+        // TRIGGER: Evaluate Gamification Badges
+        int languageCount = request.getVerifiedLanguages() != null ? request.getVerifiedLanguages().size() : 0;
+        gamificationService.checkAndAwardGithubBadge(user, languageCount);
 
         // 5. Save Logic
         return githubProfileRepository.save(profile);
