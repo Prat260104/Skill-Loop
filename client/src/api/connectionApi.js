@@ -1,75 +1,56 @@
-const API_URL = 'http://localhost:9090/api/connections';
+import api from './axiosConfig';
 
-// Helper to handle response
-const handleResponse = async (response) => {
-    if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || 'Something went wrong');
-    }
-    const contentType = response.headers.get("content-type");
-    if (contentType && contentType.indexOf("application/json") !== -1) {
-        return response.json();
-    }
-    return response.text(); // For plain text responses like "Request Accepted"
-};
-
-// Send a connection request
+// POST /api/connections/send?senderId=X&receiverId=Y
 export const sendConnectionRequest = async (senderId, receiverId) => {
     try {
-        const response = await fetch(`${API_URL}/send?senderId=${senderId}&receiverId=${receiverId}`, {
-            method: 'POST'
-        });
-        return handleResponse(response);
+        const response = await api.post(`/api/connections/send?senderId=${senderId}&receiverId=${receiverId}`);
+        return response.data;
     } catch (error) {
-        console.error("Error sending connection request:", error);
+        console.error('Error sending connection request:', error);
         throw error;
     }
 };
 
-// Accept a connection request
+// PUT /api/connections/accept/{requestId}
 export const acceptConnectionRequest = async (requestId) => {
     try {
-        const response = await fetch(`${API_URL}/accept/${requestId}`, {
-            method: 'PUT'
-        });
-        return handleResponse(response);
+        const response = await api.put(`/api/connections/accept/${requestId}`);
+        return response.data;
     } catch (error) {
-        console.error("Error accepting connection request:", error);
+        console.error('Error accepting connection request:', error);
         throw error;
     }
 };
 
-// Reject a connection request
+// PUT /api/connections/reject/{requestId}
 export const rejectConnectionRequest = async (requestId) => {
     try {
-        const response = await fetch(`${API_URL}/reject/${requestId}`, {
-            method: 'PUT'
-        });
-        return handleResponse(response);
+        const response = await api.put(`/api/connections/reject/${requestId}`);
+        return response.data;
     } catch (error) {
-        console.error("Error rejecting connection request:", error);
+        console.error('Error rejecting connection request:', error);
         throw error;
     }
 };
 
-// Get connection status between two users
+// GET /api/connections/status?senderId=X&receiverId=Y
 export const getConnectionStatus = async (senderId, receiverId) => {
     try {
-        const response = await fetch(`${API_URL}/status?senderId=${senderId}&receiverId=${receiverId}`);
-        return handleResponse(response);
+        const response = await api.get(`/api/connections/status?senderId=${senderId}&receiverId=${receiverId}`);
+        return response.data;
     } catch (error) {
-        console.error("Error fetching connection status:", error);
-        return { status: "NONE" };
+        console.error('Error fetching connection status:', error);
+        return { status: 'NONE' };
     }
 };
 
-// Get pending requests for a user
+// GET /api/connections/pending/{userId}
 export const getPendingRequests = async (userId) => {
     try {
-        const response = await fetch(`${API_URL}/pending/${userId}`);
-        return handleResponse(response);
+        const response = await api.get(`/api/connections/pending/${userId}`);
+        return response.data;
     } catch (error) {
-        console.error("Error fetching pending requests:", error);
+        console.error('Error fetching pending requests:', error);
         return [];
     }
 };

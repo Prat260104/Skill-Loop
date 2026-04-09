@@ -1,86 +1,62 @@
-const API_URL = 'http://localhost:9090/api/user';
-
-// Helper to handle response
-const handleResponse = async (response) => {
-    if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || 'Something went wrong');
-    }
-    return response.json();
-};
+import api from './axiosConfig';
 
 export const userApi = {
-    // 1. Get All Users
     // GET /api/user
     getAllUsers: async () => {
         try {
-            const response = await fetch(API_URL);
-            return handleResponse(response);
+            const response = await api.get('/api/user');
+            return response.data;
         } catch (error) {
-            console.error("Error fetching users:", error);
+            console.error('Error fetching users:', error);
             throw error;
         }
     },
 
-    // 2. Get User By ID
     // GET /api/user/{id}
     getUserById: async (id) => {
         try {
-            const response = await fetch(`${API_URL}/${id}`);
-            return handleResponse(response);
+            const response = await api.get(`/api/user/${id}`);
+            return response.data;
         } catch (error) {
-            console.error("Error fetching user details:", error);
+            console.error('Error fetching user details:', error);
             throw error;
         }
     },
 
-    // 3. Get Leaderboard
     // GET /api/user/leaderboard
     getLeaderboard: async () => {
         try {
-            const response = await fetch(`${API_URL}/leaderboard`);
-            return handleResponse(response);
+            const response = await api.get('/api/user/leaderboard');
+            return response.data;
         } catch (error) {
-            console.error("Error fetching leaderboard:", error);
+            console.error('Error fetching leaderboard:', error);
             throw error;
         }
     },
 
-    // 4. Update Profile
     // PUT /api/user/{id}/profile
     updateProfile: async (id, data) => {
         try {
-            const response = await fetch(`${API_URL}/${id}/profile`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            return handleResponse(response);
+            const response = await api.put(`/api/user/${id}/profile`, data);
+            return response.data;
         } catch (error) {
-            console.error("Error updating profile:", error);
+            console.error('Error updating profile:', error);
             throw error;
         }
     },
 
-    // 5. Upload Resume
-    // POST /api/user/{id}/resume
+    // POST /api/user/{id}/resume  (multipart/form-data)
     uploadResume: async (id, file) => {
         try {
             const formData = new FormData();
             formData.append('file', file);
-
-            const response = await fetch(`${API_URL}/${id}/resume`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                    'Accept': 'application/json'
-                },
-                body: formData
+            const response = await api.post(`/api/user/${id}/resume`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
             });
-            return handleResponse(response);
+            return response.data;
         } catch (error) {
-            console.error("Error uploading resume:", error);
+            console.error('Error uploading resume:', error);
             throw error;
         }
-    }
+    },
 };
