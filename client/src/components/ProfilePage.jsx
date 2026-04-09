@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HiBriefcase, HiMail, HiStar, HiPencil, HiCalendar, HiUpload, HiLightningBolt, HiBookOpen, HiCheck, HiX, HiClock } from 'react-icons/hi';
+import BadgeIcon from './BadgeIcon';
 import { userApi } from '../api/userApi';
 import InterviewModal from './InterviewModal';
 import SessionRequestModal from './SessionRequestModal';
@@ -426,6 +427,24 @@ export default function ProfilePage() {
                                         <HiStar className="w-10 h-10" />
                                     </div>
                                 </div>
+
+                                {/* Achievements & Badges Card */}
+                                <section className="p-6 rounded-2xl bg-white/50 dark:bg-slate-800/50 border border-gray-100 dark:border-white/5 shadow-sm">
+                                    <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+                                        🏆 Achievements
+                                    </h3>
+                                    <div className="flex flex-wrap gap-4">
+                                        {profileUser.badges && profileUser.badges.length > 0 ? (
+                                            profileUser.badges.map((badge, idx) => (
+                                                <BadgeIcon key={idx} badge={badge} />
+                                            ))
+                                        ) : (
+                                            <div className="w-full text-center py-4 bg-gray-50 dark:bg-white/5 rounded-xl border border-dashed border-gray-200 dark:border-white/10">
+                                                <p className="text-sm text-gray-500 dark:text-gray-400">Complete sessions to unlock badges!</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </section>
                             </div>
 
                             {/* Right Column: Experience, Skills */}
