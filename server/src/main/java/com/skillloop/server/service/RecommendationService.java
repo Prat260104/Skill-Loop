@@ -91,7 +91,8 @@ public class RecommendationService {
                 user.getExperience(),
                 user.getSkillPoints(),
                 user.getRole(),
-                user.getVerifiedSkills());
+                user.getVerifiedSkills(),
+                user.getBadges());
     }
 
     private UserSummaryDTO convertMapToDTO(Map<String, Object> map) {
@@ -126,7 +127,9 @@ public class RecommendationService {
             matchScore = ((Number) map.get("match_score")).doubleValue();
         }
 
+        java.util.Set<com.skillloop.server.model.Badge> badges = new java.util.HashSet<>();
+
         return new UserSummaryDTO(id, name, email, bio, skillsOffered, skillsWanted, experience, skillPoints, role,
-                verifiedSkills, matchScore);
+                verifiedSkills, matchScore, badges);
     }
 }

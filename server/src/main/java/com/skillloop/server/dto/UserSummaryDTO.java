@@ -1,6 +1,8 @@
 package com.skillloop.server.dto;
 
 import java.util.List;
+import java.util.Set;
+import com.skillloop.server.model.Badge;
 
 public class UserSummaryDTO {
     private Long id;
@@ -14,10 +16,11 @@ public class UserSummaryDTO {
     private String role;
     private Double matchScore;
     private List<String> verifiedSkills;
+    private Set<Badge> badges;
 
     public UserSummaryDTO(Long id, String name, String email, String bio, List<String> skillsOffered,
             List<String> skillsWanted, List<String> experience, int skillPoints, String role,
-            List<String> verifiedSkills, Double matchScore) {
+            List<String> verifiedSkills, Double matchScore, Set<Badge> badges) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -29,12 +32,13 @@ public class UserSummaryDTO {
         this.role = role;
         this.verifiedSkills = verifiedSkills;
         this.matchScore = matchScore;
+        this.badges = badges;
     }
 
     public UserSummaryDTO(Long id, String name, String email, String bio, List<String> skillsOffered,
             List<String> skillsWanted, List<String> experience, int skillPoints, String role,
-            List<String> verifiedSkills) {
-        this(id, name, email, bio, skillsOffered, skillsWanted, experience, skillPoints, role, verifiedSkills, 0.0);
+            List<String> verifiedSkills, Set<Badge> badges) {
+        this(id, name, email, bio, skillsOffered, skillsWanted, experience, skillPoints, role, verifiedSkills, 0.0, badges);
     }
 
     public Long getId() {
@@ -123,5 +127,13 @@ public class UserSummaryDTO {
 
     public void setMatchScore(Double matchScore) {
         this.matchScore = matchScore;
+    }
+
+    public Set<Badge> getBadges() {
+        return badges;
+    }
+
+    public void setBadges(Set<Badge> badges) {
+        this.badges = badges;
     }
 }

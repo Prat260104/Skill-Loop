@@ -8,6 +8,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 @Entity
 @Table(name = "users")
@@ -46,6 +48,12 @@ public class User {
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> verifiedSkills;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "user_badges", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "badge")
+    private Set<Badge> badges = new HashSet<>();
 
     private int skillPoints = 0;
 
@@ -152,6 +160,21 @@ public class User {
 
     public void setSkillPoints(int skillPoints) {
         this.skillPoints = skillPoints;
+    }
+
+    public Set<Badge> getBadges() {
+        return badges;
+    }
+
+    public void setBadges(Set<Badge> badges) {
+        this.badges = badges;
+    }
+
+    public void addBadge(Badge badge) {
+        if (this.badges == null) {
+            this.badges = new HashSet<>();
+        }
+        this.badges.add(badge);
     }
 
     public LocalDateTime getCreatedAt() {
