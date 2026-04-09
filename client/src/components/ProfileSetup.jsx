@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { HiPencil, HiLightningBolt, HiBookOpen } from 'react-icons/hi';
+import api from '../api/axiosConfig';
 
 export default function ProfileSetup() {
     const navigate = useNavigate();
@@ -35,32 +36,23 @@ export default function ProfileSetup() {
                 return;
             }
 
-            // Convert comma-separated string to array
             const payload = {
                 bio: formData.bio,
                 skillsOffered: formData.skillsOffered.split(',').map(s => s.trim()),
                 skillsWanted: formData.skillsWanted.split(',').map(s => s.trim())
             };
 
-            const response = await fetch(`http://localhost:9090/api/user/${user.id}/profile`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
+            await api.put(`/api/user/${user.id}/profile`, payload);
 
-            if (response.ok) {
-                // Update local storage to reflect complete profile
-                user.profileComplete = true; // Use the key from backend DTO, but here we can just set a flag
-                // Actually the backend DTO uses "isProfileComplete" (boolean), but let's stick to what we need.
-                // Re-saving to local storage might be good practice.
-                user.isProfileComplete = true;
-                localStorage.setItem('user', JSON.stringify(user));
+            // Update local storage to reflect complete profile
+            user.profileComplete = true; // Use the key from backend DTO, but here we can just set a flag
+            // Actually the backend DTO uses "isProfileComplete" (boolean), but let's stick to what we need.
+            // Re-saving to local storage might be good practice.
+            user.isProfileComplete = true;
+            localStorage.setItem('user', JSON.stringify(user));
 
-                setStatus('success');
-                setTimeout(() => navigate('/dashboard'), 1500); // Go to Dashboard
-            } else {
-                setStatus('error');
-            }
+            setStatus('success');
+            setTimeout(() => navigate('/dashboard'), 1500); // Go to Dashboard
         } catch (error) {
             setStatus('error');
         }

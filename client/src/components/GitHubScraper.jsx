@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { HiSearch, HiArrowRight, HiChartBar, HiSparkles, HiSave, HiExclamation, HiCode, HiLightningBolt, HiShieldCheck, HiDatabase } from 'react-icons/hi';
 import { FaGithub } from 'react-icons/fa';
 import DinoLoader from './DinoLoader';
+import api from '../api/axiosConfig';
 
 const GitHubScraper = () => {
     const [username, setUsername] = useState('');
@@ -29,21 +30,12 @@ const GitHubScraper = () => {
                 ai_analysis: data.ai_analysis
             };
 
-            const response = await fetch('http://localhost:9090/api/github/save', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(errorText || 'Failed to save profile');
-            }
+            await api.post('/api/github/save', payload);
 
             setSaveMessage({ type: 'success', text: 'Profile saved & skills updated successfully.' });
         } catch (err) {
             console.error(err);
-            setSaveMessage({ type: 'error', text: err.message });
+            setSaveMessage({ type: 'error', text: err.response?.data || err.message || 'Failed to save profile' });
         } finally {
             setSaving(false);
         }
@@ -57,17 +49,8 @@ const GitHubScraper = () => {
         setData(null);
 
         try {
-            const response = await fetch('http://127.0.0.1:8001/api/v1/github/analyze', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ github_url: username })
-            });
-
-            const result = await response.json();
-
-            if (!response.ok) {
-                throw new Error(result.detail || 'Failed to analyze profile');
-            }
+            const response = await api.post('http://127.0.0.1:8001/api/v1/github/analyze', { github_url: username });
+            const result = response.data;
 
             let aiAnalysis = result.ai_analysis;
             if (typeof aiAnalysis === 'string') {
@@ -82,7 +65,7 @@ const GitHubScraper = () => {
 
             setData({ ...result, ai_analysis: aiAnalysis });
         } catch (err) {
-            setError(err.message);
+            setError(err.response?.data?.detail || err.message || 'Failed to analyze profile');
         } finally {
             setLoading(false);
         }
