@@ -9,7 +9,8 @@ export default function ProfileSetup() {
     const [formData, setFormData] = useState({
         bio: '',
         skillsOffered: '',
-        skillsWanted: ''
+        skillsWanted: '',
+        department: ''
     });
     const [status, setStatus] = useState(null);
 
@@ -39,7 +40,8 @@ export default function ProfileSetup() {
             const payload = {
                 bio: formData.bio,
                 skillsOffered: formData.skillsOffered.split(',').map(s => s.trim()),
-                skillsWanted: formData.skillsWanted.split(',').map(s => s.trim())
+                skillsWanted: formData.skillsWanted.split(',').map(s => s.trim()),
+                department: formData.department
             };
 
             await api.put(`/api/user/${user.id}/profile`, payload);
@@ -86,6 +88,28 @@ export default function ProfileSetup() {
                             className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all dark:text-white"
                             onChange={handleChange}
                         />
+                    </div>
+                    
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-1.5">
+                            <HiBookOpen className="w-4 h-4 text-primary" />
+                            Department
+                        </label>
+                        <select
+                            name="department"
+                            required
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all dark:text-white"
+                            onChange={handleChange}
+                            value={formData.department}
+                        >
+                            <option value="" disabled>Select your department</option>
+                            <option value="Computer Science">Computer Science</option>
+                            <option value="Information Technology">Information Technology</option>
+                            <option value="Mechanical">Mechanical Engineering</option>
+                            <option value="Electrical">Electrical Engineering</option>
+                            <option value="Civil">Civil Engineering</option>
+                            <option value="Other">Other</option>
+                        </select>
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-6">

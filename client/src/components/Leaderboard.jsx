@@ -5,14 +5,16 @@ import { userApi } from '../api/userApi';
 export default function Leaderboard() {
     const [leaders, setLeaders] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [selectedDepartment, setSelectedDepartment] = useState('All');
 
     useEffect(() => {
         fetchLeaderboard();
-    }, []);
+    }, [selectedDepartment]);
 
     const fetchLeaderboard = async () => {
+        setLoading(true);
         try {
-            const data = await userApi.getLeaderboard();
+            const data = await userApi.getLeaderboard(selectedDepartment === 'All' ? null : selectedDepartment);
             setLeaders(data);
         } catch (error) {
             console.error("Error fetching leaderboard:", error);
@@ -55,6 +57,23 @@ export default function Leaderboard() {
                     </p>
                 </div>
 
+                {/* Department Filter */}
+                <div className="flex justify-end mb-6">
+                    <select
+                        value={selectedDepartment}
+                        onChange={(e) => setSelectedDepartment(e.target.value)}
+                        className="px-4 py-2 rounded-xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 font-medium focus:ring-2 focus:ring-primary outline-none shadow-sm"
+                    >
+                        <option value="All">All Departments</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Information Technology">Information Technology</option>
+                        <option value="Mechanical">Mechanical Engineering</option>
+                        <option value="Electrical">Electrical Engineering</option>
+                        <option value="Civil">Civil Engineering</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
                 {loading ? (
                     <div className="space-y-4">
                         {[1, 2, 3].map(n => (
@@ -84,11 +103,11 @@ export default function Leaderboard() {
                                         </div>
                                     </div>
                                     <div>
-                                        <h3 className="font-bold text-lg text-gray-800 dark:text-white">
+                                        <h3 className="font-bold text-lg text-gray-800 dark:text-white flex items-center gap-2">
                                             {user.name}
                                         </h3>
                                         <p className="text-sm text-gray-500">
-                                            {user.role} • {user.skillPoints} Points
+                                            {user.department ? `${user.department} • ` : ''}{user.role} • {user.skillPoints} Points
                                         </p>
                                     </div>
                                 </div>

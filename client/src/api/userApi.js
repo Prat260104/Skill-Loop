@@ -24,9 +24,10 @@ export const userApi = {
     },
 
     // GET /api/user/leaderboard
-    getLeaderboard: async () => {
+    getLeaderboard: async (department = null) => {
         try {
-            const response = await api.get('/api/user/leaderboard');
+            const endpoint = department ? `/api/user/leaderboard?department=${encodeURIComponent(department)}` : '/api/user/leaderboard';
+            const response = await api.get(endpoint);
             return response.data;
         } catch (error) {
             console.error('Error fetching leaderboard:', error);
