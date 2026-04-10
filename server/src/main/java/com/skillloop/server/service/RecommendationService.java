@@ -92,7 +92,8 @@ public class RecommendationService {
                 user.getSkillPoints(),
                 user.getRole(),
                 user.getVerifiedSkills(),
-                user.getBadges());
+                user.getBadges(),
+                user.getDepartment());
     }
 
     private UserSummaryDTO convertMapToDTO(Map<String, Object> map) {
@@ -129,7 +130,13 @@ public class RecommendationService {
 
         java.util.Set<com.skillloop.server.model.Badge> badges = new java.util.HashSet<>();
 
+        // Python ML isn't currently configured to send department back, default to null or extract
+        String department = null;
+        if (map.containsKey("department") && map.get("department") != null) {
+            department = (String) map.get("department");
+        }
+
         return new UserSummaryDTO(id, name, email, bio, skillsOffered, skillsWanted, experience, skillPoints, role,
-                verifiedSkills, matchScore, badges);
+                verifiedSkills, matchScore, badges, department);
     }
 }

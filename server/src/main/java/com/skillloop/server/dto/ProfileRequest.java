@@ -7,6 +7,7 @@ public class ProfileRequest {
     private List<String> skillsOffered;
     private List<String> skillsWanted;
     private List<String> experience;
+    private String department;
 
     // Getters and Setters
     public String getBio() {
@@ -39,5 +40,13 @@ public class ProfileRequest {
 
     public void setExperience(List<String> experience) {
         this.experience = experience;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
     }
 }

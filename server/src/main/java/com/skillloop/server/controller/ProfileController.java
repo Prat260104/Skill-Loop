@@ -43,6 +43,11 @@ public class ProfileController {
                                                 user.setSkillsWanted(profileRequest.getSkillsWanted());
                                                 user.setExperience(profileRequest.getExperience());
 
+                                                // Update department if provided
+                                                if (profileRequest.getDepartment() != null) {
+                                                        user.setDepartment(profileRequest.getDepartment());
+                                                }
+
                                                 // Award some basic skill points for completing profile
                                                 if (user.getSkillPoints() == 0) {
                                                         user.setSkillPoints(10);
@@ -74,7 +79,8 @@ public class ProfileController {
                                                 user.getSkillPoints(),
                                                 user.getRole(),
                                                 user.getVerifiedSkills(),
-                                                user.getBadges()))
+                                                user.getBadges(),
+                                                user.getDepartment()))
                                 .collect(java.util.stream.Collectors.toList());
                 return ResponseEntity.ok(users);
         }
@@ -93,15 +99,24 @@ public class ProfileController {
                                                 user.getSkillPoints(),
                                                 user.getRole(),
                                                 user.getVerifiedSkills(),
-                                                user.getBadges()))
+                                                user.getBadges(),
+                                                user.getDepartment()))
                                 .map(ResponseEntity::ok)
                                 .orElse(ResponseEntity.notFound().build());
         }
 
         @GetMapping("/leaderboard")
-        public ResponseEntity<java.util.List<com.skillloop.server.dto.UserSummaryDTO>> getLeaderboard() {
-                java.util.List<com.skillloop.server.dto.UserSummaryDTO> users = userRepository
-                                .findTop10ByOrderBySkillPointsDesc().stream()
+        public ResponseEntity<java.util.List<com.skillloop.server.dto.UserSummaryDTO>> getLeaderboard(
+                        @RequestParam(required = false) String department) {
+
+                java.util.List<User> topUsers;
+                if (department != null && !department.isEmpty() && !department.equals("All")) {
+                        topUsers = userRepository.findTop10ByDepartmentOrderBySkillPointsDesc(department);
+                } else {
+                        topUsers = userRepository.findTop10ByOrderBySkillPointsDesc();
+                }
+
+                java.util.List<com.skillloop.server.dto.UserSummaryDTO> users = topUsers.stream()
                                 .map(user -> new com.skillloop.server.dto.UserSummaryDTO(
                                                 user.getId(),
                                                 user.getName(),
@@ -113,7 +128,8 @@ public class ProfileController {
                                                 user.getSkillPoints(),
                                                 user.getRole(),
                                                 user.getVerifiedSkills(),
-                                                user.getBadges()))
+                                                user.getBadges(),
+                                                user.getDepartment()))
                                 .collect(java.util.stream.Collectors.toList());
                 return ResponseEntity.ok(users);
         }

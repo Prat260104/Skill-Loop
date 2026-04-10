@@ -17,10 +17,11 @@ public class UserSummaryDTO {
     private Double matchScore;
     private List<String> verifiedSkills;
     private Set<Badge> badges;
+    private String department;
 
     public UserSummaryDTO(Long id, String name, String email, String bio, List<String> skillsOffered,
             List<String> skillsWanted, List<String> experience, int skillPoints, String role,
-            List<String> verifiedSkills, Double matchScore, Set<Badge> badges) {
+            List<String> verifiedSkills, Double matchScore, Set<Badge> badges, String department) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -33,12 +34,13 @@ public class UserSummaryDTO {
         this.verifiedSkills = verifiedSkills;
         this.matchScore = matchScore;
         this.badges = badges;
+        this.department = department;
     }
 
     public UserSummaryDTO(Long id, String name, String email, String bio, List<String> skillsOffered,
             List<String> skillsWanted, List<String> experience, int skillPoints, String role,
-            List<String> verifiedSkills, Set<Badge> badges) {
-        this(id, name, email, bio, skillsOffered, skillsWanted, experience, skillPoints, role, verifiedSkills, 0.0, badges);
+            List<String> verifiedSkills, Set<Badge> badges, String department) {
+        this(id, name, email, bio, skillsOffered, skillsWanted, experience, skillPoints, role, verifiedSkills, 0.0, badges, department);
     }
 
     public Long getId() {
@@ -135,5 +137,13 @@ public class UserSummaryDTO {
 
     public void setBadges(Set<Badge> badges) {
         this.badges = badges;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
     }
 }
