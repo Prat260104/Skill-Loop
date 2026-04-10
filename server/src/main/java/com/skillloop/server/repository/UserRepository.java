@@ -18,6 +18,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // Leaderboard Magic Query: "Get Top 10 users sorted by Skill Points"
     java.util.List<User> findTop10ByOrderBySkillPointsDesc();
 
+    // Department-wise Leaderboard Query
+    java.util.List<User> findTop10ByDepartmentOrderBySkillPointsDesc(String department);
+
     // Churn Prediction: Find users who haven't logged in since a specific date
     java.util.List<User> findByLastLoginDateBefore(java.time.LocalDateTime date);
 }

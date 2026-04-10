@@ -122,6 +122,14 @@ public class User {
         this.role = role;
     }
 
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
     public List<String> getSkillsOffered() {
         return skillsOffered;
     }
