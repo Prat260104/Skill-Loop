@@ -35,6 +35,8 @@ public class User {
 
     private String role; // "STUDENT" or "MENTOR"
 
+    private String department;
+
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> skillsOffered;
 

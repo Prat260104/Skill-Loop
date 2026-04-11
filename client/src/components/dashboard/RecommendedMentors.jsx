@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../../api/axiosConfig';
 import MentorCard from '../cards/MentorCard';
 import { motion } from 'framer-motion';
 import { HiSparkles } from 'react-icons/hi';
@@ -16,7 +16,7 @@ const RecommendedMentors = ({ userId }) => {
         const fetchRecommendations = async () => {
             try {
                 // API Call to our Spring Boot Backend
-                const response = await axios.get(`http://localhost:9090/api/recommendations/${userId}`);
+                const response = await api.get(`/api/recommendations/${userId}`);
                 console.log("Recommendations Received:", response.data);
                 setMentors(response.data);
                 setLoading(false);

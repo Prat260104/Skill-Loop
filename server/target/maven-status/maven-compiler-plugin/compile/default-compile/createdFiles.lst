@@ -2,7 +2,6 @@ com/skillloop/server/service/ResumeService$1.class
 com/skillloop/server/ServerApplication.class
 com/skillloop/server/scheduler/ChurnScheduler.class
 com/skillloop/server/controller/AuthController.class
-com/skillloop/server/controller/SessionController.class
 com/skillloop/server/model/ConnectionRequest.class
 com/skillloop/server/config/AppConfig.class
 com/skillloop/server/dto/ProfileRequest.class
@@ -13,7 +12,6 @@ com/skillloop/server/dto/CompleteSessionRequest.class
 com/skillloop/server/repository/GithubProfileRepository.class
 com/skillloop/server/service/AuthService.class
 com/skillloop/server/controller/ChatController.class
-com/skillloop/server/service/SessionService.class
 com/skillloop/server/dto/UserSummaryDTO.class
 com/skillloop/server/dto/InterviewPayload$QuestionRequest.class
 com/skillloop/server/dto/ChatMessageResponse.class

@@ -3,6 +3,11 @@ import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { getChatHistory } from '../api/chatApi';
 
+const getWsSockJsUrl = () => {
+    const base = import.meta.env.VITE_API_URL || 'http://localhost:9090';
+    return `${base.replace(/\/$/, '')}/ws`;
+};
+
 /**
  * Custom hook to manage WebSocket chat connection and history.
  * 
@@ -39,8 +44,7 @@ const useChat = (currentUserId, peerId, sessionId) => {
         // 2. Setup WebSocket Connection
         // We use SockJS as a fallback wrapped by STOMP
         const client = new Client({
-            // Note: In production, URL should come from env variables
-            webSocketFactory: () => new SockJS('http://localhost:9090/ws'),
+            webSocketFactory: () => new SockJS(getWsSockJsUrl()),
             debug: (str) => console.log(str), // Helps with debugging socket issues
             reconnectDelay: 5000,
             heartbeatIncoming: 4000,
@@ -87,7 +91,7 @@ const useChat = (currentUserId, peerId, sessionId) => {
                 setIsConnected(false);
             }
         };
-    }, [currentUserId, peerId, loadHistory]);
+    }, [currentUserId, peerId, sessionId, loadHistory]);
 
     // Function exposed to the React UI to send a new message
     const sendMessage = useCallback((content) => {

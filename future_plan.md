@@ -54,7 +54,7 @@ This document outlines the **missing features** from the original Startup Plan t
 2.  **Bio Extraction:** Smartly summarize "Summary" or "Objective" instead of taking random text.
 
 ### **B. Sentiment Analysis for Feedback ✅**
-**Status:** Backend Complete - Frontend Integration Pending
+**Status:** Backend complete; session completion UI includes review + rating (`SessionReviewModal`). **Still pending:** surfacing sentiment score to the user and an **admin panel** for flagged reviews (`needsReview`).
 **Goal:** Detect toxic behavior or high-quality teaching from written reviews.
 **Implementation Steps:**
 1.  **ML Service:** ✅ **COMPLETED**
@@ -67,10 +67,10 @@ This document outlines the **missing features** from the original Startup Plan t
     *   ✅ `SessionService.completeSession()` - analyzes review on session completion.
     *   ✅ If score < -0.7 (toxic) → No points awarded, flagged for admin review.
     *   ✅ Database fields: `review`, `sentimentScore`, `needsReview`.
-3.  **Frontend:** ❌ **PENDING**
-    *   Add review textarea on session completion modal.
-    *   Display sentiment score/feedback to user.
-    *   Admin panel to view flagged reviews.
+3.  **Frontend:** ⚠️ **PARTIAL**
+    *   ✅ Review textarea + stars on session completion (`SessionReviewModal`).
+    *   ❌ Display sentiment score/label to the user after submit.
+    *   ❌ Admin panel to view flagged reviews.
 4.  **Future Production Improvements:**
     *   🔄 **Retrain with RateMyProfessors Dataset** (~18M professor reviews for better domain fit).
     *   📈 **Collect Real Skill Loop Reviews** (gather actual mentor feedback data).
@@ -95,12 +95,10 @@ This document outlines the **missing features** from the original Startup Plan t
 
 ## 🤝 2. Session Experience (The "Core" Product)
 
-### **A. Integrated Video Calling (WebRTC)**
+### **A. Integrated Video Calling (WebRTC) ✅**
 **Goal:** Users shouldn't leave the app to take the class.
-**Implementation Steps:**
-1.  **Tech:** **PeerJS** (easiest wrapper for WebRTC) or **LiveKit** (production grade).
-2.  **Frontend:** Create `VideoRoom.jsx`.
-3.  **Backend:** Signaling Server (WebSocket) to exchange Peer IDs.
+**Status:** **Done** using **Zego UIKit Prebuilt** (managed WebRTC). Route: `/room/:roomId`. Env: `VITE_ZEGO_APP_ID`, `VITE_ZEGO_SERVER_SECRET`.
+**Original plan note:** PeerJS/LiveKit + custom signaling was optional; current stack avoids a separate signaling server.
 
 ### **B. Calendar Sync**
 **Goal:** Avoid scheduling conflicts.
@@ -108,38 +106,28 @@ This document outlines the **missing features** from the original Startup Plan t
 1.  **Tech:** Google Calendar API.
 2.  **Flow:** OAuth2 "Sign in with Google" -> Grant Calendar Access -> Auto-create Google Meet link.
 
-### **C. Real-time Chat (Post-Acceptance)**
+### **C. Real-time Chat (Post-Acceptance) ✅**
 **Goal:** Enable communication only *after* a session is accepted.
-**Implementation Steps:**
-1.  **Backend (`ChatController`):**
-    *   Use **Spring WebSocket (STOMP)** for real-time messaging.
-    *   **Restriction:** Check `SessionService.isSessionAccepted(userId, peerId)` before allowing message send.
-2.  **Database:** `ChatMessage` entity (senderId, receiverId, content, timestamp, sessionId).
-3.  **Frontend:**
-    *   Show "Chat" button on `SessionCard` only if status is `ACCEPTED`.
-    *   Open a floating Chat Window on click.
-4.  **Future Enhancements:**
+**Done:**
+1.  **Backend:** STOMP over SockJS (`/ws`), `ChatController` `@MessageMapping("/chat.sendMessage")`.
+2.  **Restriction:** `ChatService.saveMessage` allows messages only when `Session.status == ACCEPTED`.
+3.  **Database:** `ChatMessage` (sender, receiver, session, content, timestamp).
+4.  **Frontend:** Chat UI + `useChat` hook; SockJS URL built from `VITE_API_URL` (no hardcoded host).
+5.  **Future Enhancements:**
     *   Add **Double Tick (Delivered)** and **Blue Tick (Read Receipts)** features via WebSockets to mimic WhatsApp-like UX.
 
 ---
 
 ## 🎮 3. Advanced Gamification (The "Hook")
 
-### **A. Badges System**
+### **A. Badges System ✅**
 **Goal:** Visual achievements.
-**Implementation Steps:**
-1.  **Database:** Create `Badge` entity (Name, Icon, Description) and `UserBadge` (UserId, BadgeId).
-2.  **Triggers:**
-    *   *First Session:* Award "Newbie" Badge.
-    *   *5 Star Rating:* Award "Verified Tutor" Badge.
-    *   *Night Owl:* Session after 10 PM.
+**Done:** `Badge` enum on `User` (element collection `user_badges`), `GamificationService` awards Icebreaker, Night Owl, Early Bird, Five Star, Code Ninja, etc.; `BadgeIcon` on profile/cards.
+**Note:** Stored as enum + set, not a separate `Badge`/`UserBadge` relational table (sufficient for current scope).
 
-### **B. Leaderboards (Department-wise)**
+### **B. Leaderboards (Department-wise) ✅**
 **Goal:** Competitive spirit.
-**Implementation Steps:**
-1.  **Backend:** Add `department` field to `User`.
-2.  **Query:** `SELECT * FROM users WHERE department = 'CS' ORDER BY skill_points DESC LIMIT 10`.
-3.  **Frontend:** Filter dropdown on Leaderboard page.
+**Done:** `User.department`, `GET /api/user/leaderboard?department=...`, `Leaderboard.jsx` filter, `ProfileSetup` collects department.
 
 ---
 
@@ -156,18 +144,15 @@ This document outlines the **missing features** from the original Startup Plan t
 ## 🏗️ 5. Production-Grade Architecture Refactoring
 *(To demonstrate enterprise-level frontend architecture)*
 
-### **A. Centralized Axios Interceptors**
+### **A. Centralized Axios Interceptors ✅**
 **Goal:** Remove repetitive `fetch()` calls and handle Auth/Errors globally.
-**Implementation Steps:**
-1.  **Tech:** `axios`.
-2.  **Logic:** Create `src/api/axiosConfig.js`. Interceptors will automatically attach `Bearer {Token}` to all requests.
-3.  **Error Handling:** Global 401 interceptor that clears session and redirects to `/login` if token expires.
+**Done:** `src/api/axiosConfig.js` — shared instance, request interceptor for `Authorization`, response interceptor for 401 → clear storage → `/login`.
 
-### **B. Environment Variables (.env)**
+### **B. Environment Variables (.env) ✅**
 **Goal:** Make the app deployable across Local, Staging, and Production environments without code changes.
-**Implementation Steps:**
-1.  **Refactor:** Replace hardcoded `http://localhost:9090` with Vite env variables (e.g., `import.meta.env.VITE_API_URL`).
-2.  **Security:** Never commit `.env` files. Demonstrates basic DevSecOps awareness.
+**Done:** `VITE_API_URL` for REST (`axiosConfig`, API modules, recommendations via `api` instance). **SockJS:** `useChat` builds `/ws` from the same `VITE_API_URL`. **Video:** `VITE_ZEGO_*` in `.env`.
+**Note:** `axiosConfig` still falls back to `http://localhost:9090` when env is unset (dev convenience).
+**Security:** Do not commit secrets; add a `.env.example` for teammates (recommended).
 
 ---
 
@@ -209,15 +194,15 @@ This document outlines the **missing features** from the original Startup Plan t
 ## ❌ Current Status Checklist
 
 - [x] GitHub Scraper (Completed)
-- [x] Sentiment Analysis (Backend Complete - Frontend Pending)
+- [x] Sentiment Analysis (backend + review UI; score display & admin queue still open)
 - [x] Recommendation Engine (Custom Algo)
 - [x] Churn Prediction Job
-- [x] Real-time Chat (Post-Acceptance)
+- [x] Real-time Chat (Post-Acceptance; STOMP + env-based WS URL)
 - [x] AI Mock Interviewer 2.0 (RAG)
 - [x] Resume Parser (Custom NER)
-- [ ] Production-Grade Axios Interceptors & Env Variables
-- [ ] Video Calling (WebRTC)
-- [ ] Badges System
-- [ ] Department-wise Leaderboards
+- [x] Production-Grade Axios Interceptors & Env Variables (`VITE_API_URL`; recommendations + chat WS aligned)
+- [x] Video Calling (Zego UIKit Prebuilt + `/room/:roomId`)
+- [x] Badges System (enum + `GamificationService`)
+- [x] Department-wise Leaderboards (API + UI)
 - [ ] University Email Regex
 

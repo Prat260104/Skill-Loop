@@ -1,6 +1,8 @@
 package com.skillloop.server.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -44,6 +46,9 @@ public class Session {
 
     @Column(updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
     public Session(User student, User mentor, String skill, SessionStatus status) {
         this.student = student;
@@ -106,6 +111,14 @@ public class Session {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     // Sentiment Analysis Getters/Setters

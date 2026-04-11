@@ -27,6 +27,10 @@
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/dto/SessionRequest.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/dto/SignupRequest.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/dto/UserSummaryDTO.java
+/Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/exception/CustomErrorResponse.java
+/Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/exception/GlobalExceptionHandler.java
+/Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/exception/ResourceNotFoundException.java
+/Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/model/Badge.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/model/ChatMessage.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/model/ConnectionRequest.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/model/ConnectionStatus.java
@@ -45,6 +49,7 @@
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/service/AuthService.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/service/ChatService.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/service/ConnectionService.java
+/Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/service/GamificationService.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/service/GithubService.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/service/NotificationService.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/service/RecommendationService.java
