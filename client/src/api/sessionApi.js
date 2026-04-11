@@ -46,11 +46,12 @@ export const sessionApi = {
     },
 
     // PUT /api/sessions/{sessionId}/complete/{studentId}
-    completeSession: async (sessionId, studentId, review) => {
+    // Now sends both review text AND star rating to the backend
+    completeSession: async (sessionId, studentId, review, rating) => {
         try {
             const response = await api.put(
                 `/api/sessions/${sessionId}/complete/${studentId}`,
-                { review }
+                { review, rating }
             );
             return response.data;
         } catch (error) {

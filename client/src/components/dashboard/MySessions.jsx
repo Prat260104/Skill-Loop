@@ -65,16 +65,36 @@ const MySessions = ({ user }) => {
         setIsReviewModalOpen(true);
     };
 
+    // State for the result step (shown after API responds)
+    const [completionResult, setCompletionResult] = useState(null);
+
     const handleReviewSubmit = async (review, rating) => {
         try {
-            await sessionApi.completeSession(selectedSession.id, user.id, review);
-            // Refresh list
+            // Now passes rating too! Before, rating was collected but never sent.
+            const result = await sessionApi.completeSession(selectedSession.id, user.id, review, rating);
+            // Store the DTO response to show in the result step
+            setCompletionResult(result);
+            // Refresh session list in background
             await fetchSessions();
-            setIsReviewModalOpen(false);
-            setSelectedSession(null);
         } catch (err) {
-            alert("Failed to complete session: " + err.message);
+            // Handle specific error codes from our custom exceptions
+            const status = err?.response?.status;
+            const message = err?.response?.data?.message || err.message;
+
+            if (status === 409) {
+                alert("This session is already completed!");
+            } else if (status === 403) {
+                alert("You don't have permission to complete this session.");
+            } else {
+                alert("Failed to complete session: " + message);
+            }
         }
+    };
+
+    const handleCloseReviewModal = () => {
+        setIsReviewModalOpen(false);
+        setSelectedSession(null);
+        setCompletionResult(null); // Reset result when modal closes
     };
 
     const handleAccept = async (session) => {
@@ -245,9 +265,10 @@ const MySessions = ({ user }) => {
 
             <SessionReviewModal
                 isOpen={isReviewModalOpen}
-                onClose={() => setIsReviewModalOpen(false)}
+                onClose={handleCloseReviewModal}
                 onSubmit={handleReviewSubmit}
                 session={selectedSession}
+                completionResult={completionResult}
             />
 
             {/* Mount the ChatBox if there is an active chat session */}

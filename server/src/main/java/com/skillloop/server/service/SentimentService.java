@@ -2,6 +2,8 @@ package com.skillloop.server.service;
 
 import com.skillloop.server.dto.SentimentRequest;
 import com.skillloop.server.dto.SentimentResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -18,6 +20,8 @@ import org.springframework.web.client.RestTemplate;
  */
 @Service
 public class SentimentService {
+
+    private static final Logger log = LoggerFactory.getLogger(SentimentService.class);
 
     @Value("${ml.service.url:http://localhost:8001}")
     private String mlServiceUrl;
@@ -41,8 +45,8 @@ public class SentimentService {
      * @throws RuntimeException if ML service call fails
      */
     public SentimentResponse analyzeSentiment(String text) {
-        System.out.println("Analyzing sentiment for text: " +
-                (text.length() > 50 ? text.substring(0, 50) + "..." : text));
+        // PRIVACY: Log text length, NOT the actual text (PII protection)
+        log.info("Analyzing sentiment for text of length {}", text.length());
 
         try {
             // Prepare request
@@ -65,16 +69,16 @@ public class SentimentService {
             SentimentResponse result = response.getBody();
 
             if (result != null) {
-                System.out.println("Sentiment analysis result - Score: " + result.getScore() +
-                        ", Label: " + result.getLabel() + ", Confidence: " + result.getConfidence());
+                log.info("Sentiment result — Score: {}, Label: {}, Confidence: {}",
+                        result.getScore(), result.getLabel(), result.getConfidence());
                 return result;
             } else {
-                System.err.println("ML service returned null response");
+                log.error("ML service returned null response");
                 throw new RuntimeException("ML service returned null response");
             }
 
         } catch (RestClientException e) {
-            System.err.println("Failed to call ML service for sentiment analysis: " + e.getMessage());
+            log.error("Failed to call ML service for sentiment analysis: {}", e.getMessage());
             throw new RuntimeException("Sentiment analysis failed: " + e.getMessage(), e);
         }
     }
