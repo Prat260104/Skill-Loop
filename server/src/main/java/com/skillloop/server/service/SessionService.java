@@ -121,7 +121,7 @@ public class SessionService {
      *   (including password hashes). Returning it directly = data leak.
      * → The DTO contains ONLY what the frontend needs to display the result.
      */
-    public CompleteSessionResponse completeSession(Long studentId, Long sessionId, String review) {
+    public CompleteSessionResponse completeSession(Long studentId, Long sessionId, String review, Integer rating) {
         Session session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Session not found with id: " + sessionId));
 
@@ -141,8 +141,17 @@ public class SessionService {
             throw new IllegalArgumentException("Only accepted sessions can be completed. Current status: " + session.getStatus());
         }
 
-        // 1. Mark as Completed
+        // SERVER-SIDE VALIDATION: Validate rating if provided
+        // WHY validate on server? Because anyone can bypass frontend and call API directly.
+        if (rating != null && (rating < 1 || rating > 5)) {
+            throw new IllegalArgumentException("Rating must be between 1 and 5. Received: " + rating);
+        }
+
+        // 1. Mark as Completed + Save Rating
         session.setStatus(SessionStatus.COMPLETED);
+        if (rating != null) {
+            session.setRating(rating);
+        }
 
         // 2. Analyze Review Sentiment (if provided)
         // Track these for the DTO response

@@ -66,7 +66,8 @@ public class SessionController {
             @RequestBody(required = false) com.skillloop.server.dto.CompleteSessionRequest request) {
         try {
             String review = (request != null) ? request.getReview() : null;
-            CompleteSessionResponse response = sessionService.completeSession(studentId, sessionId, review);
+            Integer rating = (request != null) ? request.getRating() : null;
+            CompleteSessionResponse response = sessionService.completeSession(studentId, sessionId, review, rating);
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
