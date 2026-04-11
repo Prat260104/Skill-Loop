@@ -2,6 +2,7 @@ package com.skillloop.server.service;
 
 import com.skillloop.server.dto.SentimentRequest;
 import com.skillloop.server.dto.SentimentResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -21,11 +22,16 @@ public class SentimentService {
     @Value("${ml.service.url:http://localhost:8001}")
     private String mlServiceUrl;
 
-    private final RestTemplate restTemplate;
-
-    public SentimentService() {
-        this.restTemplate = new RestTemplate();
-    }
+    /**
+     * WHY @Autowired instead of new RestTemplate()?
+     * → When we write "new RestTemplate()", we bypass Spring's bean management.
+     *   The timeouts we configured in AppConfig.java won't apply!
+     * → With @Autowired, Spring injects the SAME bean with 3s connect + 5s read timeout.
+     * 
+     * This is called "Dependency Injection" — one of Spring's core concepts.
+     */
+    @Autowired
+    private RestTemplate restTemplate;
 
     /**
      * Analyze sentiment of given text

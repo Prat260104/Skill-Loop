@@ -41,6 +41,43 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
+
+    /**
+     * Handle duplicate session completion attempts.
+     * Returns 409 CONFLICT — meaning "your request conflicts with the current state."
+     * 
+     * WHY 409 and not 400?
+     * → 400 = "your request is malformed" (wrong data format)
+     * → 409 = "your request is valid but the resource is already in a conflicting state"
+     * Example: Trying to complete an already-completed session.
+     */
+    @ExceptionHandler(SessionAlreadyCompletedException.class)
+    public ResponseEntity<CustomErrorResponse> handleSessionAlreadyCompleted(SessionAlreadyCompletedException ex, WebRequest request) {
+        CustomErrorResponse errorResponse = new CustomErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                HttpStatus.CONFLICT.getReasonPhrase(),
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    /**
+     * Handle unauthorized session access.
+     * Returns 403 FORBIDDEN — meaning "you're logged in but not allowed to do this."
+     * 
+     * WHY 403 and not 401?
+     * → 401 = "you're not logged in at all"
+     * → 403 = "you're logged in, but this isn't your session"
+     */
+    @ExceptionHandler(UnauthorizedSessionAccessException.class)
+    public ResponseEntity<CustomErrorResponse> handleUnauthorizedSessionAccess(UnauthorizedSessionAccessException ex, WebRequest request) {
+        CustomErrorResponse errorResponse = new CustomErrorResponse(
+                HttpStatus.FORBIDDEN.value(),
+                HttpStatus.FORBIDDEN.getReasonPhrase(),
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+    }
     
     // Catch-all RuntimeExceptions
     @ExceptionHandler(RuntimeException.class)

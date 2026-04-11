@@ -42,6 +42,17 @@ public class Session {
 
     private Double sentimentScore; // -1 to +1 (from ML service)
 
+    /**
+     * Explicit star rating from the student (1 to 5).
+     * 
+     * WHY separate from sentimentScore?
+     * → Rating = what the user CHOSE to rate (explicit signal)
+     * → SentimentScore = what the AI detected from the text (implicit signal)
+     * → They can disagree! User might give 5 stars but write "it was ok I guess"
+     * → Both are valuable for different analytics.
+     */
+    private Integer rating; // 1-5 stars (explicit user rating)
+
     private Boolean needsReview = false; // Flag for toxic reviews
 
     @Column(updatable = false)
@@ -145,6 +156,14 @@ public class Session {
 
     public void setNeedsReview(Boolean needsReview) {
         this.needsReview = needsReview;
+    }
+
+    public Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
     }
 
     @Override

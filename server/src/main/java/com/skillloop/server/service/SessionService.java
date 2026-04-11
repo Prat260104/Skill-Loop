@@ -3,6 +3,9 @@ package com.skillloop.server.service;
 import com.skillloop.server.dto.CompleteSessionResponse;
 import com.skillloop.server.dto.SentimentResponse;
 import com.skillloop.server.dto.SessionRequest;
+import com.skillloop.server.exception.ResourceNotFoundException;
+import com.skillloop.server.exception.SessionAlreadyCompletedException;
+import com.skillloop.server.exception.UnauthorizedSessionAccessException;
 import com.skillloop.server.model.Session;
 import com.skillloop.server.model.SessionStatus;
 import com.skillloop.server.model.User;
@@ -120,15 +123,22 @@ public class SessionService {
      */
     public CompleteSessionResponse completeSession(Long studentId, Long sessionId, String review) {
         Session session = sessionRepository.findById(sessionId)
-                .orElseThrow(() -> new RuntimeException("Session not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Session not found with id: " + sessionId));
 
-        // Only the Student can mark it as complete (to prevent cheating)
+        // SECURITY CHECK: Only the Student can mark it as complete
         if (!session.getStudent().getId().equals(studentId)) {
-            throw new RuntimeException("Only the student can mark a session as complete!");
+            throw new UnauthorizedSessionAccessException("Only the student can mark a session as complete!");
+        }
+
+        // IDEMPOTENCY GUARD: Prevent double-completion
+        // WHY? Without this, if the user double-clicks or network retries,
+        // the mentor gets double points (50+50=100) — that's a bug!
+        if (session.getStatus() == SessionStatus.COMPLETED) {
+            throw new SessionAlreadyCompletedException(sessionId);
         }
 
         if (session.getStatus() != SessionStatus.ACCEPTED) {
-            throw new RuntimeException("Only accepted sessions can be completed.");
+            throw new IllegalArgumentException("Only accepted sessions can be completed. Current status: " + session.getStatus());
         }
 
         // 1. Mark as Completed
