@@ -11,6 +11,8 @@ import com.skillloop.server.model.SessionStatus;
 import com.skillloop.server.model.User;
 import com.skillloop.server.repository.SessionRepository;
 import com.skillloop.server.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,19 @@ import java.util.List;
 
 @Service
 public class SessionService {
+
+    /**
+     * SLF4J Logger — production-grade logging.
+     * 
+     * WHY not System.out.println?
+     * → println has no timestamps, no log levels, no file output
+     * → SLF4J gives us INFO/WARN/ERROR levels, timestamps, and works
+     *   with log aggregation tools (ELK, Splunk) in production
+     * → We can filter logs by level (e.g., show only ERRORs in prod)
+     * 
+     * PRIVACY: We NEVER log review text (PII). Only session IDs + outcomes.
+     */
+    private static final Logger log = LoggerFactory.getLogger(SessionService.class);
 
     @Autowired
     private SessionRepository sessionRepository;
@@ -171,12 +186,11 @@ public class SessionService {
                 if (sentiment.isToxic()) {
                     isToxicReview = true;
                     session.setNeedsReview(true);
-                    System.out.println("⚠️  TOXIC REVIEW DETECTED! Session " + sessionId +
-                            " flagged for admin review. Score: " + sentiment.getScore());
-                    System.out.println("❌ No points awarded due to toxic review");
+                    log.warn("TOXIC REVIEW DETECTED — Session {} flagged for admin review. Score: {}",
+                            sessionId, sentiment.getScore());
                 }
             } catch (Exception e) {
-                System.err.println("Sentiment analysis failed for session " + sessionId + ": " + e.getMessage());
+                log.error("Sentiment analysis failed for session {}: {}", sessionId, e.getMessage());
                 // Continue even if sentiment fails - don't block session completion
                 session.setReview(review);
                 // sentimentLabel stays null → frontend knows ML didn't respond
@@ -190,9 +204,10 @@ public class SessionService {
             mentor.setSkillPoints(mentor.getSkillPoints() + 50); // The Reward
             userRepository.save(mentor);
             pointsAwarded = true;
-            System.out.println("✅ Awarded +50 points to " + mentor.getName());
+            log.info("Awarded +50 points to mentor (userId={}) for session {}", mentor.getId(), sessionId);
         } else {
-            System.out.println("⚠️  Points withheld for " + mentor.getName() + " due to toxic review");
+            log.warn("Points withheld for mentor (userId={}) — toxic review on session {}",
+                    mentor.getId(), sessionId);
         }
 
         Session savedSession = sessionRepository.save(session);
