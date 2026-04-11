@@ -2,8 +2,10 @@
 
 This document outlines the **missing features** from the original Startup Plan that need to be implemented to reach "Phase 2" & "Phase 3" maturity. Use this as a step-by-step guide.
 
-## ⭐ PLACEMENT SUCCESS STRATEGY (Suggested Changes)
-*(Prioritized for maximum engineering impact in interviews)*
+**Placement & interviews:** For the **20+ LPA–tier engineering bar** (security, shipping, tests, interview narrative), see **[`placement-training.md`](placement-training.md)**. Section **8** below tracks the same work as checkboxes in this file.
+
+## ⭐ PLACEMENT SUCCESS STRATEGY (Suggested ML/DS depth)
+*(Resume keywords — detailed interview prep lives in [`placement-training.md`](placement-training.md).)*
 
 ### **1. Sentiment Analysis (Custom Neural Network) 🧠**
 *   **Change:** Instead of just using an API (Gemini/TextBlob), we will build a **Custom Neural Network (LSTM/Dense)**.
@@ -85,11 +87,10 @@ This document outlines the **missing features** from the original Startup Plan t
 1.  **Tech:** OpenAI Whisper (Speech-to-Text).
 2.  **Flow:** Record audio -> Send to Whisper -> Get Text -> Send to Gemini -> "Summarize this in bullet points".
 
-### **D. Churn Prediction (Retention Logic)**
-**Goal:** Identify users who haven't logged in for 30 days.
-**Implementation Steps:**
-1.  **Backend:** Create a Scheduled Job (`@Scheduled`).
-2.  **Logic:** Check `lastLoginDate`. If > 2 weeks, send a "We miss you!" email via `NotificationService`.
+### **D. Churn Prediction (Retention Logic) ✅ (core)**
+**Goal:** Identify inactive users and act on churn risk.
+**Done:** `ChurnScheduler` + ML service call + notifications for at-risk users (see `server/.../scheduler/ChurnScheduler.java`).
+**Optional polish:** real **email** channel vs in-app only; align copy with product; document in README.
 
 ---
 
@@ -139,6 +140,17 @@ This document outlines the **missing features** from the original Startup Plan t
 1.  **Auth Service:** Regex check on Signup: `^[a-zA-Z0-9._%+-]+@university\.edu$`.
 2.  **Logic:** Reject registration if domain doesn't match allow-list.
 
+### **B. Authentication Hardening (placement-critical) ❌**
+**Goal:** APIs and WebSockets must not rely on “trust the client.”
+**Implementation Steps:**
+1.  **Spring Security 6** + **JWT** (or secure session cookies if you standardize on that).
+2.  **BCrypt** password encoding; remove plaintext storage.
+3.  **Method-level / URL-level authorization** on sessions, profile, chat history, admin routes.
+4.  **STOMP connect**: pass and validate JWT (or issue a short-lived WS ticket from REST).
+
+### **C. Abuse & moderation ❌**
+**Goal:** Report flow, rate limits on auth/chat, admin review for `needsReview` sessions (ties to §1.B sentiment).
+
 ---
 
 ## 🏗️ 5. Production-Grade Architecture Refactoring
@@ -154,6 +166,23 @@ This document outlines the **missing features** from the original Startup Plan t
 **Note:** `axiosConfig` still falls back to `http://localhost:9090` when env is unset (dev convenience).
 **Security:** Do not commit secrets; add a `.env.example` for teammates (recommended).
 
+### **C. OpenAPI / Swagger ❌**
+**Goal:** Machine-readable API contract for collaborators and interview walkthroughs.
+**Implementation:** `springdoc-openapi` (or similar) on `server`; document auth headers.
+
+### **D. Docker Compose & reproducible runs ❌**
+**Goal:** `docker compose up` → PostgreSQL + `server` + `ml-service` (+ optional `client`).
+**Implementation:** Root-level `docker-compose.yml`; non-secret defaults via `.env.example`.
+
+### **E. CI pipeline ❌**
+**Goal:** GitHub Actions — `mvn test`, `npm run build`, `pytest` (incremental is fine).
+
+### **F. Data performance ❌**
+**Goal:** Indexes on hot columns; pagination on chat/history/list endpoints; reduce N+1 on session/user lists.
+
+### **G. Observability ❌**
+**Goal:** Actuator health (or equivalent), consistent error logging; optional metrics for ML latency.
+
 ---
 
 ## 🏗️ 6. Project Structure & Codebase Organization
@@ -164,8 +193,9 @@ This document outlines the **missing features** from the original Startup Plan t
 *   **Centralized Utilities:** Create `src/utils/` for helper functions (date formatting, regex logic).
 
 ### **B. Backend (`server`) Enhancements**
-*   **Global Exception Handling:** Use `@ControllerAdvice` in an `exceptions/` package to map errors to standard JSON error responses instead of returning raw stack traces.
+*   **Global Exception Handling:** Use `@ControllerAdvice` — project already has `exception/GlobalExceptionHandler`; keep responses consistent and document shapes in Swagger.
 *   **DTO Mappers:** Implement `MapStruct` or a dedicated `mapper/` package to cleanly convert Entities to DTOs outside of Services.
+*   **Testing:** Add unit + integration tests for session completion, chat (`ACCEPTED` only), and auth once Security is in place (see [`placement-training.md`](placement-training.md) §4.6).
 
 ### **C. ML Service (`ml-service`) Refinement**
 *   **Clear Separation of Concerns:** Ensure `routes/` (for FastAPI endpoints), `services/` (for execution logic), and `models/` (for serialized weight files like `.h5`/`.pkl`) are distinctly separated.
@@ -191,12 +221,30 @@ This document outlines the **missing features** from the original Startup Plan t
 
 ---
 
+## 🎯 8. Placement & engineering bar (20+ LPA track)
+
+Full rationale, interview questions, and resume patterns: **[`placement-training.md`](placement-training.md)**.
+
+**Priority order (suggested):**
+1. Spring Security + JWT + BCrypt + protect APIs (§4.B).
+2. `.env.example` + Docker Compose + README “how to run” (§5.B–D).
+3. OpenAPI/Swagger (§5.C).
+4. Sentiment UI + admin queue for `needsReview` (§1.B + §4.C).
+5. University email allow-list (§4.A).
+6. Tests + CI (§6.B + §5.E).
+7. Indexes + pagination + optional Redis (§5.F + `placement-training` §4.4).
+
+**New product features (optional, post-core bar):** Google Calendar (§2.B), auto-summarization (§1.C), chat read receipts (§2.C), Redis leaderboard cache, report-user flow.
+
+---
+
 ## ❌ Current Status Checklist
 
+### Product & ML (from earlier roadmap)
 - [x] GitHub Scraper (Completed)
 - [x] Sentiment Analysis (backend + review UI; score display & admin queue still open)
 - [x] Recommendation Engine (Custom Algo)
-- [x] Churn Prediction Job
+- [x] Churn Prediction Job (scheduler + ML + notifications; optional: email copy)
 - [x] Real-time Chat (Post-Acceptance; STOMP + env-based WS URL)
 - [x] AI Mock Interviewer 2.0 (RAG)
 - [x] Resume Parser (Custom NER)
@@ -204,5 +252,25 @@ This document outlines the **missing features** from the original Startup Plan t
 - [x] Video Calling (Zego UIKit Prebuilt + `/room/:roomId`)
 - [x] Badges System (enum + `GamificationService`)
 - [x] Department-wise Leaderboards (API + UI)
-- [ ] University Email Regex
+- [ ] University Email Regex / allow-list
+- [ ] Sentiment: show score/label to user after submit (safe UX for toxic case)
+- [ ] Admin panel: list sessions with `needsReview`
+- [ ] Google Calendar sync (§2.B)
+- [ ] Auto-summarization post-session (§1.C)
+- [ ] Chat: delivered/read receipts (§2.C)
+
+### Placement / engineering bar (see `placement-training.md`)
+- [ ] Spring Security 6 + JWT + BCrypt passwords
+- [ ] Protected REST APIs (authorization on sensitive routes)
+- [ ] WebSocket/STOMP authentication (JWT or ticket)
+- [ ] Rate limiting (login, signup, chat)
+- [ ] OpenAPI / Swagger on `server`
+- [ ] `docker-compose.yml` (Postgres + server + ml-service [+ client])
+- [ ] GitHub Actions CI (`mvn`, `npm build`, `pytest` starter)
+- [ ] `.env.example` for `client`, `server`, `ml-service` (no secrets)
+- [ ] DB indexes + pagination on hot list/history endpoints
+- [ ] Integration/unit tests (session, chat, auth)
+- [ ] Observability: health checks + consistent error logging
+- [ ] README: architecture diagram + runbook (“ML down → …”)
+- [ ] (Optional) Redis: leaderboard cache or rate limits — with documented rationale
 
