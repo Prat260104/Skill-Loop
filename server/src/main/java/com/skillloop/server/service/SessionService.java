@@ -1,5 +1,6 @@
 package com.skillloop.server.service;
 
+import com.skillloop.server.dto.CompleteSessionResponse;
 import com.skillloop.server.dto.SentimentResponse;
 import com.skillloop.server.dto.SessionRequest;
 import com.skillloop.server.model.Session;
@@ -109,7 +110,15 @@ public class SessionService {
         return savedSession;
     }
 
-    public Session completeSession(Long studentId, Long sessionId, String review) {
+    /**
+     * Complete a session: analyze review sentiment, award points, return DTO.
+     *
+     * WHY return DTO instead of Session entity?
+     * → The Session entity contains student & mentor objects with ALL their fields
+     *   (including password hashes). Returning it directly = data leak.
+     * → The DTO contains ONLY what the frontend needs to display the result.
+     */
+    public CompleteSessionResponse completeSession(Long studentId, Long sessionId, String review) {
         Session session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new RuntimeException("Session not found"));
 
@@ -126,12 +135,18 @@ public class SessionService {
         session.setStatus(SessionStatus.COMPLETED);
 
         // 2. Analyze Review Sentiment (if provided)
+        // Track these for the DTO response
         boolean isToxicReview = false;
+        boolean reviewSubmitted = false;
+        String sentimentLabel = null;
+
         if (review != null && !review.trim().isEmpty()) {
+            reviewSubmitted = true;
             try {
                 SentimentResponse sentiment = sentimentService.analyzeSentiment(review);
                 session.setReview(review);
                 session.setSentimentScore(sentiment.getScore());
+                sentimentLabel = sentiment.getLabel(); // "POSITIVE" or "NEGATIVE"
 
                 // Flag toxic reviews for admin review
                 if (sentiment.isToxic()) {
@@ -145,14 +160,17 @@ public class SessionService {
                 System.err.println("Sentiment analysis failed for session " + sessionId + ": " + e.getMessage());
                 // Continue even if sentiment fails - don't block session completion
                 session.setReview(review);
+                // sentimentLabel stays null → frontend knows ML didn't respond
             }
         }
 
         // 3. Award Points to Mentor (ONLY if review is NOT toxic)
+        boolean pointsAwarded = false;
         User mentor = session.getMentor();
         if (!isToxicReview) {
             mentor.setSkillPoints(mentor.getSkillPoints() + 50); // The Reward
             userRepository.save(mentor);
+            pointsAwarded = true;
             System.out.println("✅ Awarded +50 points to " + mentor.getName());
         } else {
             System.out.println("⚠️  Points withheld for " + mentor.getName() + " due to toxic review");
@@ -177,6 +195,13 @@ public class SessionService {
         gamificationService.checkAndAwardSessionBadges(session.getStudent(), savedSession);
         gamificationService.checkAndAwardSessionBadges(mentor, savedSession);
 
-        return savedSession;
+        // 4. Build and return the DTO (not the raw entity!)
+        return CompleteSessionResponse.success(
+                savedSession.getId(),
+                reviewSubmitted,
+                sentimentLabel,
+                isToxicReview,
+                pointsAwarded
+        );
     }
 }

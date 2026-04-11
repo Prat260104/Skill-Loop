@@ -1,5 +1,6 @@
 package com.skillloop.server.controller;
 
+import com.skillloop.server.dto.CompleteSessionResponse;
 import com.skillloop.server.dto.SessionRequest;
 import com.skillloop.server.model.Session;
 import com.skillloop.server.service.SessionService;
@@ -57,6 +58,7 @@ public class SessionController {
     }
 
     // 5. Mark Session Complete (Award Points + Analyze Review)
+    // Now returns CompleteSessionResponse DTO instead of raw Session entity
     @PutMapping("/{sessionId}/complete/{studentId}")
     public ResponseEntity<?> completeSession(
             @PathVariable Long sessionId,
@@ -64,8 +66,8 @@ public class SessionController {
             @RequestBody(required = false) com.skillloop.server.dto.CompleteSessionRequest request) {
         try {
             String review = (request != null) ? request.getReview() : null;
-            Session session = sessionService.completeSession(studentId, sessionId, review);
-            return ResponseEntity.ok(session);
+            CompleteSessionResponse response = sessionService.completeSession(studentId, sessionId, review);
+            return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
