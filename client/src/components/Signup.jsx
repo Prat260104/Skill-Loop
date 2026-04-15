@@ -31,7 +31,9 @@ export default function Signup() {
 
         } catch (error) {
             setStatus('error');
-            setMessage('Error: ' + (error.message || 'Signup Failed'));
+            // Extract actual error message from error object
+            const errorMsg = error?.response?.data?.message || error?.message || 'Signup Failed';
+            setMessage('Error: ' + errorMsg);
         }
     };
 

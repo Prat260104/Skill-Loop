@@ -38,8 +38,9 @@ export default function Login() {
 
         } catch (error) {
             setStatus('error');
-            // Check if it's an Error object (from our API helper) or a network error string
-            setMessage('Error: ' + (error.message || 'Login Failed'));
+            // Extract actual error message from error object
+            const errorMsg = error?.response?.data?.message || error?.message || 'Login Failed';
+            setMessage('Error: ' + errorMsg);
         }
     };
 
