@@ -5,15 +5,17 @@ import com.skillloop.server.dto.SignupRequest;
 import com.skillloop.server.model.User;
 import com.skillloop.server.repository.UserRepository;
 import com.skillloop.server.security.JwtTokenProvider;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 public class AuthService {
+
+    private static final Logger log = LoggerFactory.getLogger(AuthService.class);
 
     @Autowired
     private UserRepository userRepository;
