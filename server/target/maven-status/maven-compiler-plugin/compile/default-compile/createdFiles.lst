@@ -1,0 +1,8 @@
+com/skillloop/server/repository/UserRepository.class
+com/skillloop/server/ServerApplication.class
+com/skillloop/server/model/User.class
+com/skillloop/server/config/SecurityConfig.class
+com/skillloop/server/TestController.class
+com/skillloop/server/config/DataSeeder.class
+com/skillloop/server/config/AppConfig.class
+com/skillloop/server/model/Badge.class
