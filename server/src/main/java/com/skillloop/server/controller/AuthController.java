@@ -53,16 +53,16 @@ public class AuthController {
                     && !registeredUser.getSkillsOffered().isEmpty();
 
             // Build response with JWT token
-            AuthResponse response = AuthResponse.builder()
-                    .id(registeredUser.getId())
-                    .name(registeredUser.getName())
-                    .email(registeredUser.getEmail())
-                    .role(registeredUser.getRole())
-                    .isProfileComplete(isProfileComplete)
-                    .accessToken(token)
-                    .expiresIn(jwtTokenProvider.getExpirationMs())
-                    .tokenType("Bearer")
-                    .build();
+            AuthResponse response = new AuthResponse(
+                    registeredUser.getId(),
+                    registeredUser.getName(),
+                    registeredUser.getEmail(),
+                    registeredUser.getRole(),
+                    isProfileComplete,
+                    token,
+                    jwtTokenProvider.getExpirationMs(),
+                    "Bearer"
+            );
 
             return new ResponseEntity<>(response, HttpStatus.CREATED);
 
@@ -94,16 +94,16 @@ public class AuthController {
                     && !loggedInUser.getSkillsOffered().isEmpty();
 
             // Build response with JWT token
-            AuthResponse response = AuthResponse.builder()
-                    .id(loggedInUser.getId())
-                    .name(loggedInUser.getName())
-                    .email(loggedInUser.getEmail())
-                    .role(loggedInUser.getRole())
-                    .isProfileComplete(isProfileComplete)
-                    .accessToken(token)
-                    .expiresIn(jwtTokenProvider.getExpirationMs())
-                    .tokenType("Bearer")
-                    .build();
+            AuthResponse response = new AuthResponse(
+                    loggedInUser.getId(),
+                    loggedInUser.getName(),
+                    loggedInUser.getEmail(),
+                    loggedInUser.getRole(),
+                    isProfileComplete,
+                    token,
+                    jwtTokenProvider.getExpirationMs(),
+                    "Bearer"
+            );
 
             return ResponseEntity.ok(response);
 
