@@ -2,6 +2,7 @@
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/TestController.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/config/AppConfig.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/config/DataSeeder.java
+/Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/config/SecurityConfig.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/config/WebSocketConfig.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/controller/AuthController.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/controller/ChatController.java
@@ -49,6 +50,9 @@
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/repository/SessionRepository.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/repository/UserRepository.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/scheduler/ChurnScheduler.java
+/Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/security/CustomUserDetailsService.java
+/Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/security/JwtAuthenticationFilter.java
+/Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/security/JwtTokenProvider.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/service/AuthService.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/service/ChatService.java
 /Users/prateekrai/Desktop/Skill LOOp/server/src/main/java/com/skillloop/server/service/ConnectionService.java
